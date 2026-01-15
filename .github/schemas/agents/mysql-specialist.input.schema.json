@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/mysql-specialist.input.schema.json",
+  "type": "object",
+  "title": "MySQL Specialist Input",
+  "description": "Generate MySQL database schemas",
+  "required": [
+    "schema_design"
+  ],
+  "properties": {
+    "schema_design": {
+      "type": "object"
+    },
+    "version": {
+      "type": "string"
+    },
+    "collation": {
+      "type": "string"
+    }
+  }
+}

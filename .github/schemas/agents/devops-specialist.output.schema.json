@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/devops-specialist.output.schema.json",
+  "type": "object",
+  "title": "DevOps Specialist Output",
+  "description": "Deployment and infrastructure plan",
+  "required": [
+    "devops_plan"
+  ],
+  "properties": {
+    "devops_plan": {
+      "type": "object",
+      "properties": {
+        "ci_cd_pipeline": {
+          "type": "object"
+        },
+        "infrastructure_config": {
+          "type": "object"
+        },
+        "monitoring_strategy": {
+          "type": "object"
+        },
+        "security_controls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

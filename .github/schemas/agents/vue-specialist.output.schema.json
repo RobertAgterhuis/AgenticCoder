@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/vue-specialist.output.schema.json",
+  "type": "object",
+  "title": "Vue Specialist Output",
+  "description": "Generated Vue code",
+  "required": [
+    "components"
+  ],
+  "properties": {
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

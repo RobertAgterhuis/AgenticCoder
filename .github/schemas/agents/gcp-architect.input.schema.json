@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/gcp-architect.input.schema.json",
+  "type": "object",
+  "title": "GCP Architect Input",
+  "description": "Design Google Cloud architecture",
+  "required": [
+    "requirements"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "gcp_regions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

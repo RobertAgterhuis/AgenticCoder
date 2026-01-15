@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/phase-planning.output.schema.json",
+  "title": "Phase Planning Skill Output",
+  "description": "Output schema for phase-planning skill - planned phases, sprints, and execution strategy",
+  "type": "object",
+  "required": ["phases", "sprint_plan", "planning_metrics"],
+  "properties": {
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["phase_id", "phase_name", "duration_weeks"],
+        "properties": {
+          "phase_id": {
+            "type": "string",
+            "pattern": "^PHASE-[0-9]{2}$"
+          },
+          "phase_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "duration_weeks": {
+            "type": "number"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "story_points": {
+            "type": "integer"
+          },
+          "stories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deliverables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "success_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "sprint_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "sprint_number": {
+            "type": "integer"
+          },
+          "sprint_dates": {
+            "type": "object",
+            "properties": {
+              "start_date": {
+                "type": "string",
+                "format": "date"
+              },
+              "end_date": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          },
+          "planned_story_points": {
+            "type": "integer"
+          },
+          "assigned_stories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "assigned_team_members": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "dependencies_and_sequencing": {
+      "type": "object",
+      "properties": {
+        "critical_path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "parallel_tracks": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "dependency_graph": {
+          "type": "string",
+          "description": "Description or reference to dependency visualization"
+        }
+      }
+    },
+    "risk_mitigation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk_id": {
+            "type": "string"
+          },
+          "risk_description": {
+            "type": "string"
+          },
+          "probability": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "mitigation_strategy": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "planning_metrics": {
+      "type": "object",
+      "properties": {
+        "total_story_points": {
+          "type": "integer"
+        },
+        "total_duration_weeks": {
+          "type": "number"
+        },
+        "number_of_phases": {
+          "type": "integer"
+        },
+        "number_of_sprints": {
+          "type": "integer"
+        },
+        "average_sprint_velocity": {
+          "type": "number"
+        },
+        "team_utilization_percentage": {
+          "type": "number"
+        }
+      }
+    },
+    "assumptions_and_constraints": {
+      "type": "object",
+      "properties": {
+        "planning_assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints_respected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes_and_comments": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

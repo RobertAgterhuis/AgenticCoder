@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/architecture-design.input.schema.json",
+  "title": "Architecture Design Skill Input",
+  "description": "Input schema for architecture-design skill - used by @architect for system design decisions",
+  "type": "object",
+  "required": ["system_requirements", "design_context", "constraints"],
+  "properties": {
+    "system_requirements": {
+      "type": "object",
+      "properties": {
+        "functional_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "non_functional_requirements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "requirement": {
+                "type": "string"
+              },
+              "target_value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "user_volume": {
+          "type": "integer"
+        },
+        "data_volume": {
+          "type": "string"
+        },
+        "availability_requirement": {
+          "type": "string",
+          "enum": ["99%", "99.5%", "99.9%", "99.95%", "99.99%"]
+        }
+      }
+    },
+    "design_context": {
+      "type": "object",
+      "properties": {
+        "existing_systems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "technology_preferences": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "team_expertise": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deployment_platform": {
+          "type": "string",
+          "enum": ["Cloud", "On-Premises", "Hybrid", "Edge"]
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "budget_constraint": {
+          "type": "string"
+        },
+        "timeline_constraint": {
+          "type": "string"
+        },
+        "regulatory_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "security_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "design_patterns_to_consider": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

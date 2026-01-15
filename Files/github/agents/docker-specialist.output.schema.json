@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Docker Specialist Agent - Output Schema",
+  "description": "Output schema containing generated Dockerfile and related configurations",
+  "type": "object",
+  "required": ["files"],
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["filename", "content", "description"],
+        "properties": {
+          "filename": {
+            "type": "string",
+            "description": "Name of the generated file (e.g., 'Dockerfile', 'docker-compose.yml')"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path in project (e.g., '.', '.docker')"
+          },
+          "content": {
+            "type": "string",
+            "description": "Full file content"
+          },
+          "description": {
+            "type": "string",
+            "description": "What this file does"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["dockerfile", "compose", "config", "documentation", "build-script"],
+            "description": "Type of configuration file"
+          }
+        }
+      },
+      "description": "List of generated files"
+    },
+    "imageInfo": {
+      "type": "object",
+      "properties": {
+        "baseImage": {
+          "type": "string",
+          "description": "Base image used (e.g., 'node:18-alpine')"
+        },
+        "estimatedSize": {
+          "type": "string",
+          "description": "Estimated final image size (e.g., '125MB')"
+        },
+        "stages": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Build stages in use"
+        },
+        "vulnerabilityScanning": {
+          "type": "boolean",
+          "description": "Whether image scanning is included"
+        }
+      }
+    },
+    "buildInstructions": {
+      "type": "object",
+      "properties": {
+        "buildCommand": {
+          "type": "string",
+          "description": "Command to build the image"
+        },
+        "runCommand": {
+          "type": "string",
+          "description": "Command to run the container"
+        },
+        "pushCommand": {
+          "type": "string",
+          "description": "Command to push to registry"
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "properties": {
+        "requiredVariables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "description": {"type": "string"},
+              "example": {"type": "string"}
+            }
+          },
+          "description": "Environment variables that must be set"
+        },
+        "defaultVariables": {
+          "type": "object",
+          "additionalProperties": {"type": "string"},
+          "description": "Default environment variables"
+        }
+      }
+    },
+    "ports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "port": {"type": "integer"},
+          "protocol": {"type": "string"},
+          "description": {"type": "string"}
+        }
+      },
+      "description": "Exposed ports and their purposes"
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "runAsUser": {
+          "type": "string",
+          "description": "Non-root user ID"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Linux capabilities needed"
+        },
+        "vulnerabilityScan": {
+          "type": "boolean",
+          "description": "Vulnerability scanning enabled"
+        }
+      }
+    },
+    "optimization": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "description": "Optimization approach used"
+        },
+        "cacheLayers": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Dockerfile layers optimized for caching"
+        },
+        "excludedFiles": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": ".dockerignore patterns"
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Additional optimization or security recommendations"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Human-readable summary of generated configuration"
+    }
+  }
+}

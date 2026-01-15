@@ -1,0 +1,35 @@
+{
+  "name": "@agenticcoder/agents",
+  "version": "1.0.0",
+  "description": "AgenticCoder agent framework and core agents",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\" \"bicep-avm-resolver/**/test/**/*.test.js\"",
+    "test:watch": "node --test --watch \"test/**/*.test.js\" \"bicep-avm-resolver/**/test/**/*.test.js\"",
+    "start": "node examples/simple-workflow.js",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "agents",
+    "workflow",
+    "orchestration",
+    "azure",
+    "ai"
+  ],
+  "author": "AgenticCoder Team",
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

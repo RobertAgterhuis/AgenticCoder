@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/architecture-design.output.schema.json",
+  "title": "Architecture Design Skill Output",
+  "description": "Output schema for architecture-design skill - architecture decisions and design recommendations",
+  "type": "object",
+  "required": ["recommended_architecture", "design_justification"],
+  "properties": {
+    "recommended_architecture": {
+      "type": "object",
+      "required": ["style", "components", "patterns_applied"],
+      "properties": {
+        "style": {
+          "type": "string",
+          "enum": ["Monolithic", "Microservices", "Serverless", "Hybrid", "Event-Driven"]
+        },
+        "components": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "properties": {
+              "component_name": {
+                "type": "string"
+              },
+              "responsibility": {
+                "type": "string"
+              },
+              "technology_stack": {
+                "type": "string"
+              },
+              "scalability_approach": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "patterns_applied": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern_name": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "implementation_location": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "technology_recommendations": {
+          "type": "object",
+          "properties": {
+            "frontend": {
+              "type": "string"
+            },
+            "backend": {
+              "type": "string"
+            },
+            "database": {
+              "type": "string"
+            },
+            "cache_layer": {
+              "type": "string"
+            },
+            "messaging": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "design_justification": {
+      "type": "object",
+      "properties": {
+        "why_this_architecture": {
+          "type": "string"
+        },
+        "tradeoffs_accepted": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tradeoff": {
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "alternatives_considered": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alternative": {
+                "type": "string"
+              },
+              "why_not_chosen": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "requirements_addressed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints_satisfied": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "scalability_strategy": {
+      "type": "object",
+      "properties": {
+        "horizontal_scaling": {
+          "type": "string"
+        },
+        "vertical_scaling": {
+          "type": "string"
+        },
+        "database_scaling": {
+          "type": "string"
+        },
+        "expected_growth_handling": {
+          "type": "string"
+        }
+      }
+    },
+    "resilience_and_failover": {
+      "type": "object",
+      "properties": {
+        "failure_scenarios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "scenario": {
+                "type": "string"
+              },
+              "mitigation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "redundancy_strategy": {
+          "type": "string"
+        },
+        "backup_and_recovery": {
+          "type": "string"
+        }
+      }
+    },
+    "security_architecture": {
+      "type": "object",
+      "properties": {
+        "authentication_approach": {
+          "type": "string"
+        },
+        "authorization_model": {
+          "type": "string"
+        },
+        "encryption_strategy": {
+          "type": "string"
+        },
+        "network_security": {
+          "type": "string"
+        },
+        "data_protection": {
+          "type": "string"
+        }
+      }
+    },
+    "performance_characteristics": {
+      "type": "object",
+      "properties": {
+        "expected_latency": {
+          "type": "string"
+        },
+        "expected_throughput": {
+          "type": "string"
+        },
+        "optimization_strategies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "implementation_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "recommendation": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "implementation_phase": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "architecture_evolution": {
+      "type": "object",
+      "properties": {
+        "future_considerations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "migration_path": {
+          "type": "string",
+          "description": "Path if evolution needed"
+        }
+      }
+    }
+  }
+}

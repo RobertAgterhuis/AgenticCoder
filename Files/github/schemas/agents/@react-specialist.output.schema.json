@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@react-specialist.output.schema.json",
+  "title": "@react-specialist Agent Output Schema",
+  "description": "Output contract for the @react-specialist agent (React Frontend Implementation)",
+  "type": "object",
+  "required": ["phase", "status", "artifacts"],
+  "properties": {
+    "phase": {
+      "type": "integer",
+      "const": 13,
+      "description": "Execution phase"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"],
+      "description": "Execution status"
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["components", "hooks", "services"],
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path", "type"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "type": { "type": "string", "enum": ["ui", "feature", "page"] },
+              "props": { "type": "object" },
+              "exports": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "description": "Generated React components"
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "dependencies": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "description": "Generated custom React hooks"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path"],
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "methods": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "description": "Generated API and utility services"
+        },
+        "store_definitions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string", "enum": ["zustand", "redux", "query"] }
+            }
+          },
+          "description": "Generated state management stores"
+        }
+      }
+    },
+    "code_quality": {
+      "type": "object",
+      "properties": {
+        "syntax_errors": { "type": "integer" },
+        "type_coverage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "test_coverage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "eslint_violations": { "type": "integer" },
+        "a11y_issues": { "type": "integer" }
+      },
+      "description": "Code quality metrics"
+    },
+    "generated_files": {
+      "type": "integer",
+      "description": "Total number of .tsx files generated"
+    },
+    "estimated_lines_of_code": {
+      "type": "integer",
+      "description": "Estimated LOC generated"
+    },
+    "next_phase": {
+      "type": "string",
+      "const": "@dotnet-specialist",
+      "description": "Next agent in pipeline"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+          "message": { "type": "string" }
+        }
+      },
+      "description": "Any errors or warnings during generation"
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/azure-pricing-mcp.cost-estimation.schema.json",
+  "title": "Azure Pricing MCP - Cost Estimation Schema",
+  "description": "Schema for multi-resource cost estimation across a project",
+  "type": "object",
+  "required": ["project_name", "resources", "total_monthly_cost"],
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "region": {
+      "type": "string",
+      "description": "Primary region for estimation"
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "monthly_cost"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Resource name/identifier"
+          },
+          "type": {
+            "type": "string",
+            "description": "Resource type"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1,
+            "default": 1,
+            "description": "Number of instances"
+          },
+          "monthly_cost": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Monthly cost for this resource"
+          },
+          "annual_cost": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Annual cost for this resource"
+          },
+          "cost_percent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of total cost"
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "List of resources and their costs"
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total_monthly_cost", "total_annual_cost"],
+      "properties": {
+        "total_monthly_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_annual_cost": {
+          "type": "number",
+          "minimum": 0
+        },
+        "top_cost_driver": {
+          "type": "string",
+          "description": "Most expensive resource"
+        },
+        "cost_optimization_opportunities": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Suggestions for cost reduction"
+        }
+      }
+    },
+    "currency": {
+      "type": "string",
+      "default": "USD"
+    },
+    "generated_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

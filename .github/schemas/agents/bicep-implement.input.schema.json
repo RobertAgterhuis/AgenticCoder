@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/bicep-implement.input.schema.json",
+  "type": "object",
+  "title": "Bicep Implement Agent Input",
+  "description": "Generate Bicep infrastructure templates",
+  "required": [
+    "plan"
+  ],
+  "properties": {
+    "plan": {
+      "type": "object"
+    },
+    "azure_services": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

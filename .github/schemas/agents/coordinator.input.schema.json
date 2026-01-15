@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/coordinator.input.schema.json",
+  "type": "object",
+  "title": "Implementation Coordinator Input",
+  "description": "Coordinate implementation across teams",
+  "required": [
+    "backlog",
+    "team_structure"
+  ],
+  "properties": {
+    "backlog": {
+      "type": "object"
+    },
+    "team_structure": {
+      "type": "object",
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "string"
+    }
+  }
+}

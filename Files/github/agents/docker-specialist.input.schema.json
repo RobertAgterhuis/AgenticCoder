@@ -1,0 +1,127 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Docker Specialist Agent - Input Schema",
+  "description": "Input schema for @docker-specialist agent that generates Dockerfiles and container configurations",
+  "type": "object",
+  "required": ["projectType", "requirements"],
+  "properties": {
+    "projectType": {
+      "type": "string",
+      "enum": ["nodejs", "python", "golang", "java", "dotnet", "rust", "ruby", "php", "static", "multi-service"],
+      "description": "The programming language/framework of the application"
+    },
+    "applicationName": {
+      "type": "string",
+      "description": "Name of the application for container labeling"
+    },
+    "version": {
+      "type": "string",
+      "description": "Application version (e.g., '1.0.0')"
+    },
+    "requirements": {
+      "type": "object",
+      "required": ["port", "entrypoint"],
+      "properties": {
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535,
+          "description": "Primary port the application listens on"
+        },
+        "ports": {
+          "type": "array",
+          "items": {"type": "integer"},
+          "description": "Additional ports to expose (optional)"
+        },
+        "entrypoint": {
+          "type": "string",
+          "description": "Command to run the application (e.g., 'node dist/server.js')"
+        },
+        "buildCommand": {
+          "type": "string",
+          "description": "Build command if needed (e.g., 'npm run build')"
+        },
+        "systemDependencies": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "System packages needed (e.g., ['curl', 'git'])"
+        },
+        "environmentVariables": {
+          "type": "object",
+          "additionalProperties": {"type": "string"},
+          "description": "Default environment variables"
+        }
+      }
+    },
+    "optimization": {
+      "type": "object",
+      "properties": {
+        "priority": {
+          "type": "string",
+          "enum": ["size", "speed", "security", "balanced"],
+          "description": "Optimization strategy"
+        },
+        "multiStage": {
+          "type": "boolean",
+          "description": "Use multi-stage builds"
+        },
+        "alpine": {
+          "type": "boolean",
+          "description": "Use Alpine Linux base images"
+        },
+        "minimalBase": {
+          "type": "boolean",
+          "description": "Use scratch or distroless base"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "nonRoot": {
+          "type": "boolean",
+          "description": "Run as non-root user"
+        },
+        "readOnlyFilesystem": {
+          "type": "boolean",
+          "description": "Use read-only root filesystem"
+        },
+        "healthCheck": {
+          "type": "boolean",
+          "description": "Include health check"
+        },
+        "scanVulnerabilities": {
+          "type": "boolean",
+          "description": "Include vulnerability scanning"
+        }
+      }
+    },
+    "registry": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["docker-hub", "azure-acr", "gcr", "ecr", "github-ghcr", "private"],
+          "description": "Container registry type"
+        },
+        "url": {
+          "type": "string",
+          "description": "Registry URL (e.g., 'myregistry.azurecr.io')"
+        }
+      }
+    },
+    "deploymentTarget": {
+      "type": "string",
+      "enum": ["docker-compose", "kubernetes", "docker-swarm", "ecs", "cloud-run", "app-service", "standalone"],
+      "description": "Target deployment platform"
+    },
+    "includeCompose": {
+      "type": "boolean",
+      "description": "Generate docker-compose.yml"
+    },
+    "includeDotenv": {
+      "type": "boolean",
+      "description": "Generate .env.example file"
+    }
+  }
+}

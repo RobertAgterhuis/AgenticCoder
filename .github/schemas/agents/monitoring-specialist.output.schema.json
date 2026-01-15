@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/monitoring-specialist.output.schema.json",
+  "type": "object",
+  "title": "Monitoring Specialist Output",
+  "description": "Monitoring configuration",
+  "required": [
+    "config"
+  ],
+  "properties": {
+    "config": {
+      "type": "object"
+    }
+  }
+}

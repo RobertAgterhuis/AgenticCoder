@@ -1,0 +1,482 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sql-schema-design-skill.output.schema.json",
+  "title": "SQL Schema Design Skill Output Schema",
+  "description": "Output schema for sql-schema-design skill - defines generated DDL and schema guidance",
+  "type": "object",
+  "required": [
+    "status",
+    "ddl_scripts"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial_success",
+        "warning",
+        "error"
+      ]
+    },
+    "ddl_scripts": {
+      "type": "object",
+      "properties": {
+        "create_table_statements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "table_name": {
+                "type": "string"
+              },
+              "sql": {
+                "type": "string",
+                "description": "Complete CREATE TABLE statement",
+                "minLength": 100
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "nullable": {
+                      "type": "boolean"
+                    },
+                    "constraints": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "foreign_key_constraints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "constraint_name": {
+                "type": "string"
+              },
+              "from_table": {
+                "type": "string"
+              },
+              "to_table": {
+                "type": "string"
+              },
+              "sql": {
+                "type": "string",
+                "minLength": 50
+              },
+              "delete_behavior": {
+                "type": "string",
+                "enum": ["CASCADE", "RESTRICT", "SET NULL", "NO ACTION"]
+              }
+            }
+          }
+        },
+        "unique_constraints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "constraint_name": {
+                "type": "string"
+              },
+              "table_name": {
+                "type": "string"
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "sql": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "properties": {
+        "primary_key_indexes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Automatically created primary key indexes"
+          }
+        },
+        "foreign_key_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "sql": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "performance_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "type": {
+                "type": "string",
+                "enum": ["B-Tree", "Hash", "Clustered", "Non-Clustered", "Composite"]
+              },
+              "justification": {
+                "type": "string"
+              },
+              "sql": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "filtered_indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "table": {
+                "type": "string"
+              },
+              "filter_condition": {
+                "type": "string"
+              },
+              "sql": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "normalization": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["1NF", "2NF", "3NF", "BCNF"]
+        },
+        "analysis": {
+          "type": "string",
+          "description": "Explanation of normalization level and tradeoffs"
+        },
+        "anomalies_eliminated": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "insertion_anomalies",
+              "deletion_anomalies",
+              "update_anomalies",
+              "functional_dependencies"
+            ]
+          }
+        },
+        "denormalization_recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "location": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "expected_benefit": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "enterprise_patterns": {
+      "type": "object",
+      "properties": {
+        "audit_trail": {
+          "type": "object",
+          "properties": {
+            "implemented": {
+              "type": "boolean"
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["CreatedAt", "CreatedBy", "UpdatedAt", "UpdatedBy", "DeletedAt"]
+              }
+            },
+            "trigger_or_application": {
+              "type": "string",
+              "enum": ["trigger", "application"]
+            }
+          }
+        },
+        "soft_delete": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "deleted_at_column": {
+              "type": "string"
+            },
+            "query_filter_example": {
+              "type": "string",
+              "minLength": 50
+            }
+          }
+        },
+        "versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "strategy": {
+              "type": "string",
+              "enum": ["shadow_table", "temporal_table", "version_column"]
+            }
+          }
+        },
+        "partitioning": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "strategy": {
+              "type": "string",
+              "enum": ["range", "list", "hash"]
+            },
+            "partition_column": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "data_types": {
+      "type": "object",
+      "properties": {
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "recommended_type": {
+                "type": "string"
+              },
+              "why": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "decimal_vs_float": {
+          "type": "string",
+          "const": "Use DECIMAL(18,2) for currency, never FLOAT"
+        },
+        "date_vs_string": {
+          "type": "string",
+          "const": "Use DATE/DATETIME types, never VARCHAR for dates"
+        },
+        "string_lengths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "varchar_length": {
+                "type": "integer"
+              },
+              "justification": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "check_constraints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string"
+              },
+              "sql": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "default_values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "column": {
+                "type": "string"
+              },
+              "default_value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "migration_scripts": {
+      "type": "object",
+      "properties": {
+        "initial_migration": {
+          "type": "string",
+          "description": "Complete migration script to create initial schema"
+        },
+        "subsequent_migrations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Scripts for schema modifications"
+          }
+        }
+      }
+    },
+    "best_practices": {
+      "type": "object",
+      "properties": {
+        "naming_conventions": {
+          "type": "string",
+          "const": "Table_ColumnId format, PascalCase for table names, meaningful names"
+        },
+        "indexes_applied": {
+          "type": "boolean"
+        },
+        "constraints_comprehensive": {
+          "type": "boolean"
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "entity_relationship_diagram": {
+          "type": "string",
+          "description": "ASCII or description of ERD"
+        },
+        "table_descriptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "table_name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "syntax_errors": {
+          "type": "integer",
+          "default": 0
+        },
+        "normalization_level": {
+          "type": "string",
+          "enum": ["1NF", "2NF", "3NF", "BCNF"]
+        },
+        "index_coverage": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of foreign keys with indexes"
+        },
+        "foreign_key_integrity": {
+          "type": "boolean"
+        },
+        "no_unintended_anomalies": {
+          "type": "boolean"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@database-specialist.output.schema.json",
+  "title": "@database-specialist Agent Output Schema",
+  "description": "Output contract for the @database-specialist agent (Database Schema Design & Implementation)",
+  "type": "object",
+  "required": ["phase", "status", "artifacts"],
+  "properties": {
+    "phase": {
+      "type": "integer",
+      "const": 15,
+      "description": "Execution phase"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"],
+      "description": "Execution status"
+    },
+    "artifacts": {
+      "type": "object",
+      "required": ["ddl_scripts", "migrations"],
+      "properties": {
+        "ddl_scripts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "sql"],
+            "properties": {
+              "name": { "type": "string" },
+              "sql": { "type": "string" },
+              "type": { "type": "string", "enum": ["CREATE TABLE", "ALTER TABLE", "CREATE INDEX", "CREATE CONSTRAINT"] },
+              "depends_on": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "description": "Generated SQL DDL scripts"
+        },
+        "migrations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["version", "description"],
+            "properties": {
+              "version": { "type": "string" },
+              "description": { "type": "string" },
+              "up_sql": { "type": "string" },
+              "down_sql": { "type": "string" },
+              "created_at": { "type": "string", "format": "date-time" }
+            }
+          },
+          "description": "Database migration files"
+        },
+        "indexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "table": { "type": "string" },
+              "columns": { "type": "array", "items": { "type": "string" } },
+              "type": { "type": "string" },
+              "is_unique": { "type": "boolean" }
+            }
+          },
+          "description": "Generated indexes"
+        },
+        "orm_configurations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "framework": { "type": "string", "enum": ["Entity Framework Core", "TypeORM", "Prisma"] },
+              "files": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "description": "ORM configuration files"
+        },
+        "seed_data": {
+          "type": "object",
+          "properties": {
+            "tables": { "type": "array", "items": { "type": "string" } },
+            "seed_script": { "type": "string" }
+          },
+          "description": "Optional seed data"
+        }
+      }
+    },
+    "schema_validation": {
+      "type": "object",
+      "properties": {
+        "syntax_errors": { "type": "integer", "default": 0 },
+        "normalization_level": { "type": "string", "enum": ["1NF", "2NF", "3NF", "BCNF"] },
+        "foreign_key_integrity": { "type": "boolean" },
+        "index_coverage": { "type": "number", "minimum": 0, "maximum": 100 },
+        "n_plus_one_detected": { "type": "boolean", "default": false }
+      },
+      "description": "Schema validation results"
+    },
+    "tables_created": {
+      "type": "integer",
+      "description": "Number of tables generated"
+    },
+    "total_migrations": {
+      "type": "integer",
+      "description": "Number of migration files"
+    },
+    "indexes_created": {
+      "type": "integer",
+      "description": "Number of indexes created"
+    },
+    "next_phase": {
+      "type": "string",
+      "const": "@azure-devops-specialist",
+      "description": "Next agent in pipeline"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+          "message": { "type": "string" }
+        }
+      },
+      "description": "Any errors or warnings during generation"
+    }
+  }
+}

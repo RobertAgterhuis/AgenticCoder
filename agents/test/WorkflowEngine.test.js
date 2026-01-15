@@ -1,0 +1,440 @@
+import { describe, it, before, after } from 'node:test';
+import assert from 'node:assert';
+import { WorkflowEngine } from '../core/WorkflowEngine.js';
+import { AgentRegistry } from '../core/AgentRegistry.js';
+import { BaseAgent } from '../core/BaseAgent.js';
+
+// Mock agents for testing
+class MockAgent extends BaseAgent {
+  constructor(id, executeFunc) {
+    const definition = {
+      id,
+      name: `Mock Agent ${id}`,
+      version: '1.0.0',
+      type: 'task',
+      inputs: { type: 'object' },
+      outputs: { type: 'object' }
+    };
+    super(definition);
+    this.executeFunc = executeFunc;
+  }
+
+  async _onExecute(input) {
+    if (this.executeFunc) {
+      return await this.executeFunc(input);
+    }
+    return { result: 'ok', input };
+  }
+}
+
+describe('WorkflowEngine', () => {
+  let registry;
+  let workflowEngine;
+
+  before(async () => {
+    // Initial setup
+  });
+
+  after(async () => {
+    // Final cleanup
+  });
+
+  it('should register and retrieve workflow', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const agent = new MockAgent('test-agent');
+    await agent.initialize();
+    registry.register(agent);
+
+    const workflow = {
+      id: 'test-workflow',
+      name: 'Test Workflow',
+      version: '1.0.0',
+      steps: [
+        { id: 'step1', agentId: 'test-agent', inputs: {} }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    assert.strictEqual(workflowEngine.workflows.has('test-workflow'), true);
+
+    await registry.clear();
+  });
+
+  it('should execute simple workflow with single step', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const agent = new MockAgent('agent1', (input) => {
+      return { value: input.value * 2 };
+    });
+    
+    await agent.initialize();
+    registry.register(agent);
+
+    const workflow = {
+      id: 'simple-workflow',
+      name: 'Simple Workflow',
+      version: '1.0.0',
+      steps: [
+        {
+          id: 'double',
+          agentId: 'agent1',
+          inputs: { value: '$input.value' }
+        }
+      ],
+      outputs: {
+        result: '$steps.double.output.value'
+      }
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('simple-workflow', { value: 5 });
+
+    assert.strictEqual(result.status, 'completed');
+    assert.strictEqual(result.outputs.result, 10);
+
+    await registry.clear();
+  });
+
+  it('should execute workflow with multiple steps in dependency order', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const executionOrder = [];
+
+    const agent1 = new MockAgent('agent1', async (input) => {
+      executionOrder.push('agent1');
+      return { value: 10 };
+    });
+
+    const agent2 = new MockAgent('agent2', async (input) => {
+      executionOrder.push('agent2');
+      return { value: input.value + 5 };
+    });
+
+    const agent3 = new MockAgent('agent3', async (input) => {
+      executionOrder.push('agent3');
+      return { value: input.value * 2 };
+    });
+
+    await agent1.initialize();
+    await agent2.initialize();
+    await agent3.initialize();
+    
+    registry.register(agent1);
+    registry.register(agent2);
+    registry.register(agent3);
+
+    const workflow = {
+      id: 'multi-step',
+      name: 'Multi-step Workflow',
+      version: '1.0.0',
+      steps: [
+        {
+          id: 'step1',
+          agentId: 'agent1',
+          inputs: {}
+        },
+        {
+          id: 'step2',
+          agentId: 'agent2',
+          dependsOn: ['step1'],
+          inputs: { value: '$steps.step1.output.value' }
+        },
+        {
+          id: 'step3',
+          agentId: 'agent3',
+          dependsOn: ['step2'],
+          inputs: { value: '$steps.step2.output.value' }
+        }
+      ],
+      outputs: {
+        final: '$steps.step3.output.value'
+      }
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('multi-step', {});
+
+    assert.strictEqual(result.status, 'completed');
+    assert.strictEqual(result.outputs.final, 30); // (10 + 5) * 2
+    assert.deepStrictEqual(executionOrder, ['agent1', 'agent2', 'agent3']);
+
+    await registry.clear();
+  });
+
+  it('should skip step with false condition', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const executionOrder = [];
+
+    const agent1 = new MockAgent('cond-agent1', async () => {
+      executionOrder.push('agent1');
+      return { shouldContinue: false };
+    });
+
+    const agent2 = new MockAgent('cond-agent2', async () => {
+      executionOrder.push('agent2');
+      return { value: 'executed' };
+    });
+
+    await agent1.initialize();
+    await agent2.initialize();
+    
+    registry.register(agent1);
+    registry.register(agent2);
+
+    const workflow = {
+      id: 'conditional',
+      name: 'Conditional Workflow',
+      version: '1.0.0',
+      steps: [
+        {
+          id: 'check',
+          agentId: 'cond-agent1',
+          inputs: {}
+        },
+        {
+          id: 'conditional-step',
+          agentId: 'cond-agent2',
+          dependsOn: ['check'],
+          condition: '$steps.check.output.shouldContinue === true',
+          inputs: {}
+        }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('conditional', {});
+
+    assert.strictEqual(result.status, 'completed');
+    assert.deepStrictEqual(executionOrder, ['agent1']); // agent2 should be skipped
+
+    await registry.clear();
+  });
+
+  it('should handle step failure with stop strategy', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    const failingAgent = new MockAgent('failing-agent', async () => {
+      throw new Error('Intentional failure');
+    });
+
+    await failingAgent.initialize();
+    registry.register(failingAgent);
+
+    const workflow = {
+      id: 'failing-workflow',
+      name: 'Failing Workflow',
+      version: '1.0.0',
+      steps: [
+        {
+          id: 'fail',
+          agentId: 'failing-agent',
+          inputs: {},
+          onError: 'stop'
+        }
+      ],
+      errorHandling: {
+        strategy: 'stop'
+      }
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+
+    await assert.rejects(
+      workflowEngine.execute('failing-workflow', {}),
+      /Intentional failure/
+    );
+
+    await registry.clear();
+  });
+
+  it('should retry failed step', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    let attemptCount = 0;
+
+    const retryAgent = new MockAgent('retry-agent', async () => {
+      attemptCount++;
+      if (attemptCount < 3) {
+        throw new Error('Temporary failure');
+      }
+      return { success: true };
+    });
+
+    await retryAgent.initialize();
+    registry.register(retryAgent);
+
+    const workflow = {
+      id: 'retry-workflow',
+      name: 'Retry Workflow',
+      version: '1.0.0',
+      steps: [
+        {
+          id: 'retry-step',
+          agentId: 'retry-agent',
+          inputs: {},
+          retry: {
+            maxRetries: 3,
+            backoffMs: 10
+          }
+        }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('retry-workflow', {});
+
+    assert.strictEqual(result.status, 'completed');
+    assert.strictEqual(attemptCount, 3);
+
+    await registry.clear();
+  });
+
+  it('should detect circular dependencies', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const agent = new MockAgent('circular-agent');
+    await agent.initialize();
+    registry.register(agent);
+
+    const workflow = {
+      id: 'circular',
+      name: 'Circular Workflow',
+      version: '1.0.0',
+      steps: [
+        {
+          id: 'step1',
+          agentId: 'circular-agent',
+          dependsOn: ['step2'],
+          inputs: {}
+        },
+        {
+          id: 'step2',
+          agentId: 'circular-agent',
+          dependsOn: ['step1'],
+          inputs: {}
+        }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+
+    await assert.rejects(
+      workflowEngine.execute('circular', {}),
+      /circular dependency/i
+    );
+
+    await registry.clear();
+  });
+
+  it('should aggregate outputs from multiple steps', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const agent1 = new MockAgent('output1', async () => ({ name: 'Alice' }));
+    const agent2 = new MockAgent('output2', async () => ({ age: 30 }));
+    const agent3 = new MockAgent('output3', async () => ({ city: 'Seattle' }));
+
+    await agent1.initialize();
+    await agent2.initialize();
+    await agent3.initialize();
+    
+    registry.register(agent1);
+    registry.register(agent2);
+    registry.register(agent3);
+
+    const workflow = {
+      id: 'aggregate',
+      name: 'Output Aggregation',
+      version: '1.0.0',
+      steps: [
+        { id: 'get-name', agentId: 'output1', inputs: {} },
+        { id: 'get-age', agentId: 'output2', inputs: {} },
+        { id: 'get-city', agentId: 'output3', inputs: {} }
+      ],
+      outputs: {
+        name: '$steps.get-name.output.name',
+        age: '$steps.get-age.output.age',
+        city: '$steps.get-city.output.city'
+      }
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('aggregate', {});
+
+    assert.strictEqual(result.outputs.name, 'Alice');
+    assert.strictEqual(result.outputs.age, 30);
+    assert.strictEqual(result.outputs.city, 'Seattle');
+
+    await registry.clear();
+  });
+
+  it('should track workflow execution state', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    const agent = new MockAgent('track-agent', async (input) => {
+      return { processed: true };
+    });
+
+    await agent.initialize();
+    registry.register(agent);
+
+    const workflow = {
+      id: 'tracked',
+      name: 'Tracked Workflow',
+      version: '1.0.0',
+      steps: [
+        { id: 'process', agentId: 'track-agent', inputs: { data: 'test' } }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('tracked', {});
+
+    // Get execution details
+    const execution = workflowEngine.getExecution(result.executionId);
+    
+    assert.strictEqual(execution.status, 'completed');
+    assert.strictEqual(execution.stepResults.length, 1);
+    assert.strictEqual(execution.stepResults[0].status, 'success');
+    assert.strictEqual(execution.stepResults[0].stepId, 'process');
+
+    await registry.clear();
+  });
+
+  it('should list all workflow executions', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+    
+    const agent = new MockAgent('list-agent');
+    await agent.initialize();
+    registry.register(agent);
+
+    const workflow = {
+      id: 'list-test',
+      name: 'List Test',
+      version: '1.0.0',
+      steps: [
+        { id: 'step', agentId: 'list-agent', inputs: {} }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    
+    // Execute multiple times
+    await workflowEngine.execute('list-test', {});
+    await workflowEngine.execute('list-test', {});
+
+    const executions = workflowEngine.listExecutions('list-test');
+    assert.strictEqual(executions.length >= 2, true);
+
+    await registry.clear();
+  });
+});

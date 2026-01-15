@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "react-patterns-skill.input.schema.json",
+  "title": "React Patterns Skill Input Schema",
+  "description": "Input schema for react-patterns skill - defines what information the skill needs to provide pattern guidance",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "agent_id",
+    "context",
+    "question"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "react-patterns",
+      "description": "Must be 'react-patterns'"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@react-specialist$",
+      "description": "Agent requesting the skill"
+    },
+    "context": {
+      "type": "object",
+      "required": ["phase", "project_id"],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "const": 13,
+          "description": "Phase where skill is being applied"
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^proj-"
+        },
+        "component_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "team_experience": {
+          "type": "string",
+          "enum": ["junior", "intermediate", "senior"],
+          "description": "Expected team experience level"
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "best_practice",
+            "pattern_recommendation",
+            "anti_pattern_check",
+            "optimization",
+            "architecture_guidance"
+          ]
+        },
+        "pattern_type": {
+          "type": "string",
+          "enum": [
+            "functional_components",
+            "hooks_composition",
+            "render_props",
+            "compound_components",
+            "hoc",
+            "container_presentational",
+            "custom_hooks",
+            "error_handling",
+            "performance",
+            "general"
+          ]
+        },
+        "component_scenario": {
+          "type": "string",
+          "description": "Description of the component scenario (e.g., 'complex form with validation', 'list with filtering')"
+        },
+        "current_code": {
+          "type": "string",
+          "description": "Current code snippet to review (optional)"
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "Technology dependencies in use",
+          "items": {
+            "type": "string",
+            "enum": [
+              "redux",
+              "zustand",
+              "context-api",
+              "react-query",
+              "swr",
+              "react-router",
+              "typescript",
+              "tailwind",
+              "material-ui",
+              "jest",
+              "vitest",
+              "react-testing-library",
+              "enzyme"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "description": "Project constraints",
+          "items": {
+            "type": "string",
+            "enum": [
+              "performance_critical",
+              "accessibility_required",
+              "legacy_browser_support",
+              "bundle_size_sensitive",
+              "rapid_development",
+              "long_term_maintenance"
+            ]
+          }
+        }
+      }
+    },
+    "quality_requirements": {
+      "type": "object",
+      "properties": {
+        "typescript_required": {
+          "type": "boolean"
+        },
+        "test_coverage_target": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 80
+        },
+        "accessibility_level": {
+          "type": "string",
+          "enum": ["A", "AA", "AAA"],
+          "default": "AA"
+        },
+        "performance_metrics": {
+          "type": "object",
+          "properties": {
+            "max_component_complexity": {
+              "type": "number",
+              "description": "Cyclomatic complexity threshold"
+            },
+            "bundle_size_limit_kb": {
+              "type": "number"
+            },
+            "render_time_ms": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  }
+}

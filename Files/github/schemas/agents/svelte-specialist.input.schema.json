@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Svelte Specialist Agent Input",
+  "description": "Input schema for svelte-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectName": { "type": "string", "description": "Name of the Svelte project" },
+    "appType": {
+      "type": "string",
+      "enum": ["spa", "sveltekit", "hybrid", "ssr"],
+      "description": "Type of Svelte application"
+    },
+    "features": {
+      "type": "array",
+      "description": "Features to implement",
+      "items": {
+        "type": "string",
+        "enum": ["routing", "ssr", "api-integration", "state-management", "testing", "authentication"]
+      }
+    },
+    "stateManagement": {
+      "type": "string",
+      "enum": ["stores", "context", "pinia", "none"],
+      "description": "State management approach"
+    }
+  },
+  "required": ["projectName", "appType"]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Angular Component Patterns Skill Output",
+  "description": "Output schema for angular-component-patterns skill",
+  "type": "object",
+  "properties": {
+    "generatedComponents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "templateCode": { "type": "string" },
+          "componentCode": { "type": "string" },
+          "styleCode": { "type": "string" }
+        }
+      }
+    },
+    "patterns": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "annotations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "component": { "type": "string" },
+          "annotation": { "type": "string" }
+        }
+      }
+    }
+  },
+  "required": ["generatedComponents"]
+}

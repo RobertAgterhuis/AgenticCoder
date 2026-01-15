@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@reporter.input.schema.json",
+  "title": "@reporter Agent Input Schema",
+  "description": "Input contract for the @reporter agent (Progress & Reporting Specialist)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@qa"],
+      "description": "@reporter agent is triggered by @qa"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 5,
+      "description": "@reporter agent runs in phase 5 (reporting & tracking)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["project_plan_folder", "team_size"],
+      "properties": {
+        "project_plan_folder": {
+          "type": "string",
+          "description": "Path to ProjectPlan folder",
+          "pattern": "^.*ProjectPlan/?$"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phase_number": {"type": "integer"},
+              "name": {"type": "string"},
+              "duration_days": {"type": "integer"}
+            }
+          },
+          "description": "Implementation phases"
+        },
+        "team_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Number of team members"
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "role": {"type": "string"},
+              "reporting_frequency": {
+                "type": "string",
+                "enum": ["daily", "weekly", "bi-weekly", "monthly"]
+              }
+            }
+          },
+          "description": "Stakeholders who need reporting"
+        },
+        "reporting_frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "bi-weekly", "monthly"],
+          "default": "weekly",
+          "description": "Default reporting cadence"
+        },
+        "metrics_to_track": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "code_coverage",
+              "defect_rate",
+              "velocity",
+              "uptime",
+              "performance",
+              "budget",
+              "timeline",
+              "team_capacity"
+            ]
+          },
+          "description": "Which metrics to monitor"
+        }
+      }
+    }
+  }
+}

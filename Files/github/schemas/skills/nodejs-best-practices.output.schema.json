@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node.js Best Practices Skill Output",
+  "description": "Output schema for nodejs-best-practices skill",
+  "type": "object",
+  "properties": {
+    "practices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "category": { "type": "string" },
+          "good": { "type": "string" },
+          "bad": { "type": "string" },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "checklist": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["practices"]
+}

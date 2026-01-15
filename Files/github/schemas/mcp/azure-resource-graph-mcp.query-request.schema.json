@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/azure-resource-graph-mcp.query-request.schema.json",
+  "title": "Azure Resource Graph MCP - Query Request Schema",
+  "description": "Request schema for querying Azure resources using KQL",
+  "type": "object",
+  "required": ["query"],
+  "properties": {
+    "query": {
+      "type": "string",
+      "minLength": 5,
+      "description": "KQL (Kusto Query Language) query to execute"
+    },
+    "subscriptions": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Subscription IDs to query (empty = all subscriptions)"
+    },
+    "management_groups": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Management group IDs to query"
+    },
+    "skip": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Number of results to skip (pagination)"
+    },
+    "first": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000,
+      "default": 100,
+      "description": "Maximum number of results"
+    }
+  }
+}

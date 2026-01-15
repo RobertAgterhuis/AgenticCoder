@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/artifacts/phase1-requirements.schema.json",
+  "title": "Phase 1 Requirements Artifact Schema",
+  "description": "Schema for Phase 1 output: requirements documentation created by @doc agent",
+  "type": "object",
+  "required": ["artifact_type", "phase", "created_by", "documents"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "phase1-requirements",
+      "description": "Artifact type identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 1,
+      "description": "Phase number"
+    },
+    "created_by": {
+      "type": "string",
+      "const": "@doc",
+      "description": "Agent that created this artifact"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Creation timestamp"
+    },
+    "documents": {
+      "type": "object",
+      "required": ["context", "architecture", "appendix"],
+      "properties": {
+        "context": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path", "section"],
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"},
+              "section": {
+                "type": "string",
+                "enum": [
+                  "executive-summary",
+                  "scope",
+                  "stakeholders",
+                  "requirements",
+                  "compliance",
+                  "domain-model",
+                  "glossary",
+                  "governance"
+                ]
+              },
+              "word_count": {"type": "integer", "minimum": 0}
+            }
+          },
+          "minItems": 4,
+          "description": "Context documents (minimum 4, up to 17 based on project type)"
+        },
+        "architecture": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path", "section"],
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"},
+              "section": {
+                "type": "string",
+                "enum": [
+                  "system-overview",
+                  "data-flow",
+                  "deployment",
+                  "ui-architecture",
+                  "api-design",
+                  "integration",
+                  "security",
+                  "observability",
+                  "mobile"
+                ]
+              },
+              "word_count": {"type": "integer", "minimum": 0}
+            }
+          },
+          "minItems": 3,
+          "description": "Architecture documents (minimum 3, up to 18 based on tech stack)"
+        },
+        "appendix": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "path"],
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"},
+              "word_count": {"type": "integer", "minimum": 0}
+            }
+          },
+          "minItems": 1,
+          "maxItems": 1,
+          "description": "Appendix (always 1 document)"
+        }
+      },
+      "description": "All documentation created in Phase 1"
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total_documents", "total_words"],
+      "properties": {
+        "total_documents": {
+          "type": "integer",
+          "minimum": 8,
+          "description": "Total number of documents created"
+        },
+        "total_words": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total word count across all documents"
+        },
+        "documentation_scope": {
+          "type": "string",
+          "enum": ["minimal", "balanced", "comprehensive"]
+        },
+        "quality_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Quality score (0-100) based on completeness, consistency, specificity"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "no_placeholders": {"type": "boolean"},
+        "all_links_valid": {"type": "boolean"},
+        "examples_included": {"type": "boolean"},
+        "consistent_terminology": {"type": "boolean"},
+        "aligned_with_goals": {"type": "boolean"}
+      },
+      "description": "Validation results from quality checklist"
+    }
+  }
+}

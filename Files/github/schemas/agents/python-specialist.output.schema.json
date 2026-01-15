@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Python Specialist Agent Output",
+  "description": "Output schema for python-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectStructure": { "type": "object" },
+    "mainModules": { "type": "array", "items": { "type": "object" } },
+    "configuration": { "type": "object" }
+  },
+  "required": ["projectStructure"]
+}

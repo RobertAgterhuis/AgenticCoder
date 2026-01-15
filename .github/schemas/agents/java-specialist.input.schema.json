@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/java-specialist.input.schema.json",
+  "type": "object",
+  "title": "Java Specialist Input",
+  "description": "Generate Java backend code",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "java_version": {
+      "type": "string"
+    },
+    "framework": {
+      "type": "string"
+    }
+  }
+}

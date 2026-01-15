@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/react-specialist.input.schema.json",
+  "type": "object",
+  "title": "React Specialist Input",
+  "description": "Generate React application code",
+  "required": [
+    "requirements",
+    "component_specs"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "component_specs": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "styling_framework": {
+      "type": "string"
+    },
+    "state_management": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/azure-principal-architect.input.schema.json",
+  "type": "object",
+  "title": "Azure Principal Architect Input",
+  "description": "Design Azure cloud architecture",
+  "required": [
+    "requirements",
+    "project_context"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "project_context": {
+      "type": "object",
+      "properties": {
+        "organization": {
+          "type": "string"
+        },
+        "budget": {
+          "type": "number"
+        },
+        "timeline": {
+          "type": "string"
+        }
+      }
+    },
+    "workload_characteristics": {
+      "type": "object"
+    }
+  }
+}

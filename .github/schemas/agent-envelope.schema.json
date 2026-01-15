@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agent-envelope.schema.json",
+  "title": "Agent Message Envelope",
+  "description": "Standard wrapper for all agent input/output messages",
+  "type": "object",
+  "required": ["version", "agent_id", "phase", "timestamp", "content"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version (semver)"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Unique agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12,
+      "description": "Current workflow phase (1-12)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "content": {
+      "type": "object",
+      "description": "Agent-specific payload"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Execution metadata",
+      "properties": {
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Execution time in milliseconds"
+        },
+        "tokens_used": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total tokens consumed"
+        },
+        "mcp_calls": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of MCP tools called"
+        },
+        "errors": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Any errors encountered"
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of retries performed"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/bicep-plan.output.schema.json",
+  "type": "object",
+  "title": "Bicep Plan Agent Output",
+  "description": "Bicep template structure and planning",
+  "required": [
+    "bicep_plan"
+  ],
+  "properties": {
+    "bicep_plan": {
+      "type": "object",
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "outputs": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

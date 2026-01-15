@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/bicep-implement.output.schema.json",
+  "type": "object",
+  "title": "Bicep Implement Agent Output",
+  "description": "Generated Bicep templates",
+  "required": [
+    "files"
+  ],
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

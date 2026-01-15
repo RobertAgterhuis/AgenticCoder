@@ -1,0 +1,325 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "entity-framework-skill.output.schema.json",
+  "title": "Entity Framework Skill Output Schema",
+  "description": "Output schema for entity-framework skill - defines generated DbContext and repository code",
+  "type": "object",
+  "required": [
+    "status",
+    "dbcontext_code"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial_success",
+        "warning",
+        "error"
+      ]
+    },
+    "dbcontext_code": {
+      "type": "object",
+      "properties": {
+        "class_name": {
+          "type": "string",
+          "description": "Generated DbContext class name"
+        },
+        "code": {
+          "type": "string",
+          "description": "Complete C# DbContext class",
+          "minLength": 200
+        },
+        "dbsets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "DbSet<T> property definitions"
+          }
+        },
+        "fluent_api_configuration": {
+          "type": "string",
+          "description": "OnModelCreating fluent API configuration",
+          "minLength": 100
+        },
+        "relationships_configured": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "relationship": {
+                "type": "string"
+              },
+              "navigation_properties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "foreign_key_defined": {
+                "type": "boolean"
+              },
+              "delete_behavior": {
+                "type": "string",
+                "enum": ["Cascade", "Restrict", "SetNull", "NoAction"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "entity_definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "description": "Complete entity class definition",
+            "minLength": 100
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "is_key": {
+                  "type": "boolean"
+                },
+                "is_navigation": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "data_annotations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "[Key]",
+                "[Required]",
+                "[MaxLength(...)]",
+                "[ConcurrencyCheck]",
+                "[NotMapped]",
+                "[Table(...)]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "repository_pattern": {
+      "type": "object",
+      "properties": {
+        "include_repositories": {
+          "type": "boolean",
+          "description": "Include generic repository pattern"
+        },
+        "base_repository_code": {
+          "type": "string",
+          "description": "Generic repository implementation",
+          "minLength": 150
+        },
+        "repository_implementations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity_name": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string",
+                "minLength": 50
+              },
+              "custom_methods": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "unit_of_work_pattern": {
+      "type": "object",
+      "properties": {
+        "include_uow": {
+          "type": "boolean"
+        },
+        "uow_interface": {
+          "type": "string",
+          "description": "IUnitOfWork interface definition",
+          "minLength": 100
+        },
+        "uow_implementation": {
+          "type": "string",
+          "description": "UnitOfWork class implementation",
+          "minLength": 150
+        },
+        "transaction_handling": {
+          "type": "string",
+          "description": "BeginTransaction/SaveChanges patterns"
+        }
+      }
+    },
+    "query_optimization": {
+      "type": "object",
+      "properties": {
+        "eager_loading_examples": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Include/ThenInclude examples"
+          }
+        },
+        "projection_examples": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Select to DTO examples"
+          }
+        },
+        "asnotracking_guidelines": {
+          "type": "string",
+          "description": "When to use AsNoTracking for read-only operations"
+        },
+        "pagination_pattern": {
+          "type": "string",
+          "description": "Skip/Take pagination example",
+          "minLength": 50
+        },
+        "filtering_guidelines": {
+          "type": "string",
+          "description": "Server-side filtering best practices"
+        }
+      }
+    },
+    "migration_guidance": {
+      "type": "object",
+      "properties": {
+        "initial_migration_command": {
+          "type": "string",
+          "description": "Add-Migration command"
+        },
+        "migration_code_template": {
+          "type": "string",
+          "description": "Example migration class",
+          "minLength": 100
+        },
+        "data_migration_support": {
+          "type": "boolean"
+        },
+        "rollback_strategy": {
+          "type": "string",
+          "description": "Update-Database reversal patterns"
+        }
+      }
+    },
+    "change_tracking": {
+      "type": "object",
+      "properties": {
+        "auto_timestamp_pattern": {
+          "type": "string",
+          "description": "Automatically set CreatedAt/UpdatedAt"
+        },
+        "soft_delete_pattern": {
+          "type": "string",
+          "description": "Soft delete query filter example",
+          "minLength": 50
+        },
+        "audit_trail_pattern": {
+          "type": "string",
+          "description": "Audit logging implementation"
+        }
+      }
+    },
+    "best_practices": {
+      "type": "object",
+      "properties": {
+        "anti_patterns_avoided": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "No N+1 queries",
+              "Tracking disabled for read-only",
+              "No lazy loading without explicit Include",
+              "Filtering before ToList",
+              "Appropriate delete behaviors set"
+            ]
+          }
+        },
+        "performance_tips": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "testing_guidance": {
+      "type": "object",
+      "properties": {
+        "unit_test_template": {
+          "type": "string",
+          "description": "In-memory database test setup",
+          "minLength": 100
+        },
+        "mock_strategy": {
+          "type": "string",
+          "description": "Mocking DbContext for unit tests"
+        },
+        "integration_test_pattern": {
+          "type": "string",
+          "description": "Real database testing approach"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "compilation_errors": {
+          "type": "integer",
+          "default": 0
+        },
+        "foreign_key_integrity": {
+          "type": "boolean",
+          "description": "All relationships properly configured"
+        },
+        "index_coverage": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of foreign keys indexed"
+        },
+        "migration_valid": {
+          "type": "boolean",
+          "description": "Migration scripts are valid SQL"
+        },
+        "no_n_plus_one": {
+          "type": "boolean",
+          "description": "Query patterns avoid N+1 queries"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

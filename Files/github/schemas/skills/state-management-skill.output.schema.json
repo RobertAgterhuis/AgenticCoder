@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "state-management-skill.output.schema.json",
+  "title": "State Management Skill Output Schema",
+  "description": "Output schema for state-management skill - defines recommended state management solutions",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "status",
+    "recommendation"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "state-management",
+      "description": "Skill identifier"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "multiple_options", "warning", "error"]
+    },
+    "recommendation": {
+      "type": "object",
+      "required": ["tool", "rationale"],
+      "properties": {
+        "tool": {
+          "type": "string",
+          "enum": [
+            "useState",
+            "useContext",
+            "useReducer",
+            "redux",
+            "zustand",
+            "jotai",
+            "recoil",
+            "mobx",
+            "combination"
+          ],
+          "description": "Recommended state management solution"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 100,
+          "description": "Why this solution fits the requirements"
+        },
+        "best_for": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "What this solution excels at"
+        },
+        "not_suitable_for": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Scenarios where this isn't ideal"
+        }
+      }
+    },
+    "setup_guide": {
+      "type": "object",
+      "properties": {
+        "installation": {
+          "type": "string",
+          "description": "npm/yarn installation command"
+        },
+        "basic_setup": {
+          "type": "string",
+          "description": "Minimal configuration code"
+        },
+        "typescript_support": {
+          "type": "string",
+          "description": "TypeScript configuration notes"
+        },
+        "complexity_estimate": {
+          "type": "string",
+          "enum": ["simple", "moderate", "complex"],
+          "description": "How complex is the setup"
+        },
+        "setup_time_minutes": {
+          "type": "integer",
+          "description": "Estimated setup time in minutes"
+        }
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "properties": {
+        "store_structure": {
+          "type": "string",
+          "description": "Recommended store/state structure"
+        },
+        "organization_pattern": {
+          "type": "string",
+          "enum": [
+            "flat",
+            "domain-driven",
+            "feature-based",
+            "slice-based"
+          ],
+          "description": "Recommended state organization"
+        },
+        "scalability_notes": {
+          "type": "string",
+          "description": "How this scales with app growth"
+        }
+      }
+    },
+    "performance_characteristics": {
+      "type": "object",
+      "properties": {
+        "bundle_size_kb": {
+          "type": "number",
+          "description": "Approximate bundle size in KB"
+        },
+        "re_render_optimization": {
+          "type": "string",
+          "enum": ["automatic", "manual", "both"],
+          "description": "How to prevent unnecessary re-renders"
+        },
+        "state_update_efficiency": {
+          "type": "string",
+          "enum": ["excellent", "good", "fair"],
+          "description": "Efficiency of state updates"
+        },
+        "devtools_support": {
+          "type": "boolean",
+          "description": "Has browser DevTools extension"
+        },
+        "time_travel_debugging": {
+          "type": "boolean",
+          "description": "Supports time-travel debugging"
+        }
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tool": {
+            "type": "string"
+          },
+          "when_to_use": {
+            "type": "string"
+          },
+          "comparison": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Alternative solutions and when to use them"
+    },
+    "migration_path": {
+      "type": "object",
+      "properties": {
+        "from_current": {
+          "type": "string",
+          "description": "How to migrate from current solution"
+        },
+        "incremental_adoption": {
+          "type": "boolean",
+          "description": "Can be adopted gradually"
+        },
+        "effort_estimate": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        }
+      }
+    },
+    "common_patterns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Recommended patterns for this solution"
+    },
+    "pitfalls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Common mistakes with this solution"
+    },
+    "testing_approach": {
+      "type": "string",
+      "description": "How to test state with this solution"
+    },
+    "team_learning_curve": {
+      "type": "object",
+      "properties": {
+        "estimated_weeks": {
+          "type": "number"
+        },
+        "recommended_resources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "fit_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "How well this fits the requirements (0-100)"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

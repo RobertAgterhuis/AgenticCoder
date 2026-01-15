@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/plan.output.schema.json",
+  "type": "object",
+  "title": "Requirements Planner Agent Output",
+  "description": "Structured requirements document and analysis",
+  "required": [
+    "requirements",
+    "artifacts_created"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object",
+      "properties": {
+        "functional_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "non_functional_requirements": {
+          "type": "object",
+          "properties": {
+            "availability": {
+              "type": "number"
+            },
+            "scalability": {
+              "type": "string"
+            },
+            "security": {
+              "type": "string"
+            },
+            "compliance": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "artifacts_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "filename": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

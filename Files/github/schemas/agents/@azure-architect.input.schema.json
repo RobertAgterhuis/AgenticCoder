@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@azure-architect.input.schema.json",
+  "title": "@azure-architect Agent Input Schema",
+  "description": "Input contract for the @azure-architect agent (Azure Infrastructure Design)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@architect"],
+      "description": "@azure-architect agent is triggered by @architect"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 8,
+      "description": "@azure-architect agent runs in phase 8 (Azure infrastructure)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["architecture_decisions", "deployment_target"],
+      "properties": {
+        "architecture_decisions": {
+          "type": "array",
+          "items": {"type": "object"},
+          "description": "Architecture decisions from @architect"
+        },
+        "deployment_target": {
+          "type": "string",
+          "const": "Azure",
+          "description": "Must be Azure for this agent"
+        },
+        "technology_choices": {
+          "type": "object",
+          "properties": {
+            "frontend": {"type": "string"},
+            "backend": {"type": "string"},
+            "database": {"type": "string"}
+          }
+        },
+        "scalability_requirements": {
+          "type": "object",
+          "properties": {
+            "expected_users": {"type": "integer"},
+            "expected_requests_per_second": {"type": "integer"},
+            "data_volume_gb": {"type": "integer"}
+          }
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "monthly_limit": {"type": "number"},
+            "currency": {"type": "string", "default": "USD"}
+          }
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["dev", "staging", "production"]
+          },
+          "default": ["dev", "production"]
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["GDPR", "HIPAA", "SOC2", "PCI-DSS", "None"]
+          },
+          "description": "Regulatory compliance needs"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "entity-framework-skill.input.schema.json",
+  "title": "Entity Framework Skill Input Schema",
+  "description": "Input schema for entity-framework skill - defines what information needed for data access guidance",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "agent_id",
+    "context",
+    "question"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "entity-framework",
+      "description": "Must be 'entity-framework'"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@dotnet-specialist$"
+    },
+    "context": {
+      "type": "object",
+      "required": ["phase", "project_id"],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "const": 14
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^proj-"
+        },
+        "efcore_version": {
+          "type": "string",
+          "enum": ["6.0", "7.0", "8.0"]
+        },
+        "database_system": {
+          "type": "string",
+          "enum": ["SqlServer", "PostgreSQL", "MySQL", "SQLite", "Cosmos"]
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "relationship_modeling",
+            "query_optimization",
+            "migration_strategy",
+            "change_tracking",
+            "performance_tuning",
+            "transaction_handling",
+            "unit_of_work_pattern"
+          ]
+        },
+        "entities_to_model": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "properties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "is_key": {
+                      "type": "boolean"
+                    },
+                    "is_required": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "string",
+                "description": "Source entity"
+              },
+              "to": {
+                "type": "string",
+                "description": "Target entity"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["one_to_one", "one_to_many", "many_to_many"]
+              },
+              "cascade_delete": {
+                "type": "boolean"
+              },
+              "navigation_property": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "query_requirements": {
+          "type": "object",
+          "properties": {
+            "typical_query": {
+              "type": "string",
+              "description": "Description of typical query pattern"
+            },
+            "large_result_sets": {
+              "type": "boolean"
+            },
+            "needs_pagination": {
+              "type": "boolean"
+            },
+            "needs_filtering": {
+              "type": "boolean"
+            }
+          }
+        },
+        "migration_scope": {
+          "type": "string",
+          "enum": ["new_project", "add_tables", "modify_schema", "data_migration"]
+        }
+      }
+    },
+    "performance_constraints": {
+      "type": "object",
+      "properties": {
+        "query_time_ms": {
+          "type": "integer",
+          "description": "Target query response time in milliseconds"
+        },
+        "number_of_entities": {
+          "type": "integer",
+          "description": "Typical number of entities to load"
+        },
+        "concurrent_operations": {
+          "type": "integer",
+          "description": "Expected concurrent database operations"
+        },
+        "memory_constraints": {
+          "type": "boolean",
+          "description": "Strict memory usage requirements"
+        }
+      }
+    },
+    "architectural_context": {
+      "type": "object",
+      "properties": {
+        "repository_pattern": {
+          "type": "boolean",
+          "description": "Use repository abstraction layer"
+        },
+        "unit_of_work_pattern": {
+          "type": "boolean",
+          "description": "Implement Unit of Work pattern"
+        },
+        "database_first": {
+          "type": "boolean",
+          "description": "Database-first vs. code-first"
+        },
+        "soft_delete_required": {
+          "type": "boolean"
+        },
+        "audit_trail_required": {
+          "type": "boolean"
+        },
+        "multi_tenancy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "team_context": {
+      "type": "object",
+      "properties": {
+        "ef_experience": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"]
+        },
+        "complex_queries_required": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

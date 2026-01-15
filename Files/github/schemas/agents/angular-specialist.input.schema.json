@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.dev/schemas/agents/angular-specialist.input.schema.json",
+  "title": "Angular Specialist Agent Input Schema",
+  "type": "object",
+  "required": ["application_requirements", "api_specification"],
+  "properties": {
+    "application_requirements": {
+      "type": "object",
+      "required": ["application_type", "features"],
+      "properties": {
+        "application_type": {
+          "type": "string",
+          "enum": ["spa", "pwa", "ssr"]
+        },
+        "features": {
+          "type": "array",
+          "items": {"type": "string"},
+          "minItems": 1
+        },
+        "target_browsers": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": ["chrome", "firefox", "safari", "edge"]
+        },
+        "accessibility_level": {
+          "type": "string",
+          "enum": ["WCAG-A", "WCAG-AA", "WCAG-AAA"],
+          "default": "WCAG-AA"
+        },
+        "standalone_components": {
+          "type": "boolean",
+          "description": "Use Angular 14+ standalone components",
+          "default": true
+        }
+      }
+    },
+    "api_specification": {
+      "type": "object",
+      "required": ["base_url", "endpoints"],
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "method"],
+            "properties": {
+              "path": {"type": "string"},
+              "method": {"type": "string", "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]},
+              "response_type": {"type": "string"},
+              "requires_auth": {"type": "boolean", "default": false}
+            }
+          }
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "type": {"type": "string", "enum": ["bearer", "oauth2", "api-key"]},
+            "token_storage": {"type": "string", "enum": ["localStorage", "sessionStorage"]}
+          }
+        }
+      }
+    },
+    "ui_framework": {
+      "type": "string",
+      "enum": ["angular-material", "primeng", "ng-zorro", "custom"],
+      "default": "custom"
+    },
+    "state_management": {
+      "type": "string",
+      "enum": ["ngrx", "akita", "ngxs", "none"],
+      "default": "ngrx"
+    }
+  }
+}

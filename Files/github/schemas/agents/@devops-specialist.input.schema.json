@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@devops-specialist.input.schema.json",
+  "title": "@devops-specialist Agent Input Schema",
+  "description": "Input contract for the @devops-specialist agent (CI/CD & Deployment)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["@bicep-specialist", "@frontend-specialist", "@backend-specialist"]
+      },
+      "description": "@devops-specialist receives from multiple sources"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 12,
+      "description": "@devops-specialist agent runs in phase 12 (CI/CD)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["code_structure", "bicep_modules"],
+      "properties": {
+        "code_structure": {
+          "type": "string",
+          "description": "Application structure from @code-architect"
+        },
+        "bicep_modules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"}
+            }
+          },
+          "description": "Bicep modules from @bicep-specialist"
+        },
+        "frontend_build_config": {
+          "type": "object",
+          "properties": {
+            "build_command": {"type": "string"},
+            "output_directory": {"type": "string"},
+            "node_version": {"type": "string"}
+          },
+          "description": "Frontend build details from @frontend-specialist"
+        },
+        "backend_build_config": {
+          "type": "object",
+          "properties": {
+            "build_command": {"type": "string"},
+            "runtime": {"type": "string"},
+            "runtime_version": {"type": "string"}
+          },
+          "description": "Backend build details from @backend-specialist"
+        },
+        "azure_resources": {
+          "type": "array",
+          "items": {"type": "object"},
+          "description": "Azure resources to monitor"
+        },
+        "environments": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": ["dev", "staging", "production"]
+        },
+        "repository": {
+          "type": "object",
+          "properties": {
+            "platform": {
+              "type": "string",
+              "enum": ["GitHub", "Azure DevOps", "GitLab"],
+              "default": "GitHub"
+            },
+            "branch_strategy": {
+              "type": "string",
+              "enum": ["GitFlow", "Trunk-Based", "GitHub Flow"]
+            }
+          }
+        }
+      }
+    }
+  }
+}

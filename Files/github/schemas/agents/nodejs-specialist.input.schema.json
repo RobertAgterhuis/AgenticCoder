@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node.js Specialist Agent Input",
+  "description": "Input schema for nodejs-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectName": { "type": "string" },
+    "apiType": {
+      "type": "string",
+      "enum": ["rest", "graphql", "grpc", "hybrid"],
+      "description": "Type of API to build"
+    },
+    "framework": {
+      "type": "string",
+      "enum": ["express", "fastify", "hapi", "nestjs"],
+      "description": "Web framework to use"
+    },
+    "features": {
+      "type": "array",
+      "description": "Features to implement",
+      "items": {
+        "type": "string",
+        "enum": ["authentication", "database", "caching", "testing", "validation", "logging"]
+      }
+    },
+    "database": {
+      "type": "string",
+      "enum": ["mongodb", "postgresql", "mysql", "none"],
+      "description": "Database system"
+    }
+  },
+  "required": ["projectName", "apiType", "framework"]
+}

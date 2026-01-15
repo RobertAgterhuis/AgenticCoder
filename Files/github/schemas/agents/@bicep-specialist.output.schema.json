@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@bicep-specialist.output.schema.json",
+  "title": "@bicep-specialist Agent Output Schema",
+  "description": "Output contract for the @bicep-specialist agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@bicep-specialist",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 9,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "bicep_modules_created",
+        "parameter_files_created",
+        "deployment_scripts_ready"
+      ],
+      "properties": {
+        "bicep_modules_created": {
+          "type": "integer",
+          "minimum": 3,
+          "description": "Number of Bicep modules generated"
+        },
+        "module_structure": {
+          "type": "object",
+          "properties": {
+            "orchestration_file": {"type": "string"},
+            "modules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "path": {"type": "string"},
+                  "resource_type": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "parameter_files_created": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of parameter files (dev, staging, prod)"
+        },
+        "deployment_scripts_ready": {
+          "type": "boolean",
+          "description": "Whether deployment scripts are created"
+        },
+        "avm_modules_used": {
+          "type": "boolean",
+          "description": "Whether Azure Verified Modules were used"
+        },
+        "validation_passing": {
+          "type": "boolean",
+          "description": "Whether Bicep validation passes"
+        },
+        "estimated_deployment_time": {
+          "type": "string",
+          "description": "Time to deploy (e.g., 5-10 minutes)"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "main_bicep",
+              "module_bicep",
+              "parameter_file",
+              "deployment_script",
+              "deployment_readme"
+            ]
+          }
+        }
+      },
+      "minItems": 3,
+      "description": "Bicep IaC artifacts"
+    },
+    "handoff_to": {
+      "type": "string",
+      "const": "@devops-specialist",
+      "description": "Next agent in chain"
+    }
+  }
+}

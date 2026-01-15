@@ -1,0 +1,502 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase7-code-structure.schema.json",
+  "title": "Phase 7 Code Structure Artifact",
+  "description": "Validates code structure and design output from @code-architect agent (Phase 7)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "code_metadata", "folder_structure", "design_patterns"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "code_structure",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@code-architect",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 7,
+      "description": "Phase number"
+    },
+    "code_metadata": {
+      "type": "object",
+      "properties": {
+        "project_name": {
+          "type": "string"
+        },
+        "primary_language": {
+          "type": "string"
+        },
+        "supported_languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "code_style_guide": {
+          "type": "string",
+          "description": "Reference or path to style guide"
+        },
+        "version_control": {
+          "type": "string",
+          "enum": ["Git", "Mercurial", "SVN"]
+        }
+      }
+    },
+    "folder_structure": {
+      "type": "object",
+      "properties": {
+        "root_description": {
+          "type": "string"
+        },
+        "directories": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "object",
+            "required": ["path", "purpose"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Relative path from project root"
+              },
+              "purpose": {
+                "type": "string",
+                "description": "What this directory contains"
+              },
+              "subdirectories": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "purpose": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "key_files": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "file_naming_conventions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "file_type": {
+                "type": "string"
+              },
+              "convention": {
+                "type": "string"
+              },
+              "examples": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "design_patterns": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["pattern_name", "usage", "components"],
+        "properties": {
+          "pattern_name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Creational", "Structural", "Behavioral", "Architectural"]
+          },
+          "usage": {
+            "type": "string",
+            "description": "Where and why this pattern is used"
+          },
+          "components": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "example_location": {
+            "type": "string",
+            "description": "Path to example in codebase"
+          }
+        }
+      }
+    },
+    "module_organization": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["module_name", "responsibility"],
+        "properties": {
+          "module_name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "responsibility": {
+            "type": "string"
+          },
+          "exports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "interfaces": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "class_hierarchy": {
+      "type": "object",
+      "properties": {
+        "base_classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "class_name": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "key_methods": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "subclasses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "inheritance_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "api_contracts": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "properties": {
+          "endpoint": {
+            "type": "string"
+          },
+          "method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+          },
+          "request_schema": {
+            "type": "object",
+            "description": "JSON Schema for request"
+          },
+          "response_schema": {
+            "type": "object",
+            "description": "JSON Schema for response"
+          },
+          "status_codes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "integer"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "authentication": {
+            "type": "string"
+          },
+          "rate_limiting": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "error_handling": {
+      "type": "object",
+      "properties": {
+        "error_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "error_name": {
+                "type": "string"
+              },
+              "error_code": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": "integer"
+              },
+              "description": {
+                "type": "string"
+              },
+              "handling_strategy": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "exception_hierarchy": {
+          "type": "string",
+          "description": "Description of custom exception classes"
+        },
+        "logging_strategy": {
+          "type": "string",
+          "description": "How errors are logged"
+        }
+      }
+    },
+    "configuration_management": {
+      "type": "object",
+      "properties": {
+        "config_layers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "layer": {
+                "type": "string",
+                "enum": ["Default", "Environment-Specific", "Runtime", "Feature-Flags"]
+              },
+              "location": {
+                "type": "string"
+              },
+              "examples": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "environment_variables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "variable_name": {
+                "type": "string"
+              },
+              "purpose": {
+                "type": "string"
+              },
+              "required": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "testing_structure": {
+      "type": "object",
+      "properties": {
+        "unit_tests_location": {
+          "type": "string"
+        },
+        "integration_tests_location": {
+          "type": "string"
+        },
+        "e2e_tests_location": {
+          "type": "string"
+        },
+        "test_data_location": {
+          "type": "string"
+        },
+        "mock_location": {
+          "type": "string"
+        },
+        "fixtures_location": {
+          "type": "string"
+        },
+        "naming_conventions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "state_management": {
+      "type": "object",
+      "properties": {
+        "global_state_location": {
+          "type": "string"
+        },
+        "state_container_pattern": {
+          "type": "string"
+        },
+        "middleware_location": {
+          "type": "string"
+        },
+        "store_structure": {
+          "type": "string"
+        }
+      }
+    },
+    "data_models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "model_name": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "validation": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "dependency_management": {
+      "type": "object",
+      "properties": {
+        "package_manager": {
+          "type": "string"
+        },
+        "dependency_file": {
+          "type": "string"
+        },
+        "core_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dev_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependency_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "build_and_compilation": {
+      "type": "object",
+      "properties": {
+        "build_tool": {
+          "type": "string"
+        },
+        "build_configuration_file": {
+          "type": "string"
+        },
+        "build_artifacts_location": {
+          "type": "string"
+        },
+        "compilation_targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "optimization_strategies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "documentation_structure": {
+      "type": "object",
+      "properties": {
+        "api_documentation_location": {
+          "type": "string"
+        },
+        "architectural_documentation_location": {
+          "type": "string"
+        },
+        "setup_guide_location": {
+          "type": "string"
+        },
+        "contributing_guidelines_location": {
+          "type": "string"
+        },
+        "code_comment_standards": {
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@backlog.input.schema.json",
+  "title": "@backlog Agent Input Schema",
+  "description": "Input contract for the @backlog agent (Backlog & Epics Strategist)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@doc"],
+      "description": "@backlog agent is triggered by @doc"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 2,
+      "description": "@backlog agent runs in phase 2 (backlog planning)"
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "project_plan_folder",
+        "requirements_summary",
+        "team_size",
+        "methodology"
+      ],
+      "properties": {
+        "project_plan_folder": {
+          "type": "string",
+          "description": "Path to ProjectPlan folder",
+          "pattern": "^.*ProjectPlan/?$"
+        },
+        "context_documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"}
+            }
+          },
+          "description": "List of Phase 1 Context documents"
+        },
+        "architecture_documents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"}
+            }
+          },
+          "description": "List of Phase 1 Architecture documents"
+        },
+        "requirements_summary": {
+          "type": "object",
+          "required": ["features", "business_goals"],
+          "properties": {
+            "features": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Core features to implement"
+            },
+            "business_goals": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Business objectives"
+            },
+            "compliance": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Compliance requirements (GDPR, HIPAA, etc.)"
+            },
+            "performance": {
+              "type": "string",
+              "description": "Performance requirements"
+            },
+            "security": {
+              "type": "string",
+              "description": "Security requirements"
+            }
+          },
+          "description": "Extracted key requirements from documentation"
+        },
+        "team_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Number of team members (determines backlog scale)"
+        },
+        "methodology": {
+          "type": "string",
+          "enum": [
+            "Agile Scrum",
+            "Agile Kanban",
+            "Waterfall",
+            "Lean",
+            "DevOps Continuous Delivery"
+          ],
+          "description": "Development methodology (affects story format)"
+        },
+        "project_complexity": {
+          "type": "string",
+          "enum": ["Simple", "Medium", "Complex"],
+          "default": "Medium",
+          "description": "Complexity level (affects epic count)"
+        },
+        "project_type": {
+          "type": "string",
+          "enum": [
+            "Startup MVP",
+            "Enterprise Platform",
+            "Internal Tool",
+            "API/Service",
+            "Mobile App",
+            "Data Platform",
+            "E-commerce",
+            "SaaS Product"
+          ],
+          "description": "Project type (affects story focus)"
+        }
+      }
+    }
+  }
+}

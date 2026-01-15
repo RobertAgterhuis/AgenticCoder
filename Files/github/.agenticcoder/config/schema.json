@@ -1,0 +1,305 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgenticCoder Configuration Schema",
+  "description": "Hierarchical configuration schema for AgenticCoder system",
+  "type": "object",
+  "required": ["version", "profile"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Configuration schema version (semantic versioning)"
+    },
+    "profile": {
+      "type": "string",
+      "enum": ["development", "staging", "production", "custom"],
+      "description": "Active configuration profile"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "name": {"type": "string"},
+        "description": {"type": "string"},
+        "created_at": {"type": "string", "format": "date-time"},
+        "last_modified": {"type": "string", "format": "date-time"},
+        "modified_by": {"type": "string"}
+      }
+    },
+    "agents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "enabled": {"type": "boolean", "default": true},
+          "timeout": {
+            "type": "integer",
+            "minimum": 30,
+            "maximum": 3600,
+            "description": "Execution timeout in seconds"
+          },
+          "max_retries": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10,
+            "default": 3
+          },
+          "output_quality": {
+            "type": "string",
+            "enum": ["draft", "standard", "production", "security-hardened"],
+            "default": "standard"
+          },
+          "constraints": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Hard constraints enforced on agent output"
+          },
+          "preferred_options": {
+            "type": "object",
+            "additionalProperties": {"type": "string"},
+            "description": "Preferred choices for implementation options"
+          },
+          "enabled_skills": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Skills this agent is allowed to use"
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "condition", "action"],
+        "properties": {
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "condition": {
+            "type": "string",
+            "description": "Condition expression (artifact.type, context properties, etc.)"
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "require_unit_tests",
+              "trigger_security_scan",
+              "require_documentation",
+              "enforce_code_review",
+              "block_execution",
+              "auto_approve"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["info", "warning", "error"],
+            "default": "warning"
+          }
+        }
+      }
+    },
+    "approval_workflow": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["level", "required_approvers"],
+        "properties": {
+          "level": {
+            "type": "string",
+            "enum": ["code_review", "security_review", "qa_review", "final_approval", "custom"],
+            "description": "Approval workflow stage"
+          },
+          "required_approvers": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "agents": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Agents eligible to approve at this level"
+          },
+          "timeout": {
+            "type": "integer",
+            "description": "How long to wait for approval (seconds)"
+          },
+          "auto_approve_conditions": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      }
+    },
+    "artifact_management": {
+      "type": "object",
+      "properties": {
+        "versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": true},
+            "strategy": {
+              "type": "string",
+              "enum": ["semantic", "timestamp", "sequential"],
+              "default": "semantic"
+            },
+            "keep_history": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Number of versions to keep (0 = unlimited)"
+            },
+            "auto_tag": {"type": "boolean", "default": true}
+          }
+        },
+        "quality_gates": {
+          "type": "object",
+          "properties": {
+            "min_test_coverage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "default": 80
+            },
+            "require_security_scan": {"type": "boolean", "default": false},
+            "require_accessibility_check": {"type": "boolean", "default": false},
+            "max_vulnerabilities": {"type": "integer", "minimum": 0}
+          }
+        },
+        "storage": {
+          "type": "object",
+          "properties": {
+            "backend": {
+              "type": "string",
+              "enum": ["filesystem", "git", "database", "s3"],
+              "default": "filesystem"
+            },
+            "path": {"type": "string", "default": ".agenticcoder/artifacts"},
+            "git_integration": {
+              "type": "object",
+              "properties": {
+                "enabled": {"type": "boolean"},
+                "auto_commit": {"type": "boolean"},
+                "commit_prefix": {"type": "string"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "communication": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean", "default": true},
+        "message_queue": {
+          "type": "string",
+          "enum": ["memory", "redis", "rabbitmq", "kafka"],
+          "default": "memory"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 10,
+          "description": "Message wait timeout in seconds"
+        },
+        "max_message_size": {
+          "type": "integer",
+          "description": "Maximum message size in bytes"
+        },
+        "logging": {"type": "boolean", "default": true}
+      }
+    },
+    "feedback_loops": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean", "default": true},
+        "clarification_required": {
+          "type": "boolean",
+          "default": true,
+          "description": "Block execution until clarifications answered"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 30,
+          "description": "Clarification wait timeout in seconds"
+        },
+        "default_answers": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Default answers if timeout reached"
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "properties": {
+        "github": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": false},
+            "auto_commit": {"type": "boolean", "default": false},
+            "commit_prefix": {"type": "string", "default": "[agenticcoder]"},
+            "create_pull_requests": {"type": "boolean", "default": false},
+            "target_branch": {"type": "string", "default": "develop"}
+          }
+        },
+        "slack": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": false},
+            "webhook_url": {"type": "string"},
+            "notifications": {
+              "type": "string",
+              "enum": ["all", "errors-only", "critical-only"],
+              "default": "critical-only"
+            },
+            "channel": {"type": "string"}
+          }
+        },
+        "datadog": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": false},
+            "api_key": {"type": "string"},
+            "metrics": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "enforce_https": {"type": "boolean", "default": true},
+        "require_authentication": {"type": "boolean", "default": false},
+        "rate_limiting": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "requests_per_minute": {"type": "integer"}
+          }
+        },
+        "audit_logging": {"type": "boolean", "default": true},
+        "encryption": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "algorithm": {"type": "string", "default": "AES-256"}
+          }
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["debug", "info", "warning", "error"],
+          "default": "info"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["json", "text"],
+          "default": "json"
+        },
+        "retention_days": {"type": "integer", "minimum": 1, "default": 30}
+      }
+    }
+  }
+}

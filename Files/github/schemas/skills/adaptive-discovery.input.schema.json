@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/adaptive-discovery.input.schema.json",
+  "title": "Adaptive Discovery Skill Input",
+  "description": "Input schema for adaptive-discovery skill - used by @plan agent for intelligent project discovery",
+  "type": "object",
+  "required": ["discovery_context", "project_scope"],
+  "properties": {
+    "discovery_context": {
+      "type": "object",
+      "required": ["organization_type", "project_type"],
+      "properties": {
+        "organization_type": {
+          "type": "string",
+          "enum": ["Solo Developer", "Small Team", "Startup", "Medium Enterprise", "Large Enterprise", "Government", "Non-Profit"]
+        },
+        "project_type": {
+          "type": "string",
+          "enum": ["Web Application", "Mobile App", "Desktop Application", "API Service", "Data Pipeline", "IoT Solution", "Hybrid"]
+        },
+        "industry": {
+          "type": "string"
+        },
+        "compliance_domain": {
+          "type": "string",
+          "enum": ["Healthcare", "Finance", "Government", "Retail", "Education", "Manufacturing", "None"]
+        }
+      }
+    },
+    "project_scope": {
+      "type": "object",
+      "properties": {
+        "initial_description": {
+          "type": "string",
+          "minLength": 10
+        },
+        "known_constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "known_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "budget_constraints": {
+          "type": "string"
+        },
+        "timeline_constraints": {
+          "type": "string"
+        }
+      }
+    },
+    "discovery_questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Business", "Technical", "User", "Performance", "Security", "Operational"]
+          }
+        }
+      }
+    },
+    "stakeholder_context": {
+      "type": "object",
+      "properties": {
+        "decision_makers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "technical_leads": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "user_representatives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "discovery_depth": {
+      "type": "string",
+      "enum": ["Shallow", "Medium", "Deep"],
+      "description": "Level of discovery detail required"
+    }
+  }
+}

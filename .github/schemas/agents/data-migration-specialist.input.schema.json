@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/data-migration-specialist.input.schema.json",
+  "type": "object",
+  "title": "Data Migration Specialist Input",
+  "description": "Plan and execute data migrations",
+  "required": [
+    "source_schema",
+    "target_schema"
+  ],
+  "properties": {
+    "source_schema": {
+      "type": "object"
+    },
+    "target_schema": {
+      "type": "object"
+    },
+    "migration_strategy": {
+      "type": "string"
+    }
+  }
+}

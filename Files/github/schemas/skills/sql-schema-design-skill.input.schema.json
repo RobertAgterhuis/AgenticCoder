@@ -1,0 +1,228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sql-schema-design-skill.input.schema.json",
+  "title": "SQL Schema Design Skill Input Schema",
+  "description": "Input schema for sql-schema-design skill - defines what information needed for database schema guidance",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "agent_id",
+    "context",
+    "question"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "sql-schema-design",
+      "description": "Must be 'sql-schema-design'"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@database-specialist$"
+    },
+    "context": {
+      "type": "object",
+      "required": ["phase", "project_id"],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "const": 15
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^proj-"
+        },
+        "database_system": {
+          "type": "string",
+          "enum": ["SqlServer", "PostgreSQL", "MySQL", "Oracle", "SQLite"]
+        },
+        "scale_expectation": {
+          "type": "string",
+          "enum": ["small", "medium", "large", "enterprise"]
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "schema_design",
+            "normalization_review",
+            "relationship_design",
+            "index_strategy",
+            "performance_optimization",
+            "data_types",
+            "constraints"
+          ]
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "business_rules": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from_entity": {
+                "type": "string"
+              },
+              "to_entity": {
+                "type": "string"
+              },
+              "cardinality": {
+                "type": "string",
+                "enum": ["1:1", "1:N", "N:M"]
+              },
+              "required": {
+                "type": "boolean"
+              },
+              "cascade_rules": {
+                "type": "string",
+                "enum": ["CASCADE", "RESTRICT", "SET NULL", "NO ACTION"]
+              }
+            }
+          }
+        },
+        "audit_requirements": {
+          "type": "object",
+          "properties": {
+            "track_created": {
+              "type": "boolean"
+            },
+            "track_modified": {
+              "type": "boolean"
+            },
+            "track_deleted": {
+              "type": "boolean"
+            },
+            "soft_delete_enabled": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "performance_requirements": {
+      "type": "object",
+      "properties": {
+        "expected_row_count": {
+          "type": "object",
+          "properties": {
+            "initial": {
+              "type": "integer"
+            },
+            "growth_per_year": {
+              "type": "integer"
+            }
+          }
+        },
+        "query_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "point_lookups",
+              "range_scans",
+              "aggregations",
+              "joins",
+              "full_table_scans"
+            ]
+          }
+        },
+        "read_write_ratio": {
+          "type": "string",
+          "description": "e.g., '80/20' for 80% reads, 20% writes"
+        },
+        "concurrent_users": {
+          "type": "integer"
+        }
+      }
+    },
+    "data_concerns": {
+      "type": "object",
+      "properties": {
+        "sensitive_data": {
+          "type": "boolean",
+          "description": "Contains PII or regulatory data"
+        },
+        "currency_fields": {
+          "type": "boolean",
+          "description": "Financial data that requires precision"
+        },
+        "historical_data": {
+          "type": "boolean",
+          "description": "Need to track changes over time"
+        },
+        "multi_tenancy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "architectural_context": {
+      "type": "object",
+      "properties": {
+        "normalized_to_level": {
+          "type": "string",
+          "enum": ["1NF", "2NF", "3NF", "BCNF"],
+          "description": "Target normalization level"
+        },
+        "denormalization_allowed": {
+          "type": "boolean",
+          "description": "Allow strategic denormalization for performance"
+        },
+        "partitioning_needed": {
+          "type": "boolean"
+        },
+        "data_archival": {
+          "type": "boolean",
+          "description": "Need to archive old records"
+        }
+      }
+    },
+    "team_context": {
+      "type": "object",
+      "properties": {
+        "sql_expertise": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"]
+        },
+        "devops_involvement": {
+          "type": "boolean",
+          "description": "Need for automated migration scripts"
+        }
+      }
+    }
+  }
+}

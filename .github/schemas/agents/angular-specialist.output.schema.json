@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/angular-specialist.output.schema.json",
+  "type": "object",
+  "title": "Angular Specialist Output",
+  "description": "Generated Angular code",
+  "required": [
+    "modules"
+  ],
+  "properties": {
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

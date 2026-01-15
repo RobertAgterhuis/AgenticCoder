@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@azure-architect.output.schema.json",
+  "title": "@azure-architect Agent Output Schema",
+  "description": "Output contract for the @azure-architect agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@azure-architect",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 8,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "azure_resources",
+        "resource_groups",
+        "estimated_monthly_cost"
+      ],
+      "properties": {
+        "azure_resources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "App Service",
+                  "Azure SQL",
+                  "PostgreSQL",
+                  "Redis Cache",
+                  "Storage Account",
+                  "Functions",
+                  "AKS",
+                  "Container Instances",
+                  "Front Door",
+                  "Application Gateway",
+                  "Key Vault",
+                  "Application Insights"
+                ]
+              },
+              "name": {"type": "string"},
+              "sku": {"type": "string"},
+              "estimated_cost": {"type": "string"}
+            }
+          },
+          "minItems": 3,
+          "description": "Azure resources to be provisioned"
+        },
+        "resource_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "environment": {"type": "string"},
+              "location": {"type": "string"}
+            }
+          },
+          "description": "Resource group structure"
+        },
+        "scaling_strategy": {
+          "type": "object",
+          "properties": {
+            "horizontal": {"type": "boolean"},
+            "vertical": {"type": "boolean"},
+            "auto_scale_rules": {"type": "array", "items": {"type": "object"}}
+          }
+        },
+        "networking": {
+          "type": "object",
+          "properties": {
+            "vnet_enabled": {"type": "boolean"},
+            "private_endpoints": {"type": "boolean"},
+            "cdn_enabled": {"type": "boolean"}
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "managed_identity": {"type": "boolean"},
+            "key_vault": {"type": "boolean"},
+            "network_isolation": {"type": "boolean"}
+          }
+        },
+        "estimated_monthly_cost": {
+          "type": "string",
+          "description": "Total cost estimate (e.g., $230-950/month)"
+        },
+        "cost_breakdown": {
+          "type": "object",
+          "properties": {
+            "compute": {"type": "string"},
+            "database": {"type": "string"},
+            "storage": {"type": "string"},
+            "networking": {"type": "string"}
+          }
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "azure_resource_plan",
+              "scaling_strategy_doc",
+              "cost_estimation_doc",
+              "network_diagram"
+            ]
+          }
+        }
+      },
+      "minItems": 2,
+      "description": "Azure infrastructure artifacts"
+    },
+    "handoff_to": {
+      "type": "string",
+      "const": "@bicep-specialist",
+      "description": "Next agent in chain"
+    }
+  }
+}

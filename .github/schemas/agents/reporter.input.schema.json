@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/reporter.input.schema.json",
+  "type": "object",
+  "title": "Reporter Agent Input",
+  "description": "Generate status reports and dashboards",
+  "required": [
+    "project_state"
+  ],
+  "properties": {
+    "project_state": {
+      "type": "object"
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "status",
+        "progress",
+        "risk",
+        "metrics"
+      ]
+    },
+    "stakeholders": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

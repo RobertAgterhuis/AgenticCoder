@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "modules": [
+    {
+      "resourceType": "Microsoft.Web/sites",
+      "module": "avm/res/web/sites:1.0.0",
+      "notes": "stub mapping"
+    },
+    {
+      "resourceType": "Microsoft.Sql/servers/databases",
+      "module": "avm/res/sql/server-database:1.0.0",
+      "notes": "stub mapping"
+    }
+  ]
+}

@@ -1,0 +1,474 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase9-bicep-modules.schema.json",
+  "title": "Phase 9 Bicep Modules Artifact",
+  "description": "Validates Bicep infrastructure code output from @bicep-specialist agent (Phase 9)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "bicep_metadata", "bicep_modules"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "bicep_modules",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@bicep-specialist",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 9,
+      "description": "Phase number"
+    },
+    "bicep_metadata": {
+      "type": "object",
+      "required": ["bicep_version", "modules_created"],
+      "properties": {
+        "bicep_version": {
+          "type": "string",
+          "pattern": "^[0-9]\\.[0-9]\\.[0-9]"
+        },
+        "modules_created": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "main_bicep_file": {
+          "type": "string",
+          "description": "Path to main.bicep orchestration file"
+        },
+        "module_registry": {
+          "type": "string",
+          "enum": ["Azure Verified Modules", "Internal", "Custom"]
+        }
+      }
+    },
+    "bicep_modules": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["module_name", "module_path", "purpose"],
+        "properties": {
+          "module_name": {
+            "type": "string"
+          },
+          "module_path": {
+            "type": "string",
+            "description": "Relative path from project root"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "avm_module": {
+            "type": "boolean",
+            "description": "Is this an Azure Verified Module?"
+          },
+          "avm_name": {
+            "type": "string",
+            "description": "AVM module name if applicable (e.g., 'avm/res/storage/storage-account')"
+          },
+          "avm_version": {
+            "type": "string",
+            "description": "Version of AVM module if used"
+          },
+          "input_parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "parameter_name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["string", "int", "bool", "array", "object", "secureString"]
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "default_value": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "allowed_values": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "output_values": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "output_name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string",
+                  "description": "Bicep expression or reference"
+                }
+              }
+            }
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "variable_name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Other modules or resources this depends on"
+          }
+        }
+      }
+    },
+    "parameter_files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["file_name", "environment"],
+        "properties": {
+          "file_name": {
+            "type": "string"
+          },
+          "file_path": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string",
+            "enum": ["Development", "Staging", "Production"]
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Environment-specific parameter values"
+          }
+        }
+      }
+    },
+    "orchestration_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file_name": {
+            "type": "string"
+          },
+          "file_path": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "modules_referenced": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "user_defined_types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "property_name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "deployment_scripts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "script_name": {
+            "type": "string"
+          },
+          "script_path": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string",
+            "enum": ["PowerShell", "Bash", "Python"]
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "prerequisite_checks": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "validation_and_testing": {
+      "type": "object",
+      "properties": {
+        "bicep_lint_enabled": {
+          "type": "boolean"
+        },
+        "lint_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "syntax_validation": {
+          "type": "boolean"
+        },
+        "template_tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "test_name": {
+                "type": "string"
+              },
+              "test_type": {
+                "type": "string",
+                "enum": ["Syntax", "Parameters", "Outputs", "Deployment", "Performance"]
+              },
+              "test_file": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "policy_compliance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "naming_conventions": {
+      "type": "object",
+      "properties": {
+        "resource_naming_pattern": {
+          "type": "string",
+          "description": "Pattern for resource names (e.g., '[env]-[project]-[resource]-[instance]')"
+        },
+        "naming_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resource_type": {
+                "type": "string"
+              },
+              "pattern": {
+                "type": "string"
+              },
+              "max_length": {
+                "type": "integer"
+              },
+              "allowed_characters": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "readme_location": {
+          "type": "string"
+        },
+        "module_documentation": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "module_name": {
+                "type": "string"
+              },
+              "doc_file": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "deployment_guide": {
+          "type": "string",
+          "description": "Path to deployment guide"
+        },
+        "troubleshooting_guide": {
+          "type": "string",
+          "description": "Path to troubleshooting documentation"
+        }
+      }
+    },
+    "security_and_compliance": {
+      "type": "object",
+      "properties": {
+        "secrets_management": {
+          "type": "string",
+          "description": "How secrets are handled (Key Vault references, etc.)"
+        },
+        "rbac_configuration": {
+          "type": "string",
+          "description": "RBAC role assignments in templates"
+        },
+        "network_security": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "compliance_standards": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "deployment_options": {
+      "type": "object",
+      "properties": {
+        "supported_deployment_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Incremental", "Complete", "Validate"]
+          }
+        },
+        "pre_deployment_validation": {
+          "type": "boolean"
+        },
+        "rollback_on_failure": {
+          "type": "boolean"
+        },
+        "deployment_confirmation_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "version_control": {
+      "type": "object",
+      "properties": {
+        "git_repository": {
+          "type": "string"
+        },
+        "branch_strategy": {
+          "type": "string"
+        },
+        "change_log_location": {
+          "type": "string"
+        },
+        "versioning_scheme": {
+          "type": "string"
+        }
+      }
+    },
+    "ci_cd_integration": {
+      "type": "object",
+      "properties": {
+        "pipeline_files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "validation_pipeline": {
+          "type": "string"
+        },
+        "deployment_pipeline": {
+          "type": "string"
+        },
+        "automated_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

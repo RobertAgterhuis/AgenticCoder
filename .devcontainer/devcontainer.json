@@ -1,0 +1,23 @@
+{
+  "name": "AgenticCoder Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "VARIANT": "20"
+    }
+  },
+  "features": {},
+  "postCreateCommand": "echo 'Dev container ready'",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-azurecli",
+        "ms-python.python",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  },
+  "forwardPorts": [3001, 3002, 3003],
+  "remoteUser": "vscode"
+}

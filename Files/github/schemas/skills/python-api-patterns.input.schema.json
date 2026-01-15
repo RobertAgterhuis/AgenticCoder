@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Python API Patterns Skill Input",
+  "description": "Input schema for python-api-patterns skill",
+  "type": "object",
+  "properties": {
+    "patterns": { "type": "array", "items": { "type": "string" } },
+    "framework": { "type": "string" }
+  },
+  "required": ["patterns"]
+}

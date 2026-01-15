@@ -1,0 +1,116 @@
+version: "1.0"
+profile: development
+metadata:
+  name: "Development Profile"
+  description: "Default development configuration for local experimentation"
+  created_at: "2026-01-13T00:00:00Z"
+
+agents:
+  react-specialist:
+    enabled: true
+    timeout: 300
+    max_retries: 2
+    output_quality: "draft"
+    constraints: []
+    preferred_options:
+      framework: "react"
+      styling: "tailwind"
+      testing: "vitest"
+  
+  nodejs-specialist:
+    enabled: true
+    timeout: 300
+    max_retries: 2
+    output_quality: "standard"
+    constraints: []
+    preferred_options:
+      framework: "express"
+      testing: "jest"
+  
+  python-specialist:
+    enabled: true
+    timeout: 300
+    max_retries: 2
+    output_quality: "standard"
+    preferred_options:
+      framework: "fastapi"
+      testing: "pytest"
+  
+  docker-specialist:
+    enabled: true
+    timeout: 300
+    max_retries: 2
+    output_quality: "standard"
+    preferred_options:
+      base_image: "alpine"
+      optimization_goal: "balanced"
+  
+  go-specialist:
+    enabled: true
+    timeout: 300
+    max_retries: 2
+    output_quality: "standard"
+
+rules:
+  - name: "log-all-artifacts"
+    condition: "artifact.type exists"
+    action: "auto_approve"
+    severity: "info"
+
+approval_workflow:
+  - level: "code_review"
+    required_approvers: 0
+    timeout: 3600
+    auto_approve_conditions:
+      - "test_coverage > 70"
+
+artifact_management:
+  versioning:
+    enabled: true
+    strategy: "semantic"
+    keep_history: 10
+    auto_tag: true
+  
+  quality_gates:
+    min_test_coverage: 0
+    require_security_scan: false
+    require_accessibility_check: false
+  
+  storage:
+    backend: "filesystem"
+    path: ".agenticcoder/artifacts"
+
+communication:
+  enabled: true
+  message_queue: "memory"
+  timeout: 30
+  logging: true
+
+feedback_loops:
+  enabled: true
+  clarification_required: false
+  timeout: 300
+  default_answers:
+    styling: "tailwind"
+    framework: "express"
+    testing: "jest"
+
+integrations:
+  github:
+    enabled: false
+  slack:
+    enabled: false
+  datadog:
+    enabled: false
+
+security:
+  enforce_https: false
+  require_authentication: false
+  audit_logging: true
+  encryption:
+    enabled: false
+
+logging:
+  level: "debug"
+  format: "json"
+  retention_days: 7

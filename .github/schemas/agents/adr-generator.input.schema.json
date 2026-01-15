@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/adr-generator.input.schema.json",
+  "type": "object",
+  "title": "ADR Generator Input",
+  "description": "Generate Architecture Decision Records",
+  "required": [
+    "decisions"
+  ],
+  "properties": {
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "format": {
+      "type": "string"
+    }
+  }
+}

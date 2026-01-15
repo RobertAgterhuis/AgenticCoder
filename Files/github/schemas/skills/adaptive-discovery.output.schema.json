@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/adaptive-discovery.output.schema.json",
+  "title": "Adaptive Discovery Skill Output",
+  "description": "Output schema for adaptive-discovery skill - discovery findings and insights",
+  "type": "object",
+  "required": ["discovery_findings", "discovered_requirements"],
+  "properties": {
+    "discovery_findings": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["finding_id", "finding_type", "description"],
+        "properties": {
+          "finding_id": {
+            "type": "string",
+            "pattern": "^DISC-[0-9]{4}$"
+          },
+          "finding_type": {
+            "type": "string",
+            "enum": ["Functional Requirement", "Non-Functional Requirement", "Constraint", "Risk", "Opportunity", "Assumption"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "importance": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "source": {
+            "type": "string"
+          },
+          "uncertainty_level": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          }
+        }
+      }
+    },
+    "discovered_requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "requirement_id": {
+            "type": "string"
+          },
+          "requirement_text": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Must Have", "Should Have", "Nice to Have"]
+          }
+        }
+      }
+    },
+    "stakeholder_insights": {
+      "type": "object",
+      "properties": {
+        "key_stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "decision_criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "success_metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "technical_insights": {
+      "type": "object",
+      "properties": {
+        "suggested_technologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "technical_risks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scalability_considerations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assumptions_and_unknowns": {
+      "type": "object",
+      "properties": {
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "unknowns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "further_questions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "discovery_summary": {
+      "type": "object",
+      "properties": {
+        "overall_complexity": {
+          "type": "string",
+          "enum": ["Simple", "Moderate", "Complex", "Very Complex"]
+        },
+        "recommended_approach": {
+          "type": "string"
+        },
+        "key_success_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confidence_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/data-migration-specialist.output.schema.json",
+  "type": "object",
+  "title": "Data Migration Specialist Output",
+  "description": "Migration scripts and validation",
+  "required": [
+    "migration_scripts"
+  ],
+  "properties": {
+    "migration_scripts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

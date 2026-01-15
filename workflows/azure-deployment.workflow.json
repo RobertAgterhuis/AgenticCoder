@@ -1,0 +1,91 @@
+{
+  "$schema": "../schemas/workflow.schema.json",
+  "id": "azure-deployment-workflow",
+  "name": "Azure Deployment Workflow",
+  "version": "1.0.0",
+  "description": "Complete workflow for analyzing and deploying Azure resources",
+  "steps": [
+    {
+      "id": "extract-tasks",
+      "agentId": "task-extraction",
+      "description": "Extract structured tasks from user request",
+      "inputs": {
+        "userRequest": "$input.userRequest",
+        "context": "$input.context"
+      },
+      "outputs": {
+        "tasks": "$output.tasks",
+        "intent": "$output.intent"
+      }
+    },
+    {
+      "id": "analyze-resources",
+      "agentId": "resource-analyzer",
+      "description": "Analyze required Azure resources",
+      "dependsOn": ["extract-tasks"],
+      "inputs": {
+        "tasks": "$steps.extract-tasks.output.tasks",
+        "constraints": "$input.constraints"
+      },
+      "outputs": {
+        "resources": "$output.resources",
+        "resourceGraph": "$output.resourceGraph"
+      }
+    },
+    {
+      "id": "estimate-costs",
+      "agentId": "cost-estimator",
+      "description": "Estimate deployment costs",
+      "dependsOn": ["analyze-resources"],
+      "inputs": {
+        "resources": "$steps.analyze-resources.output.resources",
+        "timeframe": "monthly",
+        "currency": "USD"
+      },
+      "outputs": {
+        "totalCost": "$output.totalCost",
+        "breakdown": "$output.breakdown"
+      },
+      "condition": "$steps.analyze-resources.output.resources.length > 0"
+    },
+    {
+      "id": "validate-deployment",
+      "agentId": "validation",
+      "description": "Validate deployment configuration",
+      "dependsOn": ["analyze-resources", "estimate-costs"],
+      "inputs": {
+        "resources": "$steps.analyze-resources.output.resources",
+        "estimatedCost": "$steps.estimate-costs.output.totalCost",
+        "constraints": "$input.constraints"
+      },
+      "retry": {
+        "maxRetries": 2,
+        "backoffMs": 1000
+      },
+      "onError": "stop"
+    }
+  ],
+  "outputs": {
+    "tasks": "$steps.extract-tasks.output.tasks",
+    "resources": "$steps.analyze-resources.output.resources",
+    "resourceGraph": "$steps.analyze-resources.output.resourceGraph",
+    "costEstimate": {
+      "total": "$steps.estimate-costs.output.totalCost",
+      "breakdown": "$steps.estimate-costs.output.breakdown",
+      "recommendations": "$steps.estimate-costs.output.recommendations"
+    },
+    "validationResult": "$steps.validate-deployment.output"
+  },
+  "errorHandling": {
+    "strategy": "stop",
+    "onError": {
+      "notify": true,
+      "rollback": false
+    }
+  },
+  "metadata": {
+    "author": "AgenticCoder Team",
+    "tags": ["azure", "deployment", "infrastructure"],
+    "version": "1.0.0"
+  }
+}

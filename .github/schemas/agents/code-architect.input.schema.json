@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/code-architect.input.schema.json",
+  "type": "object",
+  "title": "Code Architect Input",
+  "description": "Design code structure and patterns",
+  "required": [
+    "architecture",
+    "team_skills"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "team_skills": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "coding_standards": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@plan.output.schema.json",
+  "title": "@plan Agent Output Schema",
+  "description": "Output contract for the @plan agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@plan",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 0,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": ["project_plan_created", "project_name", "next_phase", "next_agent"],
+      "properties": {
+        "project_plan_created": {
+          "type": "boolean",
+          "description": "Whether ProjectPlan was successfully created"
+        },
+        "project_name": {
+          "type": "string",
+          "description": "Name of the project"
+        },
+        "folder_structure": {
+          "type": "string",
+          "description": "Description of created folder structure"
+        },
+        "agents_configured": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "List of agents configured for this project"
+        },
+        "skills_generated": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "List of skills generated based on tech stack"
+        },
+        "next_phase": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Next phase number"
+        },
+        "next_agent": {
+          "type": "string",
+          "description": "Next agent to execute"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Artifact filename"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path to artifact"
+          },
+          "schema": {
+            "type": "string",
+            "description": "Schema file for this artifact (optional)"
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "List of artifacts created"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Execution time in milliseconds"
+        },
+        "questions_asked": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of questions asked during discovery"
+        },
+        "files_created": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of files created"
+        }
+      },
+      "description": "Execution metadata"
+    }
+  }
+}

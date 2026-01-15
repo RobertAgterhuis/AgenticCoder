@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/bicep-plan.input.schema.json",
+  "type": "object",
+  "title": "Bicep Plan Agent Input",
+  "description": "Plan Bicep infrastructure-as-code",
+  "required": [
+    "azure_architecture"
+  ],
+  "properties": {
+    "azure_architecture": {
+      "type": "object"
+    },
+    "resource_naming_convention": {
+      "type": "string"
+    },
+    "parameter_strategy": {
+      "type": "string"
+    }
+  }
+}

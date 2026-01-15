@@ -1,0 +1,565 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase8-azure-infrastructure.schema.json",
+  "title": "Phase 8 Azure Infrastructure Plan Artifact",
+  "description": "Validates Azure infrastructure planning output from @azure-architect agent (Phase 8)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "infrastructure_metadata", "azure_resources", "resource_groups"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "azure_infrastructure",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@azure-architect",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 8,
+      "description": "Phase number"
+    },
+    "infrastructure_metadata": {
+      "type": "object",
+      "required": ["subscription_id", "regions"],
+      "properties": {
+        "subscription_id": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+        },
+        "subscription_name": {
+          "type": "string"
+        },
+        "regions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Primary and secondary Azure regions"
+        },
+        "environment_type": {
+          "type": "string",
+          "enum": ["Development", "Staging", "Production"]
+        }
+      }
+    },
+    "resource_groups": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "region", "purpose"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "azure_resources": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["resource_id", "resource_type", "resource_group", "region"],
+        "properties": {
+          "resource_id": {
+            "type": "string"
+          },
+          "resource_name": {
+            "type": "string"
+          },
+          "resource_type": {
+            "type": "string",
+            "enum": [
+              "App Service",
+              "App Service Plan",
+              "Application Insights",
+              "Azure SQL Database",
+              "Azure SQL Server",
+              "Azure Database for PostgreSQL",
+              "Azure Database for MySQL",
+              "Cosmos DB",
+              "Storage Account",
+              "Azure Key Vault",
+              "Azure Container Registry",
+              "Azure Kubernetes Service",
+              "Virtual Machine",
+              "Virtual Network",
+              "Network Security Group",
+              "Load Balancer",
+              "Application Gateway",
+              "API Management",
+              "Azure Functions",
+              "Logic Apps",
+              "Service Bus",
+              "Event Hubs",
+              "Event Grid",
+              "Azure Search",
+              "Azure Cognitive Services",
+              "Azure Machine Learning",
+              "Data Lake Storage",
+              "Azure Synapse Analytics",
+              "Azure Data Factory",
+              "Azure Stream Analytics",
+              "Power BI",
+              "Azure DevOps",
+              "GitHub",
+              "Container Instances"
+            ]
+          },
+          "resource_group": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "capacity": {
+            "type": "object",
+            "properties": {
+              "instances": {
+                "type": "integer"
+              },
+              "cpu": {
+                "type": "string"
+              },
+              "memory": {
+                "type": "string"
+              }
+            }
+          },
+          "configuration": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Resource-specific configuration"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of other resources this depends on"
+          },
+          "cost_monthly_usd": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "networking": {
+      "type": "object",
+      "properties": {
+        "vnets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "address_space": {
+                "type": "string"
+              },
+              "subnets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "address_prefix": {
+                      "type": "string"
+                    },
+                    "nsg_associated": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "priority": {
+                      "type": "integer"
+                    },
+                    "direction": {
+                      "type": "string",
+                      "enum": ["Inbound", "Outbound"]
+                    },
+                    "access": {
+                      "type": "string",
+                      "enum": ["Allow", "Deny"]
+                    },
+                    "protocol": {
+                      "type": "string"
+                    },
+                    "source_port": {
+                      "type": "string"
+                    },
+                    "destination_port": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "public_ips": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "allocation": {
+                "type": "string",
+                "enum": ["Static", "Dynamic"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "databases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["SQL", "PostgreSQL", "MySQL", "CosmosDB", "MongoDB", "Redis"]
+          },
+          "sku": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "backup_strategy": {
+            "type": "string"
+          },
+          "replication": {
+            "type": "string"
+          },
+          "geo_redundancy": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "storage_strategy": {
+      "type": "object",
+      "properties": {
+        "storage_accounts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "tier": {
+                "type": "string",
+                "enum": ["Standard", "Premium"]
+              },
+              "replication": {
+                "type": "string",
+                "enum": ["LRS", "GRS", "RAGRS", "ZRS", "GZRS", "RAZRS"]
+              },
+              "containers": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "backup_strategy": {
+          "type": "string"
+        },
+        "retention_days": {
+          "type": "integer"
+        }
+      }
+    },
+    "scaling_strategy": {
+      "type": "object",
+      "properties": {
+        "auto_scaling_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resource": {
+                "type": "string"
+              },
+              "metric": {
+                "type": "string"
+              },
+              "threshold": {
+                "type": "number"
+              },
+              "min_instances": {
+                "type": "integer"
+              },
+              "max_instances": {
+                "type": "integer"
+              },
+              "scale_up_cooldown_minutes": {
+                "type": "integer"
+              },
+              "scale_down_cooldown_minutes": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "load_balancing": {
+          "type": "string"
+        }
+      }
+    },
+    "monitoring_and_logging": {
+      "type": "object",
+      "properties": {
+        "application_insights": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "instrumentation_key": {
+              "type": "string"
+            },
+            "sampling_rate": {
+              "type": "number"
+            }
+          }
+        },
+        "log_analytics": {
+          "type": "object",
+          "properties": {
+            "workspace_name": {
+              "type": "string"
+            },
+            "retention_days": {
+              "type": "integer"
+            },
+            "log_sources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "metric": {
+                "type": "string"
+              },
+              "threshold": {
+                "type": "number"
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["Critical", "High", "Medium", "Low"]
+              },
+              "action": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "key_vault": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "sku": {
+              "type": "string",
+              "enum": ["Standard", "Premium"]
+            },
+            "purge_protection": {
+              "type": "boolean"
+            },
+            "soft_delete_retention_days": {
+              "type": "integer"
+            }
+          }
+        },
+        "msi_enabled": {
+          "type": "boolean",
+          "description": "Managed Service Identity"
+        },
+        "network_rules": {
+          "type": "string"
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "disaster_recovery": {
+      "type": "object",
+      "properties": {
+        "rpo_hours": {
+          "type": "number",
+          "description": "Recovery Point Objective"
+        },
+        "rto_hours": {
+          "type": "number",
+          "description": "Recovery Time Objective"
+        },
+        "backup_locations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "failover_strategy": {
+          "type": "string"
+        }
+      }
+    },
+    "cost_analysis": {
+      "type": "object",
+      "properties": {
+        "estimated_monthly_cost": {
+          "type": "number"
+        },
+        "estimated_annual_cost": {
+          "type": "number"
+        },
+        "cost_breakdown": {
+          "type": "object",
+          "properties": {
+            "compute": {
+              "type": "number"
+            },
+            "storage": {
+              "type": "number"
+            },
+            "networking": {
+              "type": "number"
+            },
+            "database": {
+              "type": "number"
+            },
+            "other": {
+              "type": "number"
+            }
+          }
+        },
+        "cost_optimization_recommendations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reserved_instances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resource_type": {
+                "type": "string"
+              },
+              "term_years": {
+                "type": "integer"
+              },
+              "commitment": {
+                "type": "string"
+              },
+              "savings_percent": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "deployment_strategy": {
+      "type": "object",
+      "properties": {
+        "infrastructure_as_code_tool": {
+          "type": "string",
+          "enum": ["Bicep", "Terraform", "ARM Templates", "Pulumi"]
+        },
+        "state_management": {
+          "type": "string"
+        },
+        "deployment_environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Development", "Staging", "Production"]
+          }
+        },
+        "ci_cd_integration": {
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

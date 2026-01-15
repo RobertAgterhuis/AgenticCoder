@@ -1,0 +1,481 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase6-architecture-decisions.schema.json",
+  "title": "Phase 6 Architecture Decisions Artifact",
+  "description": "Validates architecture design decisions output from @architect agent (Phase 6)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "architecture_metadata", "adrs", "technology_stack", "system_design"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "architecture_decisions",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@architect",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 6,
+      "description": "Phase number"
+    },
+    "architecture_metadata": {
+      "type": "object",
+      "required": ["project_name", "architecture_style"],
+      "properties": {
+        "project_name": {
+          "type": "string"
+        },
+        "architecture_style": {
+          "type": "string",
+          "enum": ["Monolithic", "Microservices", "Serverless", "Hybrid", "Event-Driven", "Layered", "Modular Monolith", "CQRS"]
+        },
+        "deployment_model": {
+          "type": "string",
+          "enum": ["Cloud-Native", "On-Premises", "Hybrid", "Multi-Cloud"]
+        },
+        "scalability_approach": {
+          "type": "string",
+          "enum": ["Horizontal", "Vertical", "Hybrid"]
+        },
+        "architecture_version": {
+          "type": "string"
+        },
+        "created_date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "adrs": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["adr_id", "title", "status", "decision"],
+        "properties": {
+          "adr_id": {
+            "type": "string",
+            "pattern": "^ADR-[0-9]{3,4}$"
+          },
+          "title": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string",
+            "description": "Problem context and why this decision was needed"
+          },
+          "decision": {
+            "type": "string",
+            "description": "What was decided"
+          },
+          "consequences": {
+            "type": "object",
+            "properties": {
+              "positive": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "negative": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "alternatives_considered": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Proposed", "Accepted", "Deprecated", "Superseded"]
+          },
+          "decision_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Person/team responsible"
+          },
+          "related_adrs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^ADR-[0-9]{3,4}$"
+            }
+          }
+        }
+      }
+    },
+    "technology_stack": {
+      "type": "object",
+      "properties": {
+        "frontend": {
+          "type": "object",
+          "properties": {
+            "framework": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            },
+            "state_management": {
+              "type": "string"
+            },
+            "ui_library": {
+              "type": "string"
+            },
+            "build_tool": {
+              "type": "string"
+            },
+            "testing_framework": {
+              "type": "string"
+            }
+          }
+        },
+        "backend": {
+          "type": "object",
+          "properties": {
+            "runtime": {
+              "type": "string"
+            },
+            "framework": {
+              "type": "string"
+            },
+            "language": {
+              "type": "string"
+            },
+            "api_style": {
+              "type": "string",
+              "enum": ["REST", "GraphQL", "gRPC", "WebSocket"]
+            },
+            "orm": {
+              "type": "string"
+            },
+            "authentication": {
+              "type": "string"
+            }
+          }
+        },
+        "data_storage": {
+          "type": "object",
+          "properties": {
+            "primary_database": {
+              "type": "string"
+            },
+            "database_type": {
+              "type": "string",
+              "enum": ["Relational", "Document", "Key-Value", "Graph", "Time-Series"]
+            },
+            "caching_layer": {
+              "type": "string"
+            },
+            "search_engine": {
+              "type": "string"
+            },
+            "backup_strategy": {
+              "type": "string"
+            }
+          }
+        },
+        "infrastructure": {
+          "type": "object",
+          "properties": {
+            "cloud_provider": {
+              "type": "string",
+              "enum": ["Azure", "AWS", "GCP", "Hybrid", "On-Premises"]
+            },
+            "container_orchestration": {
+              "type": "string"
+            },
+            "infrastructure_as_code": {
+              "type": "string"
+            },
+            "monitoring_platform": {
+              "type": "string"
+            },
+            "logging_platform": {
+              "type": "string"
+            }
+          }
+        },
+        "messaging": {
+          "type": "object",
+          "properties": {
+            "queue_system": {
+              "type": "string"
+            },
+            "event_stream": {
+              "type": "string"
+            },
+            "pub_sub": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "system_design": {
+      "type": "object",
+      "properties": {
+        "high_level_diagram": {
+          "type": "string",
+          "description": "Path to architecture diagram or description"
+        },
+        "components": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["Service", "Database", "Queue", "Cache", "API Gateway", "Load Balancer", "Storage"]
+              },
+              "responsibility": {
+                "type": "string"
+              },
+              "technology": {
+                "type": "string"
+              },
+              "scalability": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "data_flow": {
+          "type": "string",
+          "description": "Description of how data flows through system"
+        },
+        "security_layers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Security considerations at each layer"
+        }
+      }
+    },
+    "scalability_plan": {
+      "type": "object",
+      "properties": {
+        "horizontal_scaling": {
+          "type": "string",
+          "description": "How application scales horizontally"
+        },
+        "vertical_scaling": {
+          "type": "string",
+          "description": "How application scales vertically"
+        },
+        "database_scaling": {
+          "type": "string",
+          "description": "Database scaling strategy (replication, sharding, etc.)"
+        },
+        "expected_growth": {
+          "type": "object",
+          "properties": {
+            "users_year_1": {
+              "type": "integer"
+            },
+            "users_year_2": {
+              "type": "integer"
+            },
+            "users_year_3": {
+              "type": "integer"
+            }
+          }
+        },
+        "load_testing_requirements": {
+          "type": "string"
+        }
+      }
+    },
+    "disaster_recovery": {
+      "type": "object",
+      "properties": {
+        "backup_strategy": {
+          "type": "string"
+        },
+        "recovery_time_objective_hours": {
+          "type": "number"
+        },
+        "recovery_point_objective_hours": {
+          "type": "number"
+        },
+        "failover_strategy": {
+          "type": "string"
+        },
+        "geographic_redundancy": {
+          "type": "string"
+        },
+        "testing_frequency": {
+          "type": "string"
+        }
+      }
+    },
+    "cost_analysis": {
+      "type": "object",
+      "properties": {
+        "infrastructure_costs": {
+          "type": "object",
+          "properties": {
+            "compute_monthly": {
+              "type": "number"
+            },
+            "storage_monthly": {
+              "type": "number"
+            },
+            "networking_monthly": {
+              "type": "number"
+            },
+            "licenses_monthly": {
+              "type": "number"
+            },
+            "total_monthly": {
+              "type": "number"
+            }
+          }
+        },
+        "cost_optimization": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Cost optimization recommendations"
+        },
+        "cost_projections": {
+          "type": "object",
+          "properties": {
+            "year_1_total": {
+              "type": "number"
+            },
+            "year_2_total": {
+              "type": "number"
+            },
+            "year_3_total": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "performance_requirements": {
+      "type": "object",
+      "properties": {
+        "api_response_time_p95_ms": {
+          "type": "number"
+        },
+        "api_response_time_p99_ms": {
+          "type": "number"
+        },
+        "page_load_time_seconds": {
+          "type": "number"
+        },
+        "throughput_rps": {
+          "type": "number",
+          "description": "Requests per second target"
+        },
+        "concurrent_users": {
+          "type": "integer"
+        },
+        "availability_sla_percent": {
+          "type": "number",
+          "minimum": 90,
+          "maximum": 99.999
+        }
+      }
+    },
+    "security_architecture": {
+      "type": "object",
+      "properties": {
+        "authentication_scheme": {
+          "type": "string"
+        },
+        "authorization_model": {
+          "type": "string"
+        },
+        "encryption_at_rest": {
+          "type": "string"
+        },
+        "encryption_in_transit": {
+          "type": "string"
+        },
+        "secrets_management": {
+          "type": "string"
+        },
+        "threat_model": {
+          "type": "string",
+          "description": "Reference to threat model document"
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "integration_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "external_system": {
+            "type": "string"
+          },
+          "integration_type": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "risks_and_mitigations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "risk": {
+            "type": "string"
+          },
+          "likelihood": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "mitigation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

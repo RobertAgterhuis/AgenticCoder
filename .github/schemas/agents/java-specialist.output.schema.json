@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/java-specialist.output.schema.json",
+  "type": "object",
+  "title": "Java Specialist Output",
+  "description": "Generated Java code",
+  "required": [
+    "files"
+  ],
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

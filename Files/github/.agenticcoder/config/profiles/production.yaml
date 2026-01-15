@@ -1,0 +1,176 @@
+version: "1.0"
+profile: production
+metadata:
+  name: "Production Profile"
+  description: "Strict production configuration with security and quality gates"
+  created_at: "2026-01-13T00:00:00Z"
+
+agents:
+  react-specialist:
+    enabled: true
+    timeout: 600
+    max_retries: 3
+    output_quality: "production"
+    constraints:
+      - "must_include_tests: true"
+      - "accessibility_standard: wcag2.1-aa"
+      - "browser_support: [chrome, firefox, safari, edge]"
+      - "no_console_logs_in_production: true"
+    preferred_options:
+      framework: "next.js"
+      styling: "tailwind"
+      testing: "vitest"
+  
+  nodejs-specialist:
+    enabled: true
+    timeout: 1200
+    max_retries: 3
+    output_quality: "production"
+    constraints:
+      - "must_include_logging: true"
+      - "must_include_error_handling: true"
+      - "security_standard: owasp-top-10"
+      - "must_include_input_validation: true"
+      - "must_use_environment_variables: true"
+    preferred_options:
+      framework: "express"
+      database_orm: "prisma"
+      testing: "jest"
+      logging: "winston"
+  
+  python-specialist:
+    enabled: true
+    timeout: 1200
+    max_retries: 3
+    output_quality: "production"
+    constraints:
+      - "must_include_type_hints: true"
+      - "must_include_logging: true"
+      - "security_standard: owasp-top-10"
+    preferred_options:
+      framework: "fastapi"
+      testing: "pytest"
+  
+  docker-specialist:
+    enabled: true
+    timeout: 600
+    max_retries: 2
+    output_quality: "production"
+    constraints:
+      - "must_use_multi_stage: true"
+      - "must_use_non_root_user: true"
+      - "must_include_health_check: true"
+      - "must_scan_vulnerabilities: true"
+    preferred_options:
+      base_image: "alpine"
+      optimization_goal: "security"
+
+rules:
+  - name: "enforce-testing"
+    condition: "artifact.type == 'component' OR artifact.type == 'function'"
+    action: "require_unit_tests"
+    severity: "error"
+  
+  - name: "enforce-security-scan"
+    condition: "artifact.type == 'dependency' OR artifact.type == 'dockerfile'"
+    action: "trigger_security_scan"
+    severity: "error"
+  
+  - name: "enforce-documentation"
+    condition: "artifact.visibility == 'public' OR artifact.type == 'api'"
+    action: "require_documentation"
+    severity: "error"
+  
+  - name: "enforce-accessibility"
+    condition: "artifact.type == 'component' AND artifact.language == 'react'"
+    action: "require_accessibility_check"
+    severity: "warning"
+
+approval_workflow:
+  - level: "code_review"
+    required_approvers: 1
+    agents: ["@qa-agent"]
+    timeout: 3600
+    auto_approve_conditions: []
+  
+  - level: "security_review"
+    required_approvers: 1
+    agents: ["@security-agent"]
+    timeout: 7200
+    auto_approve_conditions: []
+  
+  - level: "final_approval"
+    required_approvers: 1
+    agents: ["@tech-lead-agent"]
+    timeout: 3600
+    auto_approve_conditions: []
+
+artifact_management:
+  versioning:
+    enabled: true
+    strategy: "semantic"
+    keep_history: 0
+    auto_tag: true
+  
+  quality_gates:
+    min_test_coverage: 85
+    require_security_scan: true
+    require_accessibility_check: true
+    max_vulnerabilities: 0
+  
+  storage:
+    backend: "git"
+    path: ".agenticcoder/artifacts"
+    git_integration:
+      enabled: true
+      auto_commit: true
+      commit_prefix: "[agenticcoder-prod]"
+
+communication:
+  enabled: true
+  message_queue: "redis"
+  timeout: 60
+  logging: true
+
+feedback_loops:
+  enabled: true
+  clarification_required: true
+  timeout: 600
+  default_answers: {}
+
+integrations:
+  github:
+    enabled: true
+    auto_commit: true
+    commit_prefix: "[agenticcoder-prod]"
+    create_pull_requests: true
+    target_branch: "main"
+  
+  slack:
+    enabled: true
+    notifications: "errors-only"
+    channel: "#agenticcoder-prod"
+  
+  datadog:
+    enabled: true
+    metrics:
+      - "artifact_quality"
+      - "generation_time"
+      - "security_violations"
+      - "test_coverage"
+
+security:
+  enforce_https: true
+  require_authentication: true
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 60
+  audit_logging: true
+  encryption:
+    enabled: true
+    algorithm: "AES-256"
+
+logging:
+  level: "warning"
+  format: "json"
+  retention_days: 90

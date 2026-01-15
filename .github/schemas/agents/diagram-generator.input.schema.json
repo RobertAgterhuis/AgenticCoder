@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/diagram-generator.input.schema.json",
+  "type": "object",
+  "title": "Diagram Generator Input",
+  "description": "Generate architecture diagrams",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "diagram_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tool_preference": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node.js API Patterns Skill Output",
+  "description": "Output schema for nodejs-api-patterns skill",
+  "type": "object",
+  "properties": {
+    "patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "code": { "type": "string" },
+          "useCase": { "type": "string" }
+        }
+      }
+    },
+    "examples": { "type": "array", "items": { "type": "object" } }
+  },
+  "required": ["patterns"]
+}

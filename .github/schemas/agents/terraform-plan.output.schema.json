@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/terraform-plan.output.schema.json",
+  "type": "object",
+  "title": "Terraform Plan Agent Output",
+  "description": "Terraform configuration plan",
+  "required": [
+    "terraform_plan"
+  ],
+  "properties": {
+    "terraform_plan": {
+      "type": "object",
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "variables": {
+          "type": "object"
+        },
+        "outputs": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

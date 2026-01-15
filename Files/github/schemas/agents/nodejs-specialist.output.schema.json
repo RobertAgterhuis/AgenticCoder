@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Node.js Specialist Agent Output",
+  "description": "Output schema for nodejs-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectStructure": {
+      "type": "object",
+      "description": "Generated project structure",
+      "properties": {
+        "rootFiles": { "type": "array", "items": { "type": "string" } },
+        "directories": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "description": "API routes",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "method": { "type": "string" },
+          "handler": { "type": "string" }
+        }
+      }
+    },
+    "middleware": {
+      "type": "array",
+      "description": "Middleware stack",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "purpose": { "type": "string" }
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "description": "Configuration recommendations"
+    }
+  },
+  "required": ["projectStructure", "routes"]
+}

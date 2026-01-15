@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Java API Patterns Skill Output",
+  "description": "Output schema for java-api-patterns skill",
+  "type": "object",
+  "properties": {
+    "patterns": { "type": "array", "items": { "type": "object" } }
+  },
+  "required": ["patterns"]
+}

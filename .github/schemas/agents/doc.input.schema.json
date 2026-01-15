@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/doc.input.schema.json",
+  "type": "object",
+  "title": "Documentation Generator Input",
+  "description": "Generate comprehensive project documentation",
+  "required": [
+    "project_name"
+  ],
+  "properties": {
+    "project_name": {
+      "type": "string"
+    },
+    "project_context": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "architecture": {
+          "type": "string"
+        }
+      }
+    },
+    "documentation_type": {
+      "type": "string",
+      "enum": [
+        "api",
+        "user-guide",
+        "architecture",
+        "deployment"
+      ]
+    }
+  }
+}

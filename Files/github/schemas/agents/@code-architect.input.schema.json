@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@code-architect.input.schema.json",
+  "title": "@code-architect Agent Input Schema",
+  "description": "Input contract for the @code-architect agent (Code Structure Design)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@architect"],
+      "description": "@code-architect agent is triggered by @architect"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 7,
+      "description": "@code-architect agent runs in phase 7 (code structure)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["architecture_decisions", "technology_choices"],
+      "properties": {
+        "architecture_decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "decision_id": {"type": "string"},
+              "name": {"type": "string"},
+              "decision": {"type": "string"}
+            }
+          },
+          "description": "ADRs from @architect"
+        },
+        "technology_choices": {
+          "type": "object",
+          "properties": {
+            "frontend": {"type": "string"},
+            "backend": {"type": "string"},
+            "database": {"type": "string"}
+          },
+          "description": "Tech stack selected"
+        },
+        "architecture_style": {
+          "type": "string",
+          "enum": ["Monolithic", "Modular Monolith", "Microservices", "Serverless"],
+          "description": "Architecture pattern"
+        },
+        "design_patterns": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Recommended patterns from @architect"
+        },
+        "project_plan_folder": {
+          "type": "string",
+          "pattern": "^.*ProjectPlan/?$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MySQL Optimization Skill Input",
+  "description": "Input schema for mysql-optimization skill",
+  "type": "object",
+  "properties": {
+    "aspects": {
+      "type": "array",
+      "description": "Optimization aspects to focus on",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["aspects"]
+}

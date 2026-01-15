@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/aws-architect.output.schema.json",
+  "type": "object",
+  "title": "AWS Architect Output",
+  "description": "AWS architecture and cost estimate",
+  "required": [
+    "architecture",
+    "cost_estimate"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "cost_estimate": {
+      "type": "object"
+    }
+  }
+}

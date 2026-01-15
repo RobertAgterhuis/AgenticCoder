@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/error-handling.output.schema.json",
+  "title": "Error Handling Skill Output",
+  "description": "Output schema for error-handling skill - error analysis, resolution, and prevention strategies",
+  "type": "object",
+  "required": ["error_analysis", "resolution_strategy"],
+  "properties": {
+    "error_analysis": {
+      "type": "object",
+      "properties": {
+        "root_cause": {
+          "type": "string",
+          "description": "Identified root cause of the error"
+        },
+        "contributing_factors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severity_assessment": {
+          "type": "string",
+          "enum": ["Critical", "High", "Medium", "Low"]
+        },
+        "error_classification": {
+          "type": "string"
+        }
+      }
+    },
+    "resolution_strategy": {
+      "type": "object",
+      "required": ["approach", "steps"],
+      "properties": {
+        "approach": {
+          "type": "string",
+          "enum": ["Fix", "Workaround", "Escalate", "Accept", "Prevent"]
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "step_number": {
+                "type": "integer"
+              },
+              "action": {
+                "type": "string"
+              },
+              "rationale": {
+                "type": "string"
+              },
+              "responsible_party": {
+                "type": "string"
+              },
+              "estimated_time": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "expected_outcome": {
+          "type": "string"
+        },
+        "verification_method": {
+          "type": "string"
+        }
+      }
+    },
+    "prevention_measures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "measure_id": {
+            "type": "string"
+          },
+          "preventive_action": {
+            "type": "string"
+          },
+          "implementation_location": {
+            "type": "string"
+          },
+          "effort_required": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["Immediate", "High", "Medium", "Low"]
+          }
+        }
+      }
+    },
+    "monitoring_and_alerting": {
+      "type": "object",
+      "properties": {
+        "error_detection": {
+          "type": "string",
+          "description": "How to detect this error in production"
+        },
+        "alert_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "monitoring_metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "communication_plan": {
+      "type": "object",
+      "properties": {
+        "stakeholder_notification": {
+          "type": "string"
+        },
+        "escalation_path": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status_update_frequency": {
+          "type": "string"
+        }
+      }
+    },
+    "post_resolution": {
+      "type": "object",
+      "properties": {
+        "postmortem_required": {
+          "type": "boolean"
+        },
+        "documentation_updates": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "training_needs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

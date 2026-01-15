@@ -1,0 +1,601 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase11-backend-services.schema.json",
+  "title": "Phase 11 Backend Services Artifact",
+  "description": "Validates backend services and API endpoints output from @backend-specialist agent (Phase 11)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "backend_metadata", "services", "api_endpoints"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "backend_services",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@backend-specialist",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 11,
+      "description": "Phase number"
+    },
+    "backend_metadata": {
+      "type": "object",
+      "required": ["runtime", "framework", "language", "services_created", "api_endpoints_implemented"],
+      "properties": {
+        "runtime": {
+          "type": "string",
+          "enum": ["Node.js", ".NET", "Java", "Python", "Go", "Rust", "PHP"]
+        },
+        "framework": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "api_style": {
+          "type": "string",
+          "enum": ["REST", "GraphQL", "gRPC", "WebSocket"]
+        },
+        "services_created": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "api_endpoints_implemented": {
+          "type": "integer",
+          "minimum": 5
+        },
+        "services_directory": {
+          "type": "string",
+          "description": "Path to services folder"
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["service_name", "service_path", "responsibility"],
+        "properties": {
+          "service_name": {
+            "type": "string"
+          },
+          "service_path": {
+            "type": "string"
+          },
+          "responsibility": {
+            "type": "string"
+          },
+          "service_type": {
+            "type": "string",
+            "enum": ["Business Logic", "Data Access", "Authentication", "Authorization", "Validation", "Utility"]
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "method_name": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "return_type": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Other services this depends on"
+          },
+          "unit_tests_written": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "api_endpoints": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["endpoint_path", "http_method", "description"],
+        "properties": {
+          "endpoint_path": {
+            "type": "string"
+          },
+          "http_method": {
+            "type": "string",
+            "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "authentication_required": {
+            "type": "boolean"
+          },
+          "authentication_type": {
+            "type": "string",
+            "enum": ["Bearer Token", "API Key", "OAuth 2.0", "JWT", "None"]
+          },
+          "authorization": {
+            "type": "object",
+            "properties": {
+              "required_roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "required_permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "request_body": {
+            "type": "object",
+            "properties": {
+              "required": {
+                "type": "boolean"
+              },
+              "schema": {
+                "type": "object",
+                "description": "JSON Schema for request body"
+              }
+            }
+          },
+          "query_parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "path_parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "responses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "status_code": {
+                  "type": "integer"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "JSON Schema for response"
+                }
+              }
+            }
+          },
+          "rate_limiting": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "requests_per_minute": {
+                "type": "integer"
+              }
+            }
+          },
+          "caching": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "ttl_seconds": {
+                "type": "integer"
+              },
+              "cache_key": {
+                "type": "string"
+              }
+            }
+          },
+          "handler_location": {
+            "type": "string",
+            "description": "File path to handler/controller"
+          },
+          "service_called": {
+            "type": "string",
+            "description": "Service that handles this endpoint"
+          }
+        }
+      }
+    },
+    "data_models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["model_name", "model_path"],
+        "properties": {
+          "model_name": {
+            "type": "string"
+          },
+          "model_path": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "validation": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "relation_name": {
+                  "type": "string"
+                },
+                "target_model": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["OneToOne", "OneToMany", "ManyToOne", "ManyToMany"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "database_access": {
+      "type": "object",
+      "properties": {
+        "orm_framework": {
+          "type": "string"
+        },
+        "database_type": {
+          "type": "string",
+          "enum": ["SQL", "NoSQL", "Graph", "Document", "Key-Value"]
+        },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "repository_name": {
+                "type": "string"
+              },
+              "entity_type": {
+                "type": "string"
+              },
+              "methods": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "migrations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "migration_name": {
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "authentication_and_authorization": {
+      "type": "object",
+      "properties": {
+        "authentication_method": {
+          "type": "string",
+          "enum": ["JWT", "OAuth 2.0", "API Key", "Bearer Token", "Session-based"]
+        },
+        "token_generation": {
+          "type": "string",
+          "description": "Token generation strategy"
+        },
+        "token_validation": {
+          "type": "string",
+          "description": "Token validation approach"
+        },
+        "authorization_model": {
+          "type": "string",
+          "enum": ["RBAC", "ABAC", "PBAC"]
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role_name": {
+                "type": "string"
+              },
+              "permissions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "input_validation_approach": {
+          "type": "string"
+        },
+        "validation_rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "rule_name": {
+                "type": "string"
+              },
+              "applies_to": {
+                "type": "string"
+              },
+              "validation_logic": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "error_messages": {
+          "type": "object",
+          "description": "Validation error message templates"
+        }
+      }
+    },
+    "error_handling": {
+      "type": "object",
+      "properties": {
+        "error_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "error_name": {
+                "type": "string"
+              },
+              "error_code": {
+                "type": "string"
+              },
+              "http_status": {
+                "type": "integer"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "global_error_handler": {
+          "type": "string",
+          "description": "Path to global error handler"
+        },
+        "logging_strategy": {
+          "type": "string"
+        }
+      }
+    },
+    "middleware": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "middleware_name": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "applies_to": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "background_jobs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "job_name": {
+            "type": "string"
+          },
+          "schedule": {
+            "type": "string",
+            "description": "Cron expression or frequency"
+          },
+          "handler_location": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "external_integrations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "integration_name": {
+            "type": "string"
+          },
+          "external_service": {
+            "type": "string"
+          },
+          "integration_type": {
+            "type": "string"
+          },
+          "authentication": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "logging_and_monitoring": {
+      "type": "object",
+      "properties": {
+        "logging_framework": {
+          "type": "string"
+        },
+        "log_level": {
+          "type": "string",
+          "enum": ["Trace", "Debug", "Information", "Warning", "Error", "Critical"]
+        },
+        "log_destinations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "health_check_endpoint": {
+          "type": "string"
+        },
+        "metrics_exposed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "unit_test_framework": {
+          "type": "string"
+        },
+        "integration_test_framework": {
+          "type": "string"
+        },
+        "test_database": {
+          "type": "string"
+        },
+        "test_coverage_target": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "api_documentation_tool": {
+          "type": "string",
+          "enum": ["Swagger/OpenAPI", "GraphQL SDL", "RAML", "Blueprint"]
+        },
+        "api_documentation_location": {
+          "type": "string"
+        },
+        "api_documentation_endpoint": {
+          "type": "string"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

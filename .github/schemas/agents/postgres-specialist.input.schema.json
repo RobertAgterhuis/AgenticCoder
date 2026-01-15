@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/postgres-specialist.input.schema.json",
+  "type": "object",
+  "title": "PostgreSQL Specialist Input",
+  "description": "Generate PostgreSQL database schemas",
+  "required": [
+    "schema_design"
+  ],
+  "properties": {
+    "schema_design": {
+      "type": "object"
+    },
+    "version": {
+      "type": "string"
+    },
+    "extensions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

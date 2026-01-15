@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/css-specialist.input.schema.json",
+  "type": "object",
+  "title": "CSS Specialist Input",
+  "description": "Generate stylesheets and design tokens",
+  "required": [
+    "design_system"
+  ],
+  "properties": {
+    "design_system": {
+      "type": "object"
+    },
+    "responsive_breakpoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "preprocessor": {
+      "type": "string"
+    }
+  }
+}

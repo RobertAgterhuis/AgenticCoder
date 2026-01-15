@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Angular Component Patterns Skill Input",
+  "description": "Input schema for angular-component-patterns skill",
+  "type": "object",
+  "properties": {
+    "componentType": {
+      "type": "string",
+      "description": "Type of component to create",
+      "enum": ["presentational", "container", "smart", "dumb", "smart-dumb"],
+      "example": "container"
+    },
+    "features": {
+      "type": "array",
+      "description": "Features to implement",
+      "items": {
+        "type": "string",
+        "enum": ["lifecycle", "two-way-binding", "change-detection", "view-queries", "content-projection", "dependency-injection"]
+      },
+      "example": ["lifecycle", "change-detection"]
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Design patterns to apply",
+      "items": { "type": "string" },
+      "example": ["smart-dumb", "presentation-container"]
+    }
+  },
+  "required": ["componentType"]
+}

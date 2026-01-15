@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@reporter.output.schema.json",
+  "title": "@reporter Agent Output Schema",
+  "description": "Output contract for the @reporter agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@reporter",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 5,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "reporting_framework_created",
+        "report_templates",
+        "metrics_defined"
+      ],
+      "properties": {
+        "reporting_framework_created": {
+          "type": "boolean",
+          "description": "Whether reporting framework is complete"
+        },
+        "report_templates": {
+          "type": "integer",
+          "minimum": 3,
+          "description": "Number of report templates created (daily, weekly, phase, executive)"
+        },
+        "metrics_defined": {
+          "type": "integer",
+          "minimum": 10,
+          "description": "Number of metrics with targets"
+        },
+        "implementation_log_created": {
+          "type": "boolean",
+          "description": "Whether implementation log structure is created"
+        },
+        "dashboard_created": {
+          "type": "boolean",
+          "description": "Whether metrics dashboard is created"
+        },
+        "stakeholder_reports": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of customized stakeholder reports"
+        },
+        "status_indicators_defined": {
+          "type": "boolean",
+          "description": "Whether status indicators are defined"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "implementation_log",
+              "daily_report_template",
+              "weekly_report_template",
+              "phase_report_template",
+              "executive_summary_template",
+              "metrics_dashboard"
+            ]
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "Reporting artifacts created"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {"type": "integer", "minimum": 0},
+        "total_metrics": {"type": "integer", "minimum": 0},
+        "customized_for_team_size": {"type": "boolean"}
+      }
+    }
+  }
+}

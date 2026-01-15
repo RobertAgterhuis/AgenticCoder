@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/kubernetes-specialist.input.schema.json",
+  "type": "object",
+  "title": "Kubernetes Specialist Input",
+  "description": "Generate Kubernetes manifests",
+  "required": [
+    "services"
+  ],
+  "properties": {
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "cluster_config": {
+      "type": "object"
+    },
+    "namespace": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@plan.input.schema.json",
+  "title": "@plan Agent Input Schema",
+  "description": "Input contract for the @plan agent (ProjectPlan Generator)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["user"],
+      "description": "@plan agent is always triggered by user"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 0,
+      "description": "@plan agent runs in phase 0 (discovery)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["interactive", "template", "validate"],
+          "description": "Operation mode: interactive (new project), template (from existing), validate (check plan)"
+        },
+        "template_name": {
+          "type": "string",
+          "description": "Template name if mode=template"
+        },
+        "discovery_answers": {
+          "type": "object",
+          "required": ["project_name", "organization"],
+          "properties": {
+            "project_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100,
+              "description": "Name of the project"
+            },
+            "organization": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Organization or company name"
+            },
+            "business_goals": {
+              "type": "array",
+              "items": {"type": "string"},
+              "minItems": 1,
+              "maxItems": 10,
+              "description": "Primary business goals (3-5 recommended)"
+            },
+            "stakeholders": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Main stakeholders (names or roles)"
+            },
+            "timeline": {
+              "type": "string",
+              "description": "Target timeline (e.g., '6 months', 'Q1 2026')"
+            },
+            "team_size": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "description": "Number of team members"
+            },
+            "backend_stack": {
+              "type": "string",
+              "description": "Backend technology stack"
+            },
+            "frontend_stack": {
+              "type": "string",
+              "description": "Frontend technology stack"
+            },
+            "cloud_provider": {
+              "type": "string",
+              "enum": ["Azure", "AWS", "GCP", "On-Premises", "Hybrid"],
+              "description": "Cloud provider selection"
+            },
+            "database": {
+              "type": "string",
+              "description": "Database technology"
+            },
+            "auth_strategy": {
+              "type": "string",
+              "description": "Authentication/authorization strategy"
+            },
+            "test_coverage_target": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Target test coverage percentage"
+            },
+            "compliance_requirements": {
+              "type": "array",
+              "items": {"type": "string"},
+              "description": "Compliance/security requirements (GDPR, HIPAA, etc.)"
+            },
+            "phases_count": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "description": "Number of implementation phases"
+            },
+            "release_strategy": {
+              "type": "string",
+              "enum": ["Agile Sprints", "Waterfall", "Continuous Delivery", "Phased Release"],
+              "description": "Release and delivery strategy"
+            }
+          }
+        }
+      }
+    }
+  }
+}

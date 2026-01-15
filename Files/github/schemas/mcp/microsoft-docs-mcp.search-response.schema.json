@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/microsoft-docs-mcp.search-response.schema.json",
+  "title": "Microsoft Docs MCP - Search Response Schema",
+  "description": "Response schema for Microsoft documentation search",
+  "type": "object",
+  "required": ["query", "results"],
+  "properties": {
+    "query": {
+      "type": "string",
+      "description": "The search query executed"
+    },
+    "service": {
+      "type": "string",
+      "description": "Service searched"
+    },
+    "total_results": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of matching documents"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "url", "description"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Document title"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Direct link to document"
+          },
+          "description": {
+            "type": "string",
+            "description": "Summary snippet (first 300 chars)"
+          },
+          "content_type": {
+            "type": "string",
+            "description": "Type of content (tutorial, reference, etc.)"
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date",
+            "description": "Last update date"
+          },
+          "relevance_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Search relevance score"
+          }
+        }
+      },
+      "description": "Search results"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When search was performed"
+    }
+  }
+}

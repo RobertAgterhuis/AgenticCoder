@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Docker Optimization Skill - Output Schema",
+  "description": "Output schema for docker-optimization skill containing optimization strategies and recommendations",
+  "type": "object",
+  "required": ["optimizations", "summary"],
+  "properties": {
+    "optimizations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "impact"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the optimization technique"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation"
+          },
+          "before": {
+            "type": "object",
+            "properties": {
+              "code": {"type": "string"},
+              "size": {"type": "string"},
+              "buildTime": {"type": "string"}
+            },
+            "description": "Before optimization state"
+          },
+          "after": {
+            "type": "object",
+            "properties": {
+              "code": {"type": "string"},
+              "size": {"type": "string"},
+              "buildTime": {"type": "string"}
+            },
+            "description": "After optimization state"
+          },
+          "impact": {
+            "type": "object",
+            "properties": {
+              "sizeReduction": {"type": "string"},
+              "speedImprovement": {"type": "string"},
+              "securityGain": {"type": "string"}
+            },
+            "description": "Measured impact of optimization"
+          },
+          "difficulty": {
+            "type": "string",
+            "enum": ["trivial", "easy", "moderate", "complex"],
+            "description": "Implementation difficulty"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "Recommended implementation priority"
+          }
+        }
+      },
+      "description": "List of applicable optimizations"
+    },
+    "strategy": {
+      "type": "object",
+      "properties": {
+        "recommendedApproach": {
+          "type": "string",
+          "description": "Overall optimization strategy recommended"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phase": {"type": "integer"},
+              "name": {"type": "string"},
+              "optimizations": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "estimatedGain": {"type": "string"}
+            }
+          },
+          "description": "Phased implementation plan"
+        }
+      }
+    },
+    "baseImageRecommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "image": {"type": "string"},
+          "size": {"type": "string"},
+          "useCase": {"type": "string"},
+          "tradeoffs": {"type": "string"}
+        }
+      },
+      "description": "Recommended base images ranked by optimization goal"
+    },
+    "dockerignorePatterns": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Recommended .dockerignore patterns"
+    },
+    "cacheOptimization": {
+      "type": "object",
+      "properties": {
+        "currentStrategy": {
+          "type": "string",
+          "description": "Analysis of current caching strategy"
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Recommended layer ordering changes"
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "vulnerabilities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "issue": {"type": "string"},
+              "severity": {"type": "string"},
+              "fix": {"type": "string"}
+            }
+          }
+        },
+        "improvements": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "projectedResults": {
+      "type": "object",
+      "properties": {
+        "beforeSize": {"type": "string"},
+        "afterSize": {"type": "string"},
+        "sizeReduction": {"type": "string"},
+        "beforeBuildTime": {"type": "string"},
+        "afterBuildTime": {"type": "string"},
+        "speedImprovement": {"type": "string"},
+        "vulnerabilities": {
+          "before": {"type": "integer"},
+          "after": {"type": "integer"}
+        }
+      },
+      "description": "Projected results if all recommendations are implemented"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Executive summary of optimizations and recommendations"
+    }
+  }
+}

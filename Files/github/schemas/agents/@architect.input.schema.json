@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@architect.input.schema.json",
+  "title": "@architect Agent Input Schema",
+  "description": "Input contract for the @architect agent (Architecture Design)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@coordinator"],
+      "description": "@architect agent is triggered by @coordinator"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 6,
+      "description": "@architect agent runs in phase 6 (architecture design)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["project_plan_folder", "phases"],
+      "properties": {
+        "project_plan_folder": {
+          "type": "string",
+          "description": "Path to ProjectPlan folder",
+          "pattern": "^.*ProjectPlan/?$"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phase_number": {"type": "integer"},
+              "name": {"type": "string"},
+              "epics": {"type": "array"}
+            }
+          },
+          "description": "Implementation phases from @coordinator"
+        },
+        "tech_stack": {
+          "type": "object",
+          "properties": {
+            "frontend": {
+              "type": "string",
+              "enum": ["React", "Vue", "Angular", "Svelte", "Next.js", "Other"]
+            },
+            "backend": {
+              "type": "string",
+              "enum": ["Node.js", "Python", "Go", ".NET", "Java", "Other"]
+            },
+            "database": {
+              "type": "string",
+              "enum": ["PostgreSQL", "MySQL", "SQL Server", "MongoDB", "Cosmos DB", "Other"]
+            }
+          },
+          "description": "Technology preferences"
+        },
+        "nfr_requirements": {
+          "type": "object",
+          "properties": {
+            "scalability_target": {
+              "type": "string",
+              "description": "Expected user scale (e.g., 1K, 100K, 1M users)"
+            },
+            "performance_target": {
+              "type": "string",
+              "description": "Response time target (e.g., <200ms p95)"
+            },
+            "availability_target": {
+              "type": "string",
+              "description": "Uptime target (e.g., 99.9%)"
+            }
+          }
+        },
+        "team_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Development team size"
+        },
+        "budget": {
+          "type": "object",
+          "properties": {
+            "monthly_limit": {"type": "number"},
+            "currency": {"type": "string", "default": "USD"}
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Technical or business constraints"
+        }
+      }
+    }
+  }
+}

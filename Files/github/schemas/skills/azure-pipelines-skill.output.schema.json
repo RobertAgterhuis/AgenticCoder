@@ -1,0 +1,456 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "azure-pipelines-skill.output.schema.json",
+  "title": "Azure Pipelines Skill Output Schema",
+  "description": "Output schema for azure-pipelines skill - defines generated pipeline YAML and guidance",
+  "type": "object",
+  "required": [
+    "status",
+    "pipeline_yaml"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial_success",
+        "warning",
+        "error"
+      ]
+    },
+    "pipeline_yaml": {
+      "type": "object",
+      "properties": {
+        "complete_yaml": {
+          "type": "string",
+          "description": "Complete Azure Pipelines YAML",
+          "minLength": 300
+        },
+        "trigger_config": {
+          "type": "object",
+          "properties": {
+            "branches": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "paths": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "variables": {
+          "type": "object",
+          "properties": {
+            "group_names": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "pipeline_variables": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pool_configuration": {
+          "type": "object",
+          "properties": {
+            "pool_type": {
+              "type": "string",
+              "enum": ["hosted", "self_hosted"]
+            },
+            "vm_image": {
+              "type": "string"
+            },
+            "agent_pool_name": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "yaml": {
+            "type": "string",
+            "description": "Complete stage YAML"
+          },
+          "jobs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "job_name": {
+                  "type": "string"
+                },
+                "display_name": {
+                  "type": "string"
+                },
+                "steps_count": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Previous stage this depends on"
+            }
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "deployment_strategy": {
+      "type": "object",
+      "properties": {
+        "strategy_type": {
+          "type": "string",
+          "enum": ["RunOnce", "Rolling", "Canary", "BlueGreen"]
+        },
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "resource_group": {
+                "type": "string"
+              },
+              "service_connection": {
+                "type": "string"
+              },
+              "approval_required": {
+                "type": "boolean"
+              },
+              "deployment_yaml": {
+                "type": "string",
+                "minLength": 100
+              }
+            }
+          }
+        },
+        "strategy_details": {
+          "type": "string",
+          "description": "Explanation of strategy choice and implementation"
+        }
+      }
+    },
+    "build_stage": {
+      "type": "object",
+      "properties": {
+        "restore_step": {
+          "type": "string",
+          "description": "Dependency restore command (npm install, dotnet restore, etc.)"
+        },
+        "build_step": {
+          "type": "string",
+          "description": "Build command"
+        },
+        "test_step": {
+          "type": "string",
+          "description": "Test command (if applicable)"
+        },
+        "publish_step": {
+          "type": "string",
+          "description": "Publish/package command"
+        },
+        "build_yaml": {
+          "type": "string",
+          "description": "Complete build stage YAML",
+          "minLength": 100
+        }
+      }
+    },
+    "quality_gates": {
+      "type": "object",
+      "properties": {
+        "code_quality_task": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "tool": {
+              "type": "string",
+              "enum": ["SonarQube", "SonarCloud"]
+            },
+            "yaml": {
+              "type": "string",
+              "minLength": 50
+            },
+            "minimum_quality_gate": {
+              "type": "string",
+              "description": "e.g., 'A' grade"
+            }
+          }
+        },
+        "test_results": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "publish_yaml": {
+              "type": "string"
+            },
+            "minimum_coverage_percent": {
+              "type": "integer"
+            }
+          }
+        },
+        "security_scanning": {
+          "type": "object",
+          "properties": {
+            "dependency_check": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "yaml": {
+                  "type": "string"
+                }
+              }
+            },
+            "sast": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "tool": {
+                  "type": "string",
+                  "enum": ["Microsoft Security DevOps", "WhiteSource", "Checkmarx"]
+                },
+                "yaml": {
+                  "type": "string"
+                }
+              }
+            },
+            "container_scan": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "yaml": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "infrastructure_scanning": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "tool": {
+              "type": "string",
+              "enum": ["Terraform Scan", "ARM Template Analyzer"]
+            }
+          }
+        }
+      }
+    },
+    "caching": {
+      "type": "object",
+      "properties": {
+        "nuget_caching": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "yaml": {
+              "type": "string"
+            }
+          }
+        },
+        "npm_caching": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "yaml": {
+              "type": "string"
+            }
+          }
+        },
+        "dotnet_caching": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "yaml": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "artifact_management": {
+      "type": "object",
+      "properties": {
+        "publish_build_artifacts": {
+          "type": "boolean"
+        },
+        "artifact_yaml": {
+          "type": "string",
+          "description": "PublishBuildArtifacts task YAML"
+        },
+        "feed_publishing": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "feed_name": {
+              "type": "string"
+            }
+          }
+        },
+        "container_registry": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "registry_type": {
+              "type": "string",
+              "enum": ["ACR", "Docker Hub"]
+            },
+            "yaml": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "best_practices": {
+      "type": "object",
+      "properties": {
+        "pin_vm_image_version": {
+          "type": "string",
+          "const": "Always pin specific VM image versions"
+        },
+        "fail_fast": {
+          "type": "string",
+          "const": "Fail fast on build/test errors, don't proceed to deployment"
+        },
+        "publish_test_results": {
+          "type": "string",
+          "const": "Always publish test results to pipeline"
+        },
+        "explicit_dependencies": {
+          "type": "string",
+          "const": "Explicitly define stage dependencies"
+        },
+        "secret_management": {
+          "type": "string",
+          "const": "Use secret variables for sensitive data"
+        },
+        "condition_usage": {
+          "type": "string",
+          "const": "Use conditions to control job execution"
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "properties": {
+        "slack_yaml": {
+          "type": "string",
+          "description": "Slack notification task YAML"
+        },
+        "teams_yaml": {
+          "type": "string",
+          "description": "Teams notification task YAML"
+        },
+        "email_yaml": {
+          "type": "string",
+          "description": "Email notification configuration"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "yaml_syntax_valid": {
+          "type": "boolean",
+          "description": "YAML is syntactically correct"
+        },
+        "required_variables_defined": {
+          "type": "boolean"
+        },
+        "environments_configured": {
+          "type": "boolean"
+        },
+        "service_connections_required": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Names of Azure service connections needed"
+          }
+        },
+        "approval_gates_configured": {
+          "type": "boolean",
+          "description": "Pre-deployment approvals configured"
+        },
+        "tasks_required": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Task names/extensions needed (e.g., 'SonarQubePrepare', 'PublishTestResults')"
+          }
+        },
+        "manual_setup_steps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Manual steps needed in Azure DevOps UI (e.g., create variable groups, set approvers)"
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

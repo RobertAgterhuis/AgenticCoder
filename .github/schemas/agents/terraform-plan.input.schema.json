@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/terraform-plan.input.schema.json",
+  "type": "object",
+  "title": "Terraform Plan Agent Input",
+  "description": "Plan Terraform infrastructure",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "cloud_provider": {
+      "type": "string"
+    },
+    "state_management": {
+      "type": "object"
+    }
+  }
+}

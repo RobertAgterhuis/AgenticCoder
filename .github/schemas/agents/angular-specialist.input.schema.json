@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/angular-specialist.input.schema.json",
+  "type": "object",
+  "title": "Angular Specialist Input",
+  "description": "Generate Angular application",
+  "required": [
+    "requirements"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "angular_version": {
+      "type": "string"
+    }
+  }
+}

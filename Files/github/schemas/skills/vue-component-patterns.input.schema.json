@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.dev/schemas/skills/vue-component-patterns.input.schema.json",
+  "title": "Vue Component Patterns Skill Input Schema",
+  "description": "Input for Vue component pattern generation skill",
+  "type": "object",
+  "required": ["component_type", "component_name"],
+  "properties": {
+    "component_type": {
+      "type": "string",
+      "enum": ["common", "feature", "layout", "page", "renderless", "composable"],
+      "description": "Type of component to generate"
+    },
+    "component_name": {
+      "type": "string",
+      "description": "Component name in PascalCase",
+      "pattern": "^[A-Z][a-zA-Z0-9]*$",
+      "examples": ["Button", "UserCard", "DataTable"]
+    },
+    "props": {
+      "type": "array",
+      "description": "Component props definition",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Prop name"
+          },
+          "type": {
+            "type": "string",
+            "description": "TypeScript type",
+            "examples": ["string", "number", "boolean", "User", "User[]"]
+          },
+          "required": {
+            "type": "boolean",
+            "default": false
+          },
+          "default": {
+            "description": "Default value"
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "Component emitted events",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Event name"
+          },
+          "payload": {
+            "type": "string",
+            "description": "Event payload type"
+          }
+        }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "description": "Component slots",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Slot name ('default' for default slot)"
+          },
+          "scoped": {
+            "type": "boolean",
+            "description": "Whether slot is scoped",
+            "default": false
+          },
+          "props": {
+            "type": "object",
+            "description": "Scoped slot props (if scoped=true)",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "composables": {
+      "type": "array",
+      "description": "Composables to use in component",
+      "items": {
+        "type": "string",
+        "examples": ["useAuth", "useApi", "useLocalStorage"]
+      }
+    },
+    "features": {
+      "type": "array",
+      "description": "Features to include",
+      "items": {
+        "type": "string",
+        "enum": [
+          "typescript",
+          "scoped-styles",
+          "scss",
+          "responsive",
+          "accessibility",
+          "loading-state",
+          "error-handling",
+          "validation",
+          "animations"
+        ]
+      }
+    }
+  }
+}

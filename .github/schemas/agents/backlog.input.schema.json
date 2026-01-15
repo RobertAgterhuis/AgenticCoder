@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/backlog.input.schema.json",
+  "type": "object",
+  "title": "Backlog Manager Input",
+  "description": "Convert requirements into actionable work items",
+  "required": [
+    "requirements"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "prioritization_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

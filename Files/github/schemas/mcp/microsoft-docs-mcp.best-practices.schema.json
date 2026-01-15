@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/microsoft-docs-mcp.best-practices.schema.json",
+  "title": "Microsoft Docs MCP - Best Practices Schema",
+  "description": "Schema for Azure/Microsoft best practices and patterns",
+  "type": "object",
+  "required": ["topic", "best_practices"],
+  "properties": {
+    "topic": {
+      "type": "string",
+      "description": "Technology/topic area"
+    },
+    "best_practices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["practice", "description"],
+        "properties": {
+          "practice": {
+            "type": "string",
+            "description": "Best practice statement"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed explanation"
+          },
+          "why": {
+            "type": "string",
+            "description": "Why this is important"
+          },
+          "example": {
+            "type": "string",
+            "description": "Code/configuration example"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "description": "Importance level"
+          },
+          "reference_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Link to detailed documentation"
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "List of best practices"
+    },
+    "architecture_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["pattern_name"],
+        "properties": {
+          "pattern_name": {"type": "string"},
+          "use_case": {"type": "string"},
+          "pros": {"type": "array", "items": {"type": "string"}},
+          "cons": {"type": "array", "items": {"type": "string"}},
+          "reference": {"type": "string", "format": "uri"}
+        }
+      },
+      "description": "Recommended architecture patterns"
+    },
+    "security_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "recommendation": {"type": "string"},
+          "severity": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "implementation": {"type": "string"}
+        }
+      },
+      "description": "Security-specific best practices"
+    },
+    "performance_tips": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Performance optimization recommendations"
+    },
+    "cost_optimization": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Cost reduction recommendations"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source documentation URL"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date"
+    }
+  }
+}

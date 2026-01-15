@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/azure-resource-graph-mcp.query-response.schema.json",
+  "title": "Azure Resource Graph MCP - Query Response Schema",
+  "description": "Response schema for Azure Resource Graph KQL queries",
+  "type": "object",
+  "required": ["data", "count", "total_records"],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      },
+      "description": "Query result rows"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of rows in this response"
+    },
+    "total_records": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total number of rows matching query"
+    },
+    "skip": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of rows skipped"
+    },
+    "facets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "expression": {"type": "string"},
+          "column": {"type": "string"},
+          "count": {"type": "integer"}
+        }
+      },
+      "description": "Aggregation results (if query uses summarize)"
+    },
+    "query": {
+      "type": "string",
+      "description": "The executed query"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When query was executed"
+    }
+  }
+}

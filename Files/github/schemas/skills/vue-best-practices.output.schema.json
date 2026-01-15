@@ -1,0 +1,192 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.dev/schemas/skills/vue-best-practices.output.schema.json",
+  "title": "Vue Best Practices Skill Output Schema",
+  "description": "Output from Vue best practices analysis",
+  "type": "object",
+  "required": ["analysis_results", "recommendations"],
+  "properties": {
+    "analysis_results": {
+      "type": "object",
+      "description": "Results of best practices analysis",
+      "properties": {
+        "score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall best practices score"
+        },
+        "category_scores": {
+          "type": "object",
+          "description": "Scores by category",
+          "properties": {
+            "performance": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "security": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "accessibility": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "code_quality": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "testing": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        },
+        "issues_found": {
+          "type": "array",
+          "description": "List of issues identified",
+          "items": {
+            "type": "object",
+            "required": ["severity", "category", "description"],
+            "properties": {
+              "severity": {
+                "type": "string",
+                "enum": ["critical", "high", "medium", "low", "info"]
+              },
+              "category": {
+                "type": "string",
+                "enum": ["performance", "security", "accessibility", "code-quality", "testing"]
+              },
+              "description": {
+                "type": "string",
+                "description": "Issue description"
+              },
+              "location": {
+                "type": "object",
+                "description": "Location of issue in code",
+                "properties": {
+                  "file": {
+                    "type": "string"
+                  },
+                  "line": {
+                    "type": "integer"
+                  },
+                  "column": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "code_snippet": {
+                "type": "string",
+                "description": "Code snippet showing the issue"
+              }
+            }
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Recommended improvements",
+      "items": {
+        "type": "object",
+        "required": ["title", "description", "priority"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Recommendation title"
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed recommendation description"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["performance", "security", "accessibility", "code-quality", "testing"]
+          },
+          "effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "Estimated implementation effort"
+          },
+          "impact": {
+            "type": "string",
+            "enum": ["low", "medium", "high"],
+            "description": "Expected impact of implementing recommendation"
+          },
+          "before_code": {
+            "type": "string",
+            "description": "Current code (if applicable)"
+          },
+          "after_code": {
+            "type": "string",
+            "description": "Recommended code (if applicable)"
+          },
+          "resources": {
+            "type": "array",
+            "description": "Links to documentation/resources",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
+    "optimized_code": {
+      "type": "object",
+      "description": "Optimized versions of analyzed code",
+      "properties": {
+        "component": {
+          "type": "string",
+          "description": "Optimized component code"
+        },
+        "store": {
+          "type": "string",
+          "description": "Optimized store code"
+        },
+        "composable": {
+          "type": "string",
+          "description": "Optimized composable code"
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Performance and quality metrics",
+      "properties": {
+        "estimated_bundle_size_reduction": {
+          "type": "string",
+          "description": "Estimated bundle size reduction",
+          "examples": ["15%", "45 KB"]
+        },
+        "performance_improvement": {
+          "type": "string",
+          "description": "Expected performance improvement",
+          "examples": ["20% faster", "300ms faster TTI"]
+        },
+        "accessibility_compliance": {
+          "type": "string",
+          "description": "Accessibility compliance level",
+          "enum": ["WCAG-A", "WCAG-AA", "WCAG-AAA", "Non-compliant"]
+        }
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "description": "Prioritized next steps",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

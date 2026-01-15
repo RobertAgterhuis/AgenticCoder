@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/skills/error-handling.input.schema.json",
+  "title": "Error Handling Skill Input",
+  "description": "Input schema for error-handling skill - error scenarios and context for analysis",
+  "type": "object",
+  "required": ["error_scenario"],
+  "properties": {
+    "error_scenario": {
+      "type": "object",
+      "required": ["error_type", "context"],
+      "properties": {
+        "error_type": {
+          "type": "string",
+          "enum": ["Syntax Error", "Runtime Error", "Logic Error", "Validation Error", "System Error", "Unknown Error"]
+        },
+        "error_message": {
+          "type": "string"
+        },
+        "error_code": {
+          "type": "string"
+        },
+        "stack_trace": {
+          "type": "string"
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "line_number": {
+              "type": "integer"
+            },
+            "function": {
+              "type": "string"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "affected_component": {
+      "type": "object",
+      "properties": {
+        "component_name": {
+          "type": "string"
+        },
+        "component_type": {
+          "type": "string",
+          "enum": ["Agent", "Skill", "Service", "API", "Database", "External"]
+        },
+        "responsibility": {
+          "type": "string"
+        }
+      }
+    },
+    "error_impact": {
+      "type": "object",
+      "properties": {
+        "severity": {
+          "type": "string",
+          "enum": ["Critical", "High", "Medium", "Low"]
+        },
+        "affected_functionality": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "number_of_users_impacted": {
+          "type": "integer"
+        }
+      }
+    },
+    "recovery_context": {
+      "type": "object",
+      "properties": {
+        "can_retry": {
+          "type": "boolean"
+        },
+        "fallback_available": {
+          "type": "boolean"
+        },
+        "requires_manual_intervention": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/react-specialist.output.schema.json",
+  "type": "object",
+  "title": "React Specialist Output",
+  "description": "Generated React code and components",
+  "required": [
+    "components",
+    "files_created"
+  ],
+  "properties": {
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "files_created": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

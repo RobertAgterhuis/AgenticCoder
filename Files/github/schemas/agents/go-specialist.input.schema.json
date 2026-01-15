@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Go Specialist Agent Input",
+  "description": "Input schema for go-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectName": { "type": "string" },
+    "framework": { "type": "string", "enum": ["gin", "echo", "fiber"] },
+    "features": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["projectName", "framework"]
+}

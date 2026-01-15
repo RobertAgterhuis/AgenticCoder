@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/docker-specialist.input.schema.json",
+  "type": "object",
+  "title": "Docker Specialist Input",
+  "description": "Generate Docker container configurations",
+  "required": [
+    "services"
+  ],
+  "properties": {
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "registry": {
+      "type": "string"
+    },
+    "base_images": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

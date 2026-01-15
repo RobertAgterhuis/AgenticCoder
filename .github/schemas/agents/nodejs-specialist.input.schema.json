@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/nodejs-specialist.input.schema.json",
+  "type": "object",
+  "title": "Node.js Specialist Input",
+  "description": "Generate Node.js backend code",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "node_version": {
+      "type": "string"
+    },
+    "framework": {
+      "type": "string"
+    }
+  }
+}

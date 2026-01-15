@@ -1,0 +1,85 @@
+digraph PhaseFlow {
+  rankdir=TB;
+  node [shape=box, style=rounded, fontname="Arial"];
+  edge [fontname="Arial", fontsize=10];
+  
+  // Define node styles
+  node [style="rounded,filled"];
+  
+  // Mandatory phases (Orchestration)
+  node [fillcolor="#E8F4F8", color="#0066CC"];
+  phase1[label="Phase 1\n@plan\nProject Planning\n(30-60m)"];
+  phase2[label="Phase 2\n@doc\nDocumentation\n(30-45m)"];
+  phase3[label="Phase 3\n@backlog\nBacklog Mgmt\n(20-30m)"];
+  phase4[label="Phase 4\n@coordinator\nTask Coordination\n(20-30m)"];
+  phase5[label="Phase 5\n@qa\nQA Strategy\n(15-25m)"];
+  phase6[label="Phase 6\n@reporter\nMonitoring\n(15-20m)"];
+  phase7[label="Phase 7\n@architect\nArchitecture\n(45-90m)"];
+  phase8[label="Phase 8\n@code-architect\nCode Structure\n(45-90m)"];
+  
+  // Infrastructure phases (Conditional)
+  node [fillcolor="#F0E8F4", color="#6600CC"];
+  phase9a[label="Phase 9a\n@azure-architect\nAzure Arch\n(30-45m)\n\n[IF Azure]"];
+  phase9b[label="Phase 9b\n@bicep-specialist\nInfrastructure-as-Code\n(45-60m)\n\n[AFTER 9a]"];
+  
+  // DevOps phases (Mutually exclusive)
+  node [fillcolor="#F4E8E8", color="#CC0000"];
+  phase12[label="Phase 12\n@devops-specialist\nGitHub Actions\n(30-45m)\n\n[GitHub DEFAULT]"];
+  phase16[label="Phase 16\n@azure-devops-specialist\nAzure DevOps\n(30-45m)\n\n[IF Azure DevOps]"];
+  
+  // Implementation phases (Conditional, Parallel)
+  node [fillcolor="#E8F4E8", color="#009900"];
+  phase13[label="Phase 13\n@react-specialist\nReact Frontend\n(60-120m)\n\n[IF React]"];
+  phase14[label="Phase 14\n@dotnet-specialist\n.NET Backend\n(60-120m)\n\n[IF .NET]"];
+  phase15[label="Phase 15\n@database-specialist\nDatabase Schema\n(45-60m)\n\n[IF Database]"];
+  
+  // End node
+  node [fillcolor="#E8E8E8", color="#333333"];
+  end[label="Complete\nAll Artifacts\nGenerated"];
+  
+  // Mandatory linear flow
+  phase1 -> phase2 [label="ProjectPlan"];
+  phase2 -> phase3 [label="TechnicalSpec"];
+  phase3 -> phase4 [label="ProductBacklog"];
+  phase4 -> phase5 [label="ExecutionPlan"];
+  phase5 -> phase6 [label="QAStrategy"];
+  phase6 -> phase7 [label="MonitoringPlan"];
+  phase7 -> phase8 [label="ArchitectureDecision\nDECISION POINTS 1-6"];
+  
+  // Decision Point 1: Azure?
+  phase8 -> phase9a [label="Azure?", color="#6600CC"];
+  phase9a -> phase9b [label="Seq"];
+  
+  // Decision Point 2: CI/CD Platform
+  phase8 -> phase12 [label="GitHub\n(default)", color="#CC0000", style="solid"];
+  phase8 -> phase16 [label="Azure DevOps\n(exclusive)", color="#CC0000", style="dashed"];
+  
+  // Decision Points 3-5: Tech Stack
+  phase8 -> phase13 [label="React?", color="#009900"];
+  phase8 -> phase14 [label=".NET?", color="#009900"];
+  phase8 -> phase15 [label="Database?", color="#009900"];
+  
+  // Implementation phases can run in parallel
+  phase13 -> end [label="Components\nHooks\nStores"];
+  phase14 -> end [label="Controllers\nServices\nEntities"];
+  phase15 -> end [label="DDL\nMigrations\nIndexes"];
+  
+  // Infrastructure can feed to implementation
+  phase9b -> end [label="Bicep\nModules"];
+  
+  // CI/CD at end
+  phase12 -> end [label="GitHub\nWorkflows"];
+  phase16 -> end [label="Azure\nPipelines"];
+  
+  // Legend
+  subgraph cluster_legend {
+    style=rounded;
+    label="Legend";
+    fontname="Arial";
+    
+    leg1[label="Mandatory Phase", fillcolor="#E8F4F8", color="#0066CC"];
+    leg2[label="Conditional Phase", fillcolor="#F0E8F4", color="#6600CC"];
+    leg3[label="Parallel Capable", fillcolor="#E8F4E8", color="#009900"];
+    leg4[label="Mutually Exclusive", fillcolor="#F4E8E8", color="#CC0000"];
+  }
+}

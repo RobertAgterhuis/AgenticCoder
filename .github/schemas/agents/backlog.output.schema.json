@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/backlog.output.schema.json",
+  "type": "object",
+  "title": "Backlog Manager Output",
+  "description": "Structured backlog with epics, stories, and tasks",
+  "required": [
+    "backlog"
+  ],
+  "properties": {
+    "backlog": {
+      "type": "object",
+      "properties": {
+        "epics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string"
+              },
+              "user_stories": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

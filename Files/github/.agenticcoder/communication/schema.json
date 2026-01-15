@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Communication Protocol Schema",
+  "description": "Schema for agent-to-agent communication messages",
+  "type": "object",
+  "required": ["message_id", "from_agent", "message_type"],
+  "properties": {
+    "message_id": {
+      "type": "string",
+      "pattern": "^msg-[a-z0-9-]+$",
+      "description": "Unique message identifier"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When message was created"
+    },
+    "from_agent": {
+      "type": "string",
+      "pattern": "^@[a-z0-9-]+$",
+      "description": "Sending agent identifier"
+    },
+    "to_agents": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^@[a-z0-9-]+$"
+      },
+      "description": "Recipient agent(s). Empty array means broadcast."
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "request",
+        "response",
+        "acknowledgment",
+        "notification",
+        "error",
+        "query",
+        "feedback",
+        "coordination",
+        "clarification"
+      ],
+      "description": "Type of message"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Message subject/topic"
+    },
+    "body": {
+      "type": "object",
+      "description": "Message content (structure depends on message_type)"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "conversation_id": {
+          "type": "string",
+          "description": "ID of ongoing conversation thread"
+        },
+        "turn": {
+          "type": "integer",
+          "description": "Turn number in conversation"
+        },
+        "parent_message_id": {
+          "type": "string",
+          "description": "ID of message this is responding to"
+        },
+        "references": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Artifact IDs referenced in message"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "critical"],
+      "default": "normal"
+    },
+    "deadline": {
+      "type": "integer",
+      "description": "Deadline for response in seconds"
+    },
+    "retry_policy": {
+      "type": "object",
+      "properties": {
+        "max_retries": {"type": "integer", "default": 3},
+        "retry_delay": {"type": "integer", "description": "Seconds between retries"}
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["received", "processing", "completed", "failed", "timeout"],
+          "description": "Current response status"
+        },
+        "data": {
+          "type": "object",
+          "description": "Response payload"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "code": {"type": "string"},
+            "message": {"type": "string"},
+            "details": {"type": "object"}
+          }
+        },
+        "received_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "encryption": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "algorithm": {"type": "string"},
+        "key_id": {"type": "string"}
+      }
+    },
+    "signing": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "signature": {"type": "string"},
+        "algorithm": {"type": "string"}
+      }
+    }
+  }
+}

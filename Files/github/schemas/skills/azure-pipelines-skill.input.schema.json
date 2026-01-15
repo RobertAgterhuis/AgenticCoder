@@ -1,0 +1,245 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "azure-pipelines-skill.input.schema.json",
+  "title": "Azure Pipelines Skill Input Schema",
+  "description": "Input schema for azure-pipelines skill - defines what information needed for pipeline guidance",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "agent_id",
+    "context",
+    "question"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "azure-pipelines",
+      "description": "Must be 'azure-pipelines'"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@azure-devops-specialist$"
+    },
+    "context": {
+      "type": "object",
+      "required": ["phase", "project_id"],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "const": 16
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^proj-"
+        },
+        "organization": {
+          "type": "string",
+          "description": "Azure DevOps organization name"
+        },
+        "project_name": {
+          "type": "string",
+          "description": "Azure DevOps project name"
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "pipeline_creation",
+            "deployment_strategy",
+            "quality_gates",
+            "security_scanning",
+            "artifact_management",
+            "environment_setup"
+          ]
+        },
+        "pipeline_name": {
+          "type": "string",
+          "description": "Name for the pipeline"
+        },
+        "repository": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["GitHub", "Azure Repos"]
+            },
+            "url": {
+              "type": "string"
+            },
+            "branch": {
+              "type": "string"
+            }
+          }
+        },
+        "build_configuration": {
+          "type": "object",
+          "properties": {
+            "build_type": {
+              "type": "string",
+              "enum": [".NET", "Node.js", "Python", "Java", "Go", "Docker"]
+            },
+            "framework_version": {
+              "type": "string",
+              "description": "e.g., 'net8.0', '18.x', '3.11'"
+            },
+            "build_commands": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "test_enabled": {
+              "type": "boolean"
+            },
+            "test_framework": {
+              "type": "string",
+              "enum": ["xUnit", "NUnit", "Jest", "pytest", "JUnit", "TestNG"]
+            }
+          }
+        },
+        "deployment_environments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": ["dev", "staging", "production"]
+              },
+              "azure_service": {
+                "type": "string",
+                "enum": [
+                  "App Service",
+                  "Container Instance",
+                  "Kubernetes (AKS)",
+                  "Function App",
+                  "Static Web App",
+                  "Virtual Machine"
+                ]
+              },
+              "resource_group": {
+                "type": "string"
+              },
+              "requires_approval": {
+                "type": "boolean",
+                "description": "Deployment requires manual approval"
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "deployment_strategy": {
+          "type": "string",
+          "enum": ["RunOnce", "Rolling", "Canary", "BlueGreen"]
+        },
+        "quality_gates": {
+          "type": "object",
+          "properties": {
+            "code_quality_analysis": {
+              "type": "boolean",
+              "description": "Run SonarQube analysis"
+            },
+            "sonarqube_project_key": {
+              "type": "string"
+            },
+            "sonarqube_server": {
+              "type": "string"
+            },
+            "minimum_coverage_percent": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100,
+              "default": 80
+            },
+            "dependency_scanning": {
+              "type": "boolean"
+            },
+            "sast_scanning": {
+              "type": "boolean"
+            },
+            "container_scanning": {
+              "type": "boolean"
+            },
+            "infrastructure_scanning": {
+              "type": "boolean"
+            }
+          }
+        },
+        "artifact_management": {
+          "type": "object",
+          "properties": {
+            "artifact_feed": {
+              "type": "string",
+              "description": "Azure Artifacts feed name"
+            },
+            "publish_build_artifacts": {
+              "type": "boolean"
+            },
+            "docker_registry": {
+              "type": "string",
+              "enum": ["Azure Container Registry", "Docker Hub"]
+            }
+          }
+        },
+        "notifications": {
+          "type": "object",
+          "properties": {
+            "slack_notifications": {
+              "type": "boolean"
+            },
+            "email_on_failure": {
+              "type": "boolean"
+            },
+            "teams_notifications": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "architectural_context": {
+      "type": "object",
+      "properties": {
+        "number_of_stages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "parallel_jobs": {
+          "type": "boolean",
+          "description": "Run multiple jobs in parallel"
+        },
+        "use_templates": {
+          "type": "boolean",
+          "description": "Create reusable pipeline templates"
+        },
+        "vm_image": {
+          "type": "string",
+          "enum": ["ubuntu-latest", "windows-latest", "macos-latest"]
+        },
+        "container_pool": {
+          "type": "boolean",
+          "description": "Use self-hosted agent pool"
+        }
+      }
+    },
+    "team_context": {
+      "type": "object",
+      "properties": {
+        "devops_experience": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"]
+        },
+        "yaml_preference": {
+          "type": "boolean",
+          "description": "Prefer YAML over classic UI"
+        }
+      }
+    }
+  }
+}

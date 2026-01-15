@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/azure-pricing-mcp.pricing-request.schema.json",
+  "title": "Azure Pricing MCP - Pricing Request Schema",
+  "description": "Request schema for querying Azure service pricing",
+  "type": "object",
+  "required": ["resource_type"],
+  "properties": {
+    "resource_type": {
+      "type": "string",
+      "enum": [
+        "virtual_machine",
+        "app_service",
+        "cosmos_db",
+        "sql_database",
+        "storage_account",
+        "azure_functions",
+        "kubernetes_service",
+        "api_management",
+        "cognitive_services",
+        "data_factory",
+        "synapse_analytics",
+        "monitor"
+      ],
+      "description": "Azure resource type to price"
+    },
+    "region": {
+      "type": "string",
+      "default": "us-east-1",
+      "description": "Azure region (e.g., us-east-1, westeurope, australiaeast)"
+    },
+    "specifications": {
+      "type": "object",
+      "description": "Resource-specific specifications",
+      "properties": {
+        "instance_size": {
+          "type": "string",
+          "description": "VM/Instance size (e.g., Standard_B2s, P1V2)"
+        },
+        "storage_gb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Storage size in GB"
+        },
+        "requests_per_second": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Expected requests per second"
+        },
+        "data_transfer_gb": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Data transfer in GB"
+        },
+        "compute_hours": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Monthly compute hours"
+        }
+      }
+    },
+    "currency": {
+      "type": "string",
+      "enum": ["USD", "EUR", "GBP", "AUD"],
+      "default": "USD",
+      "description": "Currency for pricing"
+    },
+    "billing_model": {
+      "type": "string",
+      "enum": ["pay_as_you_go", "reserved_1_year", "reserved_3_year", "spot"],
+      "default": "pay_as_you_go",
+      "description": "Billing model"
+    }
+  }
+}

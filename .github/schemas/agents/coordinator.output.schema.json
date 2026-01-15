@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/coordinator.output.schema.json",
+  "type": "object",
+  "title": "Implementation Coordinator Output",
+  "description": "Coordination plan and resource allocation",
+  "required": [
+    "coordination_plan"
+  ],
+  "properties": {
+    "coordination_plan": {
+      "type": "object",
+      "properties": {
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "resource_allocation": {
+          "type": "object"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

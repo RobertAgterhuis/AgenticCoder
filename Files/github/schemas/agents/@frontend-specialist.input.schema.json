@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@frontend-specialist.input.schema.json",
+  "title": "@frontend-specialist Agent Input Schema",
+  "description": "Input contract for the @frontend-specialist agent (UI Implementation)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@code-architect"],
+      "description": "@frontend-specialist agent is triggered by @code-architect"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 10,
+      "description": "@frontend-specialist agent runs in phase 10 (frontend)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["code_structure", "design_patterns"],
+      "properties": {
+        "code_structure": {
+          "type": "string",
+          "description": "Folder structure from @code-architect"
+        },
+        "design_patterns": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Design patterns to apply"
+        },
+        "technology_choices": {
+          "type": "object",
+          "properties": {
+            "frontend": {
+              "type": "string",
+              "enum": ["React", "Vue", "Angular", "Svelte", "Next.js"]
+            },
+            "styling": {
+              "type": "string",
+              "enum": ["Tailwind CSS", "CSS Modules", "Styled Components", "SASS"]
+            },
+            "state_management": {
+              "type": "string",
+              "enum": ["Zustand", "Redux", "TanStack Query", "Context API"]
+            }
+          }
+        },
+        "api_contracts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "endpoint": {"type": "string"},
+              "method": {"type": "string"},
+              "request": {"type": "object"},
+              "response": {"type": "object"}
+            }
+          },
+          "description": "API endpoints to consume"
+        },
+        "pages": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Pages to implement (e.g., Home, Login, Dashboard)"
+        }
+      }
+    }
+  }
+}

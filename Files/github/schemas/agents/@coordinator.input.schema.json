@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@coordinator.input.schema.json",
+  "title": "@coordinator Agent Input Schema",
+  "description": "Input contract for the @coordinator agent (Implementation Coordinator)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@backlog"],
+      "description": "@coordinator agent is triggered by @backlog"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 3,
+      "description": "@coordinator agent runs in phase 3 (implementation planning)"
+    },
+    "input": {
+      "type": "object",
+      "required": [
+        "project_plan_folder",
+        "team_size",
+        "methodology",
+        "timeline_constraint"
+      ],
+      "properties": {
+        "project_plan_folder": {
+          "type": "string",
+          "description": "Path to ProjectPlan folder",
+          "pattern": "^.*ProjectPlan/?$"
+        },
+        "epics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "estimated_effort"],
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "estimated_effort": {"type": "integer", "minimum": 1},
+              "priority": {"type": "string"}
+            }
+          },
+          "description": "Epics from @backlog agent"
+        },
+        "stories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "story_points"],
+            "properties": {
+              "id": {"type": "string"},
+              "epic_id": {"type": "string"},
+              "story_points": {"type": "integer"}
+            }
+          },
+          "description": "User stories with story points"
+        },
+        "release_plan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "release_name": {"type": "string"},
+              "target_date": {"type": "string", "format": "date"},
+              "epics_included": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "description": "Release milestones from Phase 2"
+        },
+        "team_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Number of team members (determines phase scaling)"
+        },
+        "methodology": {
+          "type": "string",
+          "enum": [
+            "Agile Scrum",
+            "Kanban",
+            "Waterfall",
+            "Hybrid",
+            "Continuous Delivery"
+          ],
+          "description": "Development methodology (affects phase structure)"
+        },
+        "timeline_constraint": {
+          "type": "string",
+          "description": "Total project timeline (e.g., '6 months', '120 days')"
+        },
+        "project_risk_level": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High", "Critical"],
+          "default": "Medium",
+          "description": "Risk level (affects phase breakdown)"
+        }
+      }
+    }
+  }
+}

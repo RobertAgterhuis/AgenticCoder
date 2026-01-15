@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.dev/schemas/skills/vue-best-practices.input.schema.json",
+  "title": "Vue Best Practices Skill Input Schema",
+  "description": "Input for Vue best practices optimization skill",
+  "type": "object",
+  "required": ["analysis_type"],
+  "properties": {
+    "analysis_type": {
+      "type": "string",
+      "enum": [
+        "performance",
+        "security",
+        "accessibility",
+        "code-quality",
+        "testing",
+        "build-optimization",
+        "comprehensive"
+      ],
+      "description": "Type of best practices analysis to perform"
+    },
+    "component_code": {
+      "type": "string",
+      "description": "Vue component code to analyze"
+    },
+    "store_code": {
+      "type": "string",
+      "description": "Pinia store code to analyze"
+    },
+    "composable_code": {
+      "type": "string",
+      "description": "Composable code to analyze"
+    },
+    "application_type": {
+      "type": "string",
+      "enum": ["spa", "pwa", "ssr"],
+      "description": "Type of application"
+    },
+    "target_metrics": {
+      "type": "object",
+      "description": "Target performance metrics",
+      "properties": {
+        "bundle_size_kb": {
+          "type": "number",
+          "description": "Target bundle size in KB"
+        },
+        "first_contentful_paint_ms": {
+          "type": "number",
+          "description": "Target FCP in milliseconds"
+        },
+        "time_to_interactive_ms": {
+          "type": "number",
+          "description": "Target TTI in milliseconds"
+        },
+        "lighthouse_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Target Lighthouse performance score"
+        }
+      }
+    },
+    "accessibility_level": {
+      "type": "string",
+      "enum": ["WCAG-A", "WCAG-AA", "WCAG-AAA"],
+      "default": "WCAG-AA"
+    }
+  }
+}

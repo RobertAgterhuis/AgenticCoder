@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/qa.output.schema.json",
+  "type": "object",
+  "title": "QA Validator Output",
+  "description": "QA strategy and test plan",
+  "required": [
+    "qa_strategy",
+    "test_plan"
+  ],
+  "properties": {
+    "qa_strategy": {
+      "type": "object"
+    },
+    "test_plan": {
+      "type": "object",
+      "properties": {
+        "test_cases": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "test_schedule": {
+          "type": "string"
+        },
+        "coverage_target": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

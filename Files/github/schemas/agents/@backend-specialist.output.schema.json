@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@backend-specialist.output.schema.json",
+  "title": "@backend-specialist Agent Output Schema",
+  "description": "Output contract for the @backend-specialist agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@backend-specialist",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 11,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "services_created",
+        "repositories_created",
+        "api_endpoints_implemented"
+      ],
+      "properties": {
+        "services_created": {
+          "type": "integer",
+          "minimum": 3,
+          "description": "Number of service classes"
+        },
+        "repositories_created": {
+          "type": "integer",
+          "minimum": 3,
+          "description": "Number of repository implementations"
+        },
+        "api_endpoints_implemented": {
+          "type": "integer",
+          "minimum": 5,
+          "description": "Number of REST endpoints"
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": {"type": "string"},
+              "path": {"type": "string"},
+              "handler": {"type": "string"}
+            }
+          }
+        },
+        "authentication_implemented": {
+          "type": "boolean",
+          "description": "Whether auth is implemented"
+        },
+        "validation_implemented": {
+          "type": "boolean",
+          "description": "Whether input validation is implemented"
+        },
+        "error_handling_implemented": {
+          "type": "boolean",
+          "description": "Whether error handling is implemented"
+        },
+        "database_migrations_created": {
+          "type": "boolean",
+          "description": "Whether DB migrations are ready"
+        },
+        "testing_setup": {
+          "type": "boolean",
+          "description": "Whether unit tests are configured"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "service_files",
+              "repository_files",
+              "route_files",
+              "controller_files",
+              "middleware_files",
+              "migration_files"
+            ]
+          }
+        }
+      },
+      "minItems": 3,
+      "description": "Backend artifacts created"
+    },
+    "handoff_to": {
+      "type": "string",
+      "const": "@devops-specialist",
+      "description": "Next agent in chain"
+    }
+  }
+}

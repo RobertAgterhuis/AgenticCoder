@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/agent-envelope.schema.json",
+  "title": "Agent Envelope Schema",
+  "description": "Universal wrapper for all agent input/output messages. Provides standardized structure for agent communication.",
+  "type": "object",
+  "required": ["agent_id", "phase", "timestamp", "data"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@[a-z]+$",
+      "description": "Unique agent identifier (e.g., @plan, @doc, @backlog)",
+      "examples": ["@plan", "@doc", "@backlog", "@coordinator"]
+    },
+    "phase": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Current phase number (0-10)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of message creation"
+    },
+    "data": {
+      "oneOf": [
+        {
+          "type": "object",
+          "description": "Agent input or output data (validated against agent-specific schema)"
+        },
+        {
+          "$ref": "#/$defs/error_response"
+        }
+      ],
+      "description": "Payload data - either success data or error response"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Execution time in milliseconds"
+        },
+        "correlation_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique ID for tracing agent chain execution"
+        },
+        "source_agent": {
+          "type": "string",
+          "pattern": "^@[a-z]+$",
+          "description": "Agent that triggered this execution"
+        },
+        "next_agent": {
+          "type": "string",
+          "pattern": "^@[a-z]+$",
+          "description": "Next agent in the chain"
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3,
+          "default": 0,
+          "description": "Number of retry attempts"
+        }
+      },
+      "description": "Additional metadata for tracking and debugging"
+    }
+  },
+  "$defs": {
+    "error_response": {
+      "type": "object",
+      "required": ["error", "error_code", "message"],
+      "properties": {
+        "error": {
+          "type": "boolean",
+          "const": true,
+          "description": "Indicates this is an error response"
+        },
+        "error_code": {
+          "type": "string",
+          "enum": [
+            "VALIDATION_ERROR",
+            "EXECUTION_ERROR",
+            "TIMEOUT_ERROR",
+            "DEPENDENCY_ERROR",
+            "SCHEMA_ERROR",
+            "MCP_ERROR"
+          ],
+          "description": "Error category"
+        },
+        "message": {
+          "type": "string",
+          "description": "Human-readable error message"
+        },
+        "details": {
+          "type": "object",
+          "description": "Additional error context"
+        }
+      }
+    }
+  }
+}

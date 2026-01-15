@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/azure-resource-graph-mcp.inventory.schema.json",
+  "title": "Azure Resource Graph MCP - Inventory Schema",
+  "description": "Schema for Azure resource inventory/audit results",
+  "type": "object",
+  "required": ["inventory_date", "summary"],
+  "properties": {
+    "inventory_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When inventory was generated"
+    },
+    "summary": {
+      "type": "object",
+      "required": ["total_resources", "by_type"],
+      "properties": {
+        "total_resources": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of resources"
+        },
+        "by_type": {
+          "type": "object",
+          "additionalProperties": {"type": "integer"},
+          "description": "Resources grouped by type"
+        },
+        "by_subscription": {
+          "type": "object",
+          "additionalProperties": {"type": "integer"},
+          "description": "Resources grouped by subscription"
+        },
+        "by_region": {
+          "type": "object",
+          "additionalProperties": {"type": "integer"},
+          "description": "Resources grouped by region"
+        }
+      }
+    },
+    "resource_details": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "resource_group": {"type": "string"},
+          "subscription_id": {"type": "string"},
+          "region": {"type": "string"},
+          "tags": {
+            "type": "object",
+            "additionalProperties": {"type": "string"}
+          }
+        }
+      },
+      "description": "Detailed resource list"
+    },
+    "compliance_checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "check_name": {"type": "string"},
+          "passed": {"type": "integer"},
+          "failed": {"type": "integer"},
+          "recommendations": {"type": "array", "items": {"type": "string"}}
+        }
+      },
+      "description": "Compliance/security check results"
+    }
+  }
+}

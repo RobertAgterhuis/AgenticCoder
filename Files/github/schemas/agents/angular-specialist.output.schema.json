@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Angular Specialist Agent Output",
+  "description": "Output structure from angular-specialist agent containing generated component architecture and implementation specifications",
+  "type": "object",
+  "properties": {
+    "componentArchitecture": {
+      "type": "object",
+      "description": "Component structure and hierarchy",
+      "properties": {
+        "rootComponent": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "example": "AppComponent" },
+            "selector": { "type": "string", "example": "app-root" },
+            "template": { "type": "string" },
+            "styles": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "featureModules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "example": "UsersModule" },
+              "components": { "type": "array", "items": { "type": "string" } },
+              "services": { "type": "array", "items": { "type": "string" } },
+              "routing": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "stateManagement": {
+      "type": "object",
+      "description": "NgRx or state management configuration",
+      "properties": {
+        "tool": { "type": "string", "enum": ["ngrx", "akita", "ngxs"] },
+        "stores": { "type": "array", "items": { "type": "string" } },
+        "effects": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "serviceLayers": {
+      "type": "array",
+      "description": "Service architecture layers",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "example": "UserService" },
+          "scope": { "type": "string", "enum": ["root", "module", "component"] },
+          "methods": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Implementation recommendations",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["componentArchitecture", "stateManagement"]
+}

@@ -1,0 +1,301 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "dotnet-webapi-skill.output.schema.json",
+  "title": ".NET Web API Skill Output Schema",
+  "description": "Output schema for dotnet-webapi skill - defines generated controller code and guidance",
+  "type": "object",
+  "required": [
+    "status",
+    "controller_code"
+  ],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "partial_success",
+        "warning",
+        "error"
+      ]
+    },
+    "controller_code": {
+      "type": "object",
+      "properties": {
+        "class_name": {
+          "type": "string",
+          "description": "Generated controller class name"
+        },
+        "code": {
+          "type": "string",
+          "description": "Complete C# controller code",
+          "minLength": 200
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "[ApiController]",
+              "[Route(\"api/[controller]\")]",
+              "[Authorize]",
+              "[AllowAnonymous]"
+            ]
+          }
+        },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": ["Get", "Post", "Put", "Patch", "Delete"]
+              },
+              "route": {
+                "type": "string"
+              },
+              "returns": {
+                "type": "string",
+                "enum": [
+                  "Ok",
+                  "Created",
+                  "NoContent",
+                  "BadRequest",
+                  "NotFound",
+                  "Unauthorized",
+                  "Conflict"
+                ]
+              },
+              "requires_auth": {
+                "type": "boolean"
+              },
+              "summary": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "dto_definitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "description": "Complete C# DTO class"
+          },
+          "validation_attributes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "[Required]",
+                "[StringLength(...)]",
+                "[EmailAddress]",
+                "[Range(...)]",
+                "[RegularExpression(...)]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "error_handling": {
+      "type": "object",
+      "properties": {
+        "exception_middleware": {
+          "type": "string",
+          "description": "Global error handling middleware code",
+          "minLength": 100
+        },
+        "status_codes": {
+          "type": "object",
+          "properties": {
+            "200": {
+              "type": "string",
+              "const": "OK - Resource retrieved successfully"
+            },
+            "201": {
+              "type": "string",
+              "const": "Created - New resource created"
+            },
+            "204": {
+              "type": "string",
+              "const": "No Content - Operation successful, no response body"
+            },
+            "400": {
+              "type": "string",
+              "const": "Bad Request - Validation failure"
+            },
+            "401": {
+              "type": "string",
+              "const": "Unauthorized - Authentication required"
+            },
+            "403": {
+              "type": "string",
+              "const": "Forbidden - Insufficient permissions"
+            },
+            "404": {
+              "type": "string",
+              "const": "Not Found - Resource does not exist"
+            },
+            "409": {
+              "type": "string",
+              "const": "Conflict - Resource already exists"
+            },
+            "500": {
+              "type": "string",
+              "const": "Internal Server Error - Unexpected error"
+            }
+          }
+        },
+        "problem_details_format": {
+          "type": "string",
+          "const": "RFC 7231 compliant error responses"
+        }
+      }
+    },
+    "dependency_injection": {
+      "type": "object",
+      "properties": {
+        "service_registrations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "DI service registration code (services.Add...)"
+          }
+        },
+        "lifetime_strategy": {
+          "type": "string",
+          "enum": ["Transient", "Scoped", "Singleton"],
+          "description": "Recommended lifetime for services"
+        }
+      }
+    },
+    "authentication_implementation": {
+      "type": "object",
+      "properties": {
+        "auth_type": {
+          "type": "string",
+          "enum": ["JWT", "OAuth2", "IdentityServer", "AzureAD", "API_Key"]
+        },
+        "configuration_code": {
+          "type": "string",
+          "description": "Authentication setup code",
+          "minLength": 100
+        },
+        "authorization_policies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "Policy registration code"
+          }
+        }
+      }
+    },
+    "best_practices": {
+      "type": "object",
+      "properties": {
+        "async_await": {
+          "type": "string",
+          "const": "All operations async to prevent thread starvation"
+        },
+        "null_check_strategy": {
+          "type": "string",
+          "const": "Use ArgumentNullException for public methods"
+        },
+        "logging": {
+          "type": "string",
+          "description": "Logging guidelines (info, warning, error levels)"
+        },
+        "validation_placement": {
+          "type": "string",
+          "const": "Validate at controller boundary before services"
+        }
+      }
+    },
+    "testing_guidance": {
+      "type": "object",
+      "properties": {
+        "unit_test_template": {
+          "type": "string",
+          "description": "xUnit/NUnit test class template",
+          "minLength": 100
+        },
+        "mock_strategy": {
+          "type": "string",
+          "description": "Moq/Substitute mocking patterns"
+        },
+        "test_coverage_target": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 80
+        }
+      }
+    },
+    "performance_recommendations": {
+      "type": "object",
+      "properties": {
+        "caching_strategy": {
+          "type": "string",
+          "enum": ["no_caching", "in_memory", "distributed_redis"],
+          "description": "Recommended caching approach"
+        },
+        "database_optimization": {
+          "type": "string",
+          "description": "Query optimization tips"
+        },
+        "pagination": {
+          "type": "string",
+          "description": "Pagination implementation for list endpoints"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "compilation_errors": {
+          "type": "integer",
+          "default": 0
+        },
+        "code_analysis_warnings": {
+          "type": "integer",
+          "default": 0
+        },
+        "follows_conventions": {
+          "type": "boolean",
+          "description": "Follows Microsoft C# coding standards"
+        },
+        "async_compliance": {
+          "type": "boolean",
+          "description": "All I/O operations are async"
+        },
+        "security_review": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "input_validation",
+              "authentication_check",
+              "authorization_check",
+              "sql_injection_prevention",
+              "xss_prevention"
+            ]
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/error-response.schema.json",
+  "title": "Error Response Schema",
+  "description": "Standard error response from any agent or service",
+  "type": "object",
+  "required": ["error_code", "message", "timestamp"],
+  "properties": {
+    "error_code": {
+      "type": "string",
+      "description": "Machine-readable error code (e.g., AGENT_TIMEOUT, VALIDATION_ERROR)"
+    },
+    "message": {
+      "type": "string",
+      "description": "Human-readable error message"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp"
+    },
+    "details": {
+      "type": "object",
+      "description": "Additional error context"
+    },
+    "stack_trace": {
+      "type": "string",
+      "description": "Stack trace (development only)"
+    },
+    "request_id": {
+      "type": "string",
+      "description": "Unique request identifier for tracing"
+    },
+    "agent_id": {
+      "type": "string",
+      "description": "Agent that encountered the error"
+    },
+    "phase": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 12,
+      "description": "Phase during which error occurred"
+    },
+    "retryable": {
+      "type": "boolean",
+      "description": "Whether this error can be retried"
+    },
+    "retry_after_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Seconds to wait before retrying (if retryable)"
+    }
+  }
+}

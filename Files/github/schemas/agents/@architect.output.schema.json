@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@architect.output.schema.json",
+  "title": "@architect Agent Output Schema",
+  "description": "Output contract for the @architect agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@architect",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 6,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "architecture_style",
+        "architecture_decisions",
+        "technology_choices"
+      ],
+      "properties": {
+        "architecture_style": {
+          "type": "string",
+          "enum": ["Monolithic", "Modular Monolith", "Microservices", "Serverless", "Hybrid"],
+          "description": "Overall architecture pattern chosen"
+        },
+        "architecture_decisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "decision_id": {"type": "string"},
+              "name": {"type": "string"},
+              "context": {"type": "string"},
+              "decision": {"type": "string"},
+              "rationale": {"type": "string"},
+              "consequences": {"type": "array", "items": {"type": "string"}}
+            }
+          },
+          "minItems": 5,
+          "description": "Architecture Decision Records (ADRs)"
+        },
+        "technology_choices": {
+          "type": "object",
+          "properties": {
+            "frontend": {"type": "string"},
+            "backend": {"type": "string"},
+            "database": {"type": "string"},
+            "cache": {"type": "string"},
+            "messaging": {"type": "string"}
+          }
+        },
+        "deployment_target": {
+          "type": "string",
+          "enum": ["Azure", "AWS", "GCP", "On-Premises", "Hybrid"],
+          "description": "Cloud provider or deployment target"
+        },
+        "design_patterns": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Recommended design patterns"
+        },
+        "estimated_monthly_cost": {
+          "type": "string",
+          "description": "Cost estimate (e.g., $200-500/month)"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "architecture_narrative",
+              "adr_document",
+              "system_diagram",
+              "technology_matrix",
+              "cost_estimation"
+            ]
+          }
+        }
+      },
+      "minItems": 2,
+      "description": "Architecture artifacts created"
+    },
+    "handoff_to": {
+      "type": "string",
+      "const": "@code-architect",
+      "description": "Next agent in chain"
+    }
+  }
+}

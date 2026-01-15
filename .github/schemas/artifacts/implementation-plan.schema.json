@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/artifacts/implementation-plan.schema.json",
+  "title": "Implementation Plan Schema",
+  "description": "Schema for implementation and development planning",
+  "type": "object",
+  "required": ["phases", "team_structure", "schedule"],
+  "properties": {
+    "phases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["phase_number", "name", "duration_days"],
+        "properties": {
+          "phase_number": { "type": "integer", "minimum": 1 },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "duration_days": { "type": "integer", "minimum": 1 },
+          "deliverables": { "type": "array", "items": { "type": "string" } },
+          "dependencies": { "type": "array", "items": { "type": "integer" } },
+          "resources_required": {
+            "type": "object",
+            "properties": {
+              "developers": { "type": "integer" },
+              "architects": { "type": "integer" },
+              "testers": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "team_structure": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": { "type": "string" },
+              "count": { "type": "integer" },
+              "skills": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "schedule": {
+      "type": "object",
+      "properties": {
+        "start_date": { "type": "string", "format": "date" },
+        "end_date": { "type": "string", "format": "date" },
+        "milestones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "deliverables": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "description": { "type": "string" },
+          "probability": { "type": "string", "enum": ["Low", "Medium", "High"] },
+          "impact": { "type": "string", "enum": ["Low", "Medium", "High"] },
+          "mitigation": { "type": "string" }
+        }
+      }
+    }
+  }
+}

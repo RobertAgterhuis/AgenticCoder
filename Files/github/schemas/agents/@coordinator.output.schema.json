@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@coordinator.output.schema.json",
+  "title": "@coordinator Agent Output Schema",
+  "description": "Output contract for the @coordinator agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@coordinator",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 3,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "phases_created",
+        "total_timeline_days",
+        "dependencies_mapped",
+        "agent_assignments",
+        "next_phase",
+        "next_agent"
+      ],
+      "properties": {
+        "phases_created": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 15,
+          "description": "Number of implementation phases defined"
+        },
+        "total_timeline_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total estimated project duration in days"
+        },
+        "buffer_days": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "20% buffer days for unknowns"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["phase_number", "name", "duration_days"],
+            "properties": {
+              "phase_number": {"type": "integer"},
+              "name": {"type": "string"},
+              "duration_days": {"type": "integer", "minimum": 1},
+              "start_date": {"type": "string", "format": "date"},
+              "end_date": {"type": "string", "format": "date"},
+              "epics_included": {"type": "array", "items": {"type": "string"}},
+              "status": {
+                "type": "string",
+                "enum": ["Planned", "In Progress", "Completed"]
+              }
+            }
+          },
+          "minItems": 1,
+          "description": "Defined implementation phases"
+        },
+        "dependencies_mapped": {
+          "type": "boolean",
+          "description": "Whether phase dependencies have been identified"
+        },
+        "agent_assignments": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "description": "Agent assignments per phase"
+        },
+        "next_phase": {
+          "type": "integer",
+          "const": 4,
+          "description": "Next phase number"
+        },
+        "next_agent": {
+          "type": "string",
+          "enum": ["@qa"],
+          "description": "Next agent to execute"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": ["phases", "timeline", "dependencies", "agent_assignments"]
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "Planning artifacts created"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {"type": "integer", "minimum": 0},
+        "phases_with_dependencies": {"type": "integer", "minimum": 0},
+        "critical_path_length_days": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

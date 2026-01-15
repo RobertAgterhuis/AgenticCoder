@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.dev/schemas/skills/infrastructure-automation.output.schema.json",
+  "title": "Infrastructure Automation Skill Output Schema",
+  "description": "Output schema for infrastructure-automation skill - generated IaC and deployment configs",
+  "type": "object",
+  "required": ["skill_id", "status", "automation_scripts", "infrastructure_code"],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "infrastructure-automation",
+      "description": "Skill identifier"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"],
+      "description": "Generation status"
+    },
+    "automation_scripts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["script_name", "script_path", "language"],
+        "properties": {
+          "script_name": {
+            "type": "string"
+          },
+          "script_path": {
+            "type": "string",
+            "examples": ["scripts/deploy.sh", "scripts/validate.ps1"]
+          },
+          "language": {
+            "type": "string",
+            "enum": ["PowerShell", "Bash", "Python", "Go"]
+          },
+          "purpose": {
+            "type": "string",
+            "examples": ["Deploy infrastructure", "Validate resources", "Setup monitoring"]
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "parameter_name": { "type": "string" },
+                "type": { "type": "string" },
+                "required": { "type": "boolean" },
+                "default_value": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "description": "Generated deployment and setup scripts"
+    },
+    "infrastructure_code": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["file_name", "file_path", "format"],
+        "properties": {
+          "file_name": { "type": "string" },
+          "file_path": {
+            "type": "string",
+            "examples": ["infra/main.bicep", "terraform/main.tf"]
+          },
+          "format": {
+            "type": "string",
+            "enum": ["Bicep", "Terraform", "ARM Template", "CloudFormation"]
+          },
+          "resources_defined": {
+            "type": "array",
+            "items": { "type": "string" },
+            "examples": ["App Service", "PostgreSQL Database", "Redis Cache"]
+          },
+          "parameters": {
+            "type": "array",
+            "items": { "type": "string" },
+            "examples": ["environment", "region", "instance_size"]
+          },
+          "outputs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "examples": ["app_service_url", "database_connection_string"]
+          }
+        }
+      },
+      "description": "Generated infrastructure-as-code files"
+    },
+    "deployment_configuration": {
+      "type": "object",
+      "properties": {
+        "deployment_method": {
+          "type": "string",
+          "enum": ["Blue-Green", "Rolling", "Canary", "RunOnce"],
+          "description": "Deployment strategy"
+        },
+        "rollback_strategy": {
+          "type": "string",
+          "description": "How to rollback on failure"
+        },
+        "validation_steps": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["Health checks", "Smoke tests", "Performance baseline"]
+        },
+        "post_deployment_verification": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["Check all resources deployed", "Verify connectivity", "Test endpoints"]
+        }
+      }
+    },
+    "cost_analysis": {
+      "type": "object",
+      "properties": {
+        "estimated_monthly_cost": {
+          "type": "number",
+          "description": "Estimated monthly cost in USD"
+        },
+        "cost_breakdown": {
+          "type": "object",
+          "additionalProperties": { "type": "number" },
+          "examples": { "App Service": 50, "Database": 100, "CDN": 25 }
+        },
+        "cost_optimization_applied": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["Reserved instances", "Auto-scaling enabled", "CDN caching configured"]
+        },
+        "savings_potential": {
+          "type": "string",
+          "description": "Potential monthly savings with optimizations"
+        }
+      },
+      "description": "Cost estimates and optimization recommendations"
+    },
+    "security_configuration": {
+      "type": "object",
+      "properties": {
+        "network_security_rules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["Allow HTTPS only", "Restrict to VPN", "DDoS protection enabled"]
+        },
+        "secrets_management": {
+          "type": "string",
+          "examples": ["Azure Key Vault", "Secrets stored in GitHub"]
+        },
+        "access_control": {
+          "type": "string",
+          "examples": ["RBAC configured", "Service principal created"]
+        },
+        "audit_logging": {
+          "type": "string",
+          "examples": ["Application Insights", "Log Analytics configured"]
+        },
+        "encryption": {
+          "type": "object",
+          "properties": {
+            "at_rest": { "type": "boolean" },
+            "in_transit": { "type": "boolean" },
+            "tls_version": { "type": "string", "examples": ["1.2", "1.3"] }
+          }
+        }
+      },
+      "description": "Security configurations applied"
+    },
+    "documentation": {
+      "type": "object",
+      "properties": {
+        "deployment_guide": {
+          "type": "string",
+          "description": "Path to deployment documentation"
+        },
+        "troubleshooting_guide": {
+          "type": "string",
+          "description": "Path to troubleshooting documentation"
+        },
+        "configuration_reference": {
+          "type": "string",
+          "description": "Path to configuration reference"
+        },
+        "architecture_diagram": {
+          "type": "string",
+          "description": "Path to architecture diagram"
+        }
+      }
+    },
+    "files_generated": {
+      "type": "integer",
+      "description": "Total number of IaC and script files generated"
+    },
+    "resources_count": {
+      "type": "integer",
+      "description": "Total number of cloud resources defined"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

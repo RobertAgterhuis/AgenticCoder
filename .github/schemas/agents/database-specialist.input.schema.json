@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/database-specialist.input.schema.json",
+  "type": "object",
+  "title": "Database Specialist Input",
+  "description": "Design database architecture",
+  "required": [
+    "requirements"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "data_volume": {
+      "type": "object"
+    },
+    "performance_requirements": {
+      "type": "object"
+    }
+  }
+}

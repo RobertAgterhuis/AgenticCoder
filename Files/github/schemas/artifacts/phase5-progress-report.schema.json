@@ -1,0 +1,454 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase5-progress-report.schema.json",
+  "title": "Phase 5 Progress Report Artifact",
+  "description": "Validates progress tracking and reporting output from @reporter agent (Phase 5)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "report_metadata", "sprint_plan"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "progress_report",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@reporter",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 5,
+      "description": "Phase number"
+    },
+    "report_metadata": {
+      "type": "object",
+      "required": ["report_period_start", "report_period_end", "total_sprints"],
+      "properties": {
+        "report_period_start": {
+          "type": "string",
+          "format": "date"
+        },
+        "report_period_end": {
+          "type": "string",
+          "format": "date"
+        },
+        "project_name": {
+          "type": "string"
+        },
+        "total_sprints": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sprint_duration_weeks": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 4,
+          "description": "Length of each sprint (typically 1-2 weeks)"
+        }
+      }
+    },
+    "sprint_plan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sprint_number", "duration_weeks", "planned_stories"],
+        "properties": {
+          "sprint_number": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sprint_name": {
+            "type": "string",
+            "description": "Optional sprint name (Sprint 1, Week 1, etc.)"
+          },
+          "duration_weeks": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 4
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "planned_stories": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "pattern": "^US-[0-9]{3,4}$"
+            }
+          },
+          "planned_story_points": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "team_capacity_points": {
+            "type": "integer",
+            "description": "Total team capacity for this sprint"
+          }
+        }
+      },
+      "description": "Sprint-by-sprint planning"
+    },
+    "velocity_tracking": {
+      "type": "object",
+      "properties": {
+        "initial_velocity": {
+          "type": "number",
+          "description": "Starting team velocity estimate"
+        },
+        "current_velocity": {
+          "type": "number",
+          "description": "Current measured velocity"
+        },
+        "velocity_trend": {
+          "type": "string",
+          "enum": ["Increasing", "Stable", "Decreasing"],
+          "description": "Velocity trend direction"
+        },
+        "velocity_rationale": {
+          "type": "string",
+          "description": "Explanation of velocity changes"
+        },
+        "velocity_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sprint": {
+                "type": "integer"
+              },
+              "velocity": {
+                "type": "number"
+              },
+              "notes": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Historical velocity data"
+        }
+      }
+    },
+    "progress_metrics": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric_name": {
+            "type": "string"
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "current_value": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "measurement_frequency": {
+            "type": "string",
+            "enum": ["Daily", "Weekly", "Per Sprint", "Per Phase"]
+          },
+          "trend": {
+            "type": "string",
+            "enum": ["On Track", "At Risk", "Off Track"]
+          }
+        }
+      },
+      "description": "Key progress metrics"
+    },
+    "implementation_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "milestone": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Completed", "In Progress", "Blocked"]
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Files/deliverables created"
+          }
+        }
+      },
+      "description": "Timeline of implementation milestones"
+    },
+    "blockers_and_risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "issue": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Open", "In Progress", "Resolved"]
+          },
+          "owner": {
+            "type": "string"
+          },
+          "mitigation": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "string",
+            "description": "Impact on timeline/quality"
+          },
+          "date_opened": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "scope_changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "change_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["Addition", "Removal", "Modification"]
+          },
+          "justification": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "object",
+            "properties": {
+              "schedule_impact_days": {
+                "type": "integer"
+              },
+              "cost_impact": {
+                "type": "string"
+              },
+              "quality_impact": {
+                "type": "string"
+              }
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Requested", "Approved", "Rejected", "Implemented"]
+          }
+        }
+      }
+    },
+    "resource_allocation": {
+      "type": "object",
+      "properties": {
+        "team_size": {
+          "type": "integer"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string"
+              },
+              "count": {
+                "type": "integer"
+              },
+              "allocation_percentage": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100
+              }
+            }
+          }
+        },
+        "utilization_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Percentage of time team is working on project"
+        },
+        "turnover": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "person": {
+                "type": "string"
+              },
+              "date_left": {
+                "type": "string",
+                "format": "date"
+              },
+              "replacement_status": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "quality_status": {
+      "type": "object",
+      "properties": {
+        "test_coverage_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "open_bugs": {
+          "type": "object",
+          "properties": {
+            "critical": {
+              "type": "integer"
+            },
+            "high": {
+              "type": "integer"
+            },
+            "medium": {
+              "type": "integer"
+            },
+            "low": {
+              "type": "integer"
+            }
+          }
+        },
+        "bugs_fixed": {
+          "type": "integer"
+        },
+        "technical_debt_items": {
+          "type": "integer"
+        }
+      }
+    },
+    "delivery_forecast": {
+      "type": "object",
+      "properties": {
+        "original_delivery_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "forecasted_delivery_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "variance_days": {
+          "type": "integer",
+          "description": "Days ahead (negative) or behind (positive)"
+        },
+        "confidence_level": {
+          "type": "string",
+          "enum": ["High", "Medium", "Low"]
+        },
+        "completion_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        }
+      }
+    },
+    "retrospective_notes": {
+      "type": "object",
+      "properties": {
+        "what_went_well": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "what_went_poorly": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lessons_learned": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "improvements_next_sprint": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "report_schedule": {
+      "type": "object",
+      "properties": {
+        "daily_standup": {
+          "type": "string",
+          "description": "Time and frequency (e.g., '9:00 AM daily')"
+        },
+        "weekly_summary": {
+          "type": "string",
+          "description": "When weekly reports are sent"
+        },
+        "sprint_review": {
+          "type": "string",
+          "description": "When sprint reviews occur"
+        },
+        "retrospective": {
+          "type": "string",
+          "description": "When retrospectives occur"
+        },
+        "stakeholder_update": {
+          "type": "string",
+          "description": "Frequency of updates to leadership"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

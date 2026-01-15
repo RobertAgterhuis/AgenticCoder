@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/artifacts/requirements.schema.json",
+  "title": "Requirements Artifact Schema",
+  "description": "Schema for Phase 1 requirements documentation",
+  "type": "object",
+  "required": ["requirements", "constraints", "acceptance_criteria"],
+  "properties": {
+    "requirements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "description", "priority"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^REQ-[0-9]+$" },
+          "description": { "type": "string" },
+          "priority": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Functional", "Non-Functional", "Constraint"]
+          },
+          "acceptance_criteria": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "description": { "type": "string" },
+          "impact": { "type": "string" }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "created_date": { "type": "string", "format": "date-time" },
+        "version": { "type": "string" },
+        "author": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/architect.output.schema.json",
+  "type": "object",
+  "title": "Architecture Agent Output",
+  "description": "System architecture design",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object",
+      "properties": {
+        "layers": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "data_flow": {
+          "type": "string"
+        },
+        "integration_points": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/python-specialist.input.schema.json",
+  "type": "object",
+  "title": "Python Specialist Input",
+  "description": "Generate Python backend code",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "python_version": {
+      "type": "string"
+    },
+    "framework": {
+      "type": "string"
+    }
+  }
+}

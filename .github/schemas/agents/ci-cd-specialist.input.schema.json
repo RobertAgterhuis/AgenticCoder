@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/ci-cd-specialist.input.schema.json",
+  "type": "object",
+  "title": "CI/CD Specialist Input",
+  "description": "Generate CI/CD pipeline configuration",
+  "required": [
+    "repository_info"
+  ],
+  "properties": {
+    "repository_info": {
+      "type": "object"
+    },
+    "pipeline_platform": {
+      "type": "string"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

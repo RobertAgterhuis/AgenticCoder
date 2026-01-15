@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/artifacts/architecture.schema.json",
+  "title": "Architecture Document Schema",
+  "description": "Schema for architecture design documentation",
+  "type": "object",
+  "required": ["architecture_overview", "components", "data_flow"],
+  "properties": {
+    "architecture_overview": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "style": {
+          "type": "string",
+          "enum": ["Microservices", "Monolithic", "Serverless", "Hybrid"]
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "type"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["Service", "Database", "Message Queue", "Cache", "API Gateway", "Load Balancer", "Storage"]
+          },
+          "description": { "type": "string" },
+          "technology": { "type": "string" },
+          "responsibilities": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "data_flow": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["from", "to"],
+        "properties": {
+          "from": { "type": "string" },
+          "to": { "type": "string" },
+          "protocol": { "type": "string" },
+          "data_format": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "non_functional_requirements": {
+      "type": "object",
+      "properties": {
+        "availability": { "type": "number", "minimum": 0, "maximum": 100 },
+        "response_time_ms": { "type": "integer" },
+        "throughput_rps": { "type": "integer" },
+        "data_retention_days": { "type": "integer" }
+      }
+    }
+  }
+}

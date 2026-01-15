@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "react-patterns-skill.output.schema.json",
+  "title": "React Patterns Skill Output Schema",
+  "description": "Output schema for react-patterns skill - defines what the skill produces as guidance",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "status",
+    "guidance"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "react-patterns",
+      "description": "Skill identifier"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial_success", "warning", "error"],
+      "description": "Guidance delivery status"
+    },
+    "guidance": {
+      "type": "object",
+      "required": ["recommended_pattern", "explanation"],
+      "properties": {
+        "recommended_pattern": {
+          "type": "string",
+          "description": "Recommended pattern name"
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 100,
+          "description": "Detailed explanation of why this pattern"
+        },
+        "code_example": {
+          "type": "string",
+          "description": "TypeScript code example implementing the pattern"
+        },
+        "benefits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Benefits of this pattern for the scenario"
+        },
+        "tradeoffs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tradeoffs and considerations"
+        },
+        "implementation_steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Step-by-step implementation guide"
+        },
+        "testing_strategy": {
+          "type": "string",
+          "description": "How to test this pattern effectively"
+        },
+        "performance_impact": {
+          "type": "object",
+          "properties": {
+            "re_renders": {
+              "type": "string",
+              "enum": ["low", "medium", "high"]
+            },
+            "bundle_impact": {
+              "type": "string",
+              "enum": ["negligible", "small", "moderate"]
+            },
+            "optimization_notes": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "anti_patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "why_avoid": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Anti-patterns to avoid for this scenario"
+    },
+    "related_patterns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Related patterns that might be combined"
+    },
+    "dependencies_advice": {
+      "type": "object",
+      "properties": {
+        "recommended_libraries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "avoid_with": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Technologies this pattern doesn't work well with"
+        }
+      }
+    },
+    "experience_level": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Recommended experience level for this pattern"
+    },
+    "maintenance_notes": {
+      "type": "string",
+      "description": "Notes on long-term maintenance of this pattern"
+    },
+    "common_mistakes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Common mistakes when implementing this pattern"
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "pattern_applicable": {
+          "type": "boolean"
+        },
+        "confidence_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Confidence that this pattern fits the scenario"
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Assumptions made in providing this guidance"
+        }
+      }
+    },
+    "references": {
+      "type": "object",
+      "properties": {
+        "external_resources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skill_section": {
+          "type": "string",
+          "description": "Section in react-patterns.skill.md for reference"
+        }
+      }
+    }
+  }
+}

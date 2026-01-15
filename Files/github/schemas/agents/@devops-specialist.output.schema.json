@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@devops-specialist.output.schema.json",
+  "title": "@devops-specialist Agent Output Schema",
+  "description": "Output contract for the @devops-specialist agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@devops-specialist",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 12,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "cicd_pipelines_created",
+        "deployment_scripts_ready",
+        "monitoring_configured"
+      ],
+      "properties": {
+        "cicd_pipelines_created": {
+          "type": "integer",
+          "minimum": 3,
+          "description": "Number of CI/CD workflows (build, deploy-dev, deploy-prod, etc.)"
+        },
+        "pipelines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "trigger": {"type": "string"},
+              "environments": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "deployment_scripts_ready": {
+          "type": "boolean",
+          "description": "Whether deployment automation is complete"
+        },
+        "docker_config_created": {
+          "type": "boolean",
+          "description": "Whether Dockerfile and docker-compose are created"
+        },
+        "monitoring_configured": {
+          "type": "boolean",
+          "description": "Whether Application Insights is configured"
+        },
+        "alerts_configured": {
+          "type": "boolean",
+          "description": "Whether Azure Monitor alerts are set up"
+        },
+        "health_checks_implemented": {
+          "type": "boolean",
+          "description": "Whether health check endpoints exist"
+        },
+        "secrets_management_configured": {
+          "type": "boolean",
+          "description": "Whether Key Vault or GitHub Secrets are configured"
+        },
+        "smoke_tests_created": {
+          "type": "boolean",
+          "description": "Whether post-deployment tests exist"
+        },
+        "deployment_time_estimate": {
+          "type": "string",
+          "description": "Estimated deployment time (e.g., 5-10 minutes)"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "github_workflow",
+              "dockerfile",
+              "docker_compose",
+              "deployment_script",
+              "monitoring_config",
+              "alert_rules",
+              "deployment_docs"
+            ]
+          }
+        }
+      },
+      "minItems": 4,
+      "description": "DevOps artifacts created"
+    },
+    "deployment_ready": {
+      "type": "boolean",
+      "description": "Whether system is ready for production deployment"
+    },
+    "handoff_to": {
+      "type": "null",
+      "description": "Final phase - no handoff (production ready)"
+    }
+  }
+}

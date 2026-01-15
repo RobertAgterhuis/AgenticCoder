@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MySQL Specialist Agent Input",
+  "description": "Input schema for mysql-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectName": { "type": "string" },
+    "requirements": {
+      "type": "object",
+      "description": "Database requirements",
+      "properties": {
+        "tables": { "type": "array", "items": { "type": "string" } },
+        "relationships": { "type": "array", "items": { "type": "object" } },
+        "scale": { "type": "string", "enum": ["small", "medium", "large"] }
+      }
+    }
+  },
+  "required": ["projectName"]
+}

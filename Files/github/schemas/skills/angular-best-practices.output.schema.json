@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Angular Best Practices Skill Output",
+  "description": "Output schema for angular-best-practices skill",
+  "type": "object",
+  "properties": {
+    "practices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "example": { "type": "string" },
+          "antiPattern": { "type": "string" },
+          "benefits": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["practices"]
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/aws-architect.input.schema.json",
+  "type": "object",
+  "title": "AWS Architect Input",
+  "description": "Design AWS cloud architecture",
+  "required": [
+    "requirements"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "aws_regions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "workload_type": {
+      "type": "string"
+    }
+  }
+}

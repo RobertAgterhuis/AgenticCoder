@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/code-architect.output.schema.json",
+  "type": "object",
+  "title": "Code Architect Output",
+  "description": "Code architecture and patterns",
+  "required": [
+    "code_structure"
+  ],
+  "properties": {
+    "code_structure": {
+      "type": "object",
+      "properties": {
+        "directory_layout": {
+          "type": "object"
+        },
+        "module_definitions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "design_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

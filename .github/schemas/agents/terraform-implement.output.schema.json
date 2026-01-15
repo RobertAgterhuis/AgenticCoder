@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/terraform-implement.output.schema.json",
+  "type": "object",
+  "title": "Terraform Implement Agent Output",
+  "description": "Generated Terraform files",
+  "required": [
+    "files"
+  ],
+  "properties": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

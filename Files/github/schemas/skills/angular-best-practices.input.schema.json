@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Angular Best Practices Skill Input",
+  "description": "Input schema for angular-best-practices skill",
+  "type": "object",
+  "properties": {
+    "categories": {
+      "type": "array",
+      "description": "Categories of best practices",
+      "items": {
+        "type": "string",
+        "enum": ["security", "performance", "testing", "rxjs", "typescript", "accessibility"]
+      },
+      "example": ["performance", "security"]
+    },
+    "context": {
+      "type": "object",
+      "description": "Context about the project",
+      "properties": {
+        "angularVersion": { "type": "string", "example": "17.0.0" },
+        "projectType": { "type": "string", "enum": ["web", "pwa", "spa"] },
+        "scale": { "type": "string", "enum": ["small", "medium", "enterprise"] }
+      }
+    }
+  },
+  "required": ["categories"]
+}

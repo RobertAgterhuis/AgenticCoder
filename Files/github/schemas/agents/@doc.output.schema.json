@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@doc.output.schema.json",
+  "title": "@doc Agent Output Schema",
+  "description": "Output contract for the @doc agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@doc",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 1,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "documentation_completed",
+        "documents_created",
+        "sections_completed",
+        "next_phase",
+        "next_agent"
+      ],
+      "properties": {
+        "documentation_completed": {
+          "type": "boolean",
+          "description": "Whether all required documentation is complete"
+        },
+        "documents_created": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Total number of documents created"
+        },
+        "sections_completed": {
+          "type": "object",
+          "required": ["context", "architecture", "appendix"],
+          "properties": {
+            "context": {
+              "type": "integer",
+              "minimum": 4,
+              "maximum": 17,
+              "description": "Number of Context documents (4-17 based on scope)"
+            },
+            "architecture": {
+              "type": "integer",
+              "minimum": 3,
+              "maximum": 18,
+              "description": "Number of Architecture documents (3-18 based on stack)"
+            },
+            "appendix": {
+              "type": "integer",
+              "const": 1,
+              "description": "Appendix is always 1 document"
+            }
+          }
+        },
+        "quality_checks": {
+          "type": "object",
+          "properties": {
+            "no_placeholders": {"type": "boolean"},
+            "all_links_valid": {"type": "boolean"},
+            "examples_included": {"type": "boolean"},
+            "consistent_terminology": {"type": "boolean"},
+            "aligned_with_goals": {"type": "boolean"},
+            "decision_rationale_included": {"type": "boolean"}
+          },
+          "description": "Quality checklist validation results"
+        },
+        "next_phase": {
+          "type": "integer",
+          "const": 2,
+          "description": "Next phase number"
+        },
+        "next_agent": {
+          "type": "string",
+          "enum": ["@backlog"],
+          "description": "Next agent to execute"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "section"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Document filename"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path to document"
+          },
+          "section": {
+            "type": "string",
+            "enum": ["context", "architecture", "appendix"],
+            "description": "Which section this document belongs to"
+          },
+          "word_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Approximate word count"
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "List of documentation artifacts created"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Execution time in milliseconds"
+        },
+        "total_word_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total words across all documents"
+        },
+        "cross_references_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of cross-document links created"
+        }
+      },
+      "description": "Execution metadata"
+    }
+  }
+}

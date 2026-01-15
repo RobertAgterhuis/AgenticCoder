@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/api-specialist.input.schema.json",
+  "type": "object",
+  "title": "API Specialist Input",
+  "description": "Design and generate API specifications",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "api_style": {
+      "type": "string"
+    },
+    "documentation_format": {
+      "type": "string"
+    }
+  }
+}

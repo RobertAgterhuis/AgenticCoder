@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/postgres-specialist.output.schema.json",
+  "type": "object",
+  "title": "PostgreSQL Specialist Output",
+  "description": "Generated PostgreSQL schemas",
+  "required": [
+    "scripts"
+  ],
+  "properties": {
+    "scripts": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

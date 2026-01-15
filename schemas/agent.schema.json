@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.io/schemas/agent.schema.json",
+  "title": "Agent Definition Schema",
+  "description": "Schema for defining AgenticCoder agents",
+  "type": "object",
+  "required": ["id", "name", "version", "type", "inputs", "outputs"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Unique agent identifier"
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable agent name"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["task", "infrastructure", "application", "validation", "orchestration"],
+      "description": "Agent category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Agent purpose and capabilities"
+    },
+    "inputs": {
+      "type": "object",
+      "description": "Expected input schema",
+      "properties": {
+        "required": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "properties": {
+          "type": "object"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "description": "Output schema",
+      "properties": {
+        "properties": {
+          "type": "object"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "agentId": { "type": "string" },
+          "optional": { "type": "boolean" }
+        }
+      },
+      "description": "Required agents or MCP servers"
+    },
+    "mcpServers": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "MCP servers this agent uses"
+    },
+    "timeout": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 600000,
+      "description": "Execution timeout in milliseconds"
+    },
+    "retryPolicy": {
+      "type": "object",
+      "properties": {
+        "maxRetries": { "type": "integer", "minimum": 0 },
+        "backoffMs": { "type": "integer", "minimum": 100 }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "author": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "documentation": { "type": "string", "format": "uri" }
+      }
+    }
+  }
+}

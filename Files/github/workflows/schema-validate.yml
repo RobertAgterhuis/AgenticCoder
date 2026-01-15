@@ -1,0 +1,32 @@
+name: Schema Validation
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/schemas/**'
+      - '.github/scripts/validate-schemas.py'
+      - '.github/workflows/schema-validate.yml'
+  pull_request:
+    paths:
+      - '.github/schemas/**'
+      - '.github/scripts/validate-schemas.py'
+      - '.github/workflows/schema-validate.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install validator deps
+        run: pip install jsonschema==4.22.0
+
+      - name: Validate schemas
+        run: python .github/scripts/validate-schemas.py

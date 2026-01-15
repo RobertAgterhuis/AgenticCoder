@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Docker Optimization Skill - Input Schema",
+  "description": "Input schema for docker-optimization skill providing image optimization strategies",
+  "type": "object",
+  "required": ["language", "optimizationGoal"],
+  "properties": {
+    "language": {
+      "type": "string",
+      "enum": ["nodejs", "python", "golang", "java", "dotnet", "rust", "ruby", "php", "multi"],
+      "description": "Application language/runtime"
+    },
+    "optimizationGoal": {
+      "type": "string",
+      "enum": ["minimize-size", "maximize-speed", "improve-security", "balanced", "cost-reduction"],
+      "description": "Primary optimization objective"
+    },
+    "currentImage": {
+      "type": "object",
+      "properties": {
+        "baseImage": {
+          "type": "string",
+          "description": "Current base image (e.g., 'node:18')"
+        },
+        "estimatedSize": {
+          "type": "string",
+          "description": "Current image size estimate"
+        },
+        "buildTime": {
+          "type": "string",
+          "description": "Current build time"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "maxImageSize": {
+          "type": "string",
+          "description": "Maximum acceptable image size (e.g., '200MB')"
+        },
+        "maxBuildTime": {
+          "type": "string",
+          "description": "Maximum acceptable build time"
+        },
+        "requiredTools": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "System tools that must be available"
+        }
+      }
+    },
+    "securityRequirements": {
+      "type": "object",
+      "properties": {
+        "nonRoot": {
+          "type": "boolean",
+          "description": "Must run as non-root"
+        },
+        "readOnlyFs": {
+          "type": "boolean",
+          "description": "Must support read-only filesystem"
+        },
+        "noVulnerabilities": {
+          "type": "boolean",
+          "description": "Zero vulnerability tolerance"
+        }
+      }
+    },
+    "deploymentContext": {
+      "type": "object",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": ["kubernetes", "docker-compose", "ecs", "app-service", "cloud-run", "lambda"],
+          "description": "Deployment platform"
+        },
+        "registryBandwidth": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Registry push/pull bandwidth constraints"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "production": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Production dependencies to optimize"
+        },
+        "development": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Development dependencies to exclude"
+        }
+      }
+    }
+  }
+}

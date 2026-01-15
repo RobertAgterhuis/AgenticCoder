@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@backend-specialist.input.schema.json",
+  "title": "@backend-specialist Agent Input Schema",
+  "description": "Input contract for the @backend-specialist agent (API Implementation)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@code-architect"],
+      "description": "@backend-specialist agent is triggered by @code-architect"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 11,
+      "description": "@backend-specialist agent runs in phase 11 (backend)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["code_structure", "design_patterns"],
+      "properties": {
+        "code_structure": {
+          "type": "string",
+          "description": "Folder structure from @code-architect"
+        },
+        "design_patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "Repository Pattern",
+              "Service Pattern",
+              "Factory Pattern",
+              "Dependency Injection"
+            ]
+          },
+          "description": "Design patterns to implement"
+        },
+        "technology_choices": {
+          "type": "object",
+          "properties": {
+            "backend": {
+              "type": "string",
+              "enum": ["Node.js", "Python", "Go", ".NET", "Java"]
+            },
+            "framework": {
+              "type": "string",
+              "enum": ["Express", "FastAPI", "Gin", "ASP.NET Core", "Spring Boot"]
+            },
+            "database": {
+              "type": "string",
+              "enum": ["PostgreSQL", "MySQL", "MongoDB", "SQL Server"]
+            }
+          }
+        },
+        "api_contracts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "endpoint": {"type": "string"},
+              "method": {"type": "string"},
+              "description": {"type": "string"}
+            }
+          },
+          "description": "API endpoints to implement"
+        },
+        "domain_models": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Domain models (User, Product, Order, etc.)"
+        }
+      }
+    }
+  }
+}

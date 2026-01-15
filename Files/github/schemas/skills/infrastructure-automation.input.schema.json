@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.dev/schemas/skills/infrastructure-automation.input.schema.json",
+  "title": "Infrastructure Automation Skill Input Schema",
+  "description": "Input schema for infrastructure-automation skill - defines requirements for IaC generation",
+  "type": "object",
+  "required": ["skill_id", "agent_id", "infrastructure_requirements", "automation_scope"],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "infrastructure-automation",
+      "description": "Must be 'infrastructure-automation'"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@bicep-specialist$|^@devops-specialist$",
+      "description": "Agent requesting the skill"
+    },
+    "context": {
+      "type": "object",
+      "required": ["phase", "project_id"],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "enum": [9, 12],
+          "description": "Phase 9 (Bicep) or Phase 12 (DevOps)"
+        },
+        "project_id": {
+          "type": "string"
+        },
+        "technology_stack": {
+          "type": "object"
+        }
+      }
+    },
+    "infrastructure_requirements": {
+      "type": "object",
+      "required": ["cloud_platform"],
+      "properties": {
+        "resources_needed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["resource_type"],
+            "properties": {
+              "resource_type": {
+                "type": "string",
+                "enum": ["App Service", "Database", "Cache", "CDN", "Load Balancer", "Container Registry", "Kubernetes Cluster"]
+              },
+              "specifications": {
+                "type": "string",
+                "description": "Detailed specifications (SKU, size, etc)"
+              },
+              "quantity": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "description": "List of required cloud resources"
+        },
+        "cloud_platform": {
+          "type": "string",
+          "enum": ["Azure", "AWS", "GCP"],
+          "description": "Target cloud platform"
+        },
+        "regions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1,
+          "description": "Deployment regions"
+        },
+        "environment_type": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Development", "Staging", "Production"]
+          },
+          "minItems": 1,
+          "description": "Target environments"
+        }
+      }
+    },
+    "automation_scope": {
+      "type": "object",
+      "properties": {
+        "provisioning": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate infrastructure provisioning code"
+        },
+        "configuration_management": {
+          "type": "boolean",
+          "default": false,
+          "description": "Generate configuration management code"
+        },
+        "deployment": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate deployment scripts"
+        },
+        "monitoring_setup": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate monitoring configuration"
+        },
+        "scaling": {
+          "type": "boolean",
+          "default": false,
+          "description": "Generate auto-scaling configuration"
+        }
+      },
+      "description": "What aspects to automate"
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "cost_optimization_required": {
+          "type": "boolean",
+          "default": true
+        },
+        "security_standards": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["PCI-DSS", "HIPAA", "SOC2", "ISO27001"]
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "examples": ["GDPR", "CCPA", "HIPAA"]
+        },
+        "budget_limit": {
+          "type": "number",
+          "description": "Monthly budget limit in USD"
+        }
+      },
+      "description": "Constraints and requirements"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/database-specialist.output.schema.json",
+  "type": "object",
+  "title": "Database Specialist Output",
+  "description": "Database architecture and schema design",
+  "required": [
+    "database_design"
+  ],
+  "properties": {
+    "database_design": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "object"
+        },
+        "indexes": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

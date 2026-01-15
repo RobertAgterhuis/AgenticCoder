@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@frontend-specialist.output.schema.json",
+  "title": "@frontend-specialist Agent Output Schema",
+  "description": "Output contract for the @frontend-specialist agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@frontend-specialist",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 10,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "components_created",
+        "pages_created",
+        "build_config_ready"
+      ],
+      "properties": {
+        "components_created": {
+          "type": "integer",
+          "minimum": 10,
+          "description": "Number of reusable components"
+        },
+        "component_library": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"},
+              "category": {
+                "type": "string",
+                "enum": ["ui", "feature", "layout", "common"]
+              }
+            }
+          }
+        },
+        "pages_created": {
+          "type": "integer",
+          "minimum": 3,
+          "description": "Number of pages/routes"
+        },
+        "routing_configured": {
+          "type": "boolean",
+          "description": "Whether routing is set up"
+        },
+        "state_management_configured": {
+          "type": "boolean",
+          "description": "Whether state management is configured"
+        },
+        "api_integration_complete": {
+          "type": "boolean",
+          "description": "Whether API client is configured"
+        },
+        "build_config_ready": {
+          "type": "boolean",
+          "description": "Whether build configuration is ready"
+        },
+        "testing_setup": {
+          "type": "boolean",
+          "description": "Whether unit tests are configured"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "component_files",
+              "page_files",
+              "routing_config",
+              "api_client",
+              "build_config"
+            ]
+          }
+        }
+      },
+      "minItems": 3,
+      "description": "Frontend artifacts created"
+    },
+    "handoff_to": {
+      "type": "string",
+      "const": "@devops-specialist",
+      "description": "Next agent in chain"
+    }
+  }
+}

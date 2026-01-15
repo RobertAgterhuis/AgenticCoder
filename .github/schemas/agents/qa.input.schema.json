@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/qa.input.schema.json",
+  "type": "object",
+  "title": "QA Validator Input",
+  "description": "Define quality assurance strategy",
+  "required": [
+    "requirements",
+    "project_type"
+  ],
+  "properties": {
+    "requirements": {
+      "type": "object"
+    },
+    "project_type": {
+      "type": "string"
+    },
+    "compliance_requirements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "test_scope": {
+      "type": "string"
+    }
+  }
+}

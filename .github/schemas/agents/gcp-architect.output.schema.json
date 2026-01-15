@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/gcp-architect.output.schema.json",
+  "type": "object",
+  "title": "GCP Architect Output",
+  "description": "GCP architecture design",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    }
+  }
+}

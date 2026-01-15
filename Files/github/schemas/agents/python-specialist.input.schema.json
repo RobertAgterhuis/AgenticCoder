@@ -1,0 +1,16 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Python Specialist Agent Input",
+  "description": "Input schema for python-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectName": { "type": "string" },
+    "framework": { "type": "string", "enum": ["fastapi", "django", "flask"] },
+    "features": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "pythonVersion": { "type": "string", "default": "3.11" }
+  },
+  "required": ["projectName", "framework"]
+}

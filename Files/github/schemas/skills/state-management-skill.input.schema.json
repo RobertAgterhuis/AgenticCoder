@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "state-management-skill.input.schema.json",
+  "title": "State Management Skill Input Schema",
+  "description": "Input schema for state-management skill - defines what information the skill needs to recommend state management solutions",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "agent_id",
+    "context",
+    "question"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "const": "state-management",
+      "description": "Must be 'state-management'"
+    },
+    "agent_id": {
+      "type": "string",
+      "pattern": "^@react-specialist$",
+      "description": "Agent requesting the skill"
+    },
+    "context": {
+      "type": "object",
+      "required": ["phase", "project_id"],
+      "properties": {
+        "phase": {
+          "type": "integer",
+          "const": 13
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^proj-"
+        },
+        "app_complexity": {
+          "type": "string",
+          "enum": ["simple", "medium", "complex", "enterprise"],
+          "description": "Overall application complexity"
+        },
+        "team_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of developers"
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "tool_selection",
+            "pattern_recommendation",
+            "refactoring",
+            "performance_optimization",
+            "testing",
+            "migration"
+          ]
+        },
+        "current_solution": {
+          "type": "string",
+          "enum": [
+            "props",
+            "useState",
+            "useContext",
+            "redux",
+            "zustand",
+            "jotai",
+            "recoil",
+            "mobx",
+            "none"
+          ],
+          "description": "Current state management approach"
+        },
+        "target_solution": {
+          "type": "string",
+          "description": "Desired state management approach"
+        },
+        "state_complexity": {
+          "type": "object",
+          "properties": {
+            "number_of_states": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "update_frequency": {
+              "type": "string",
+              "enum": ["low", "medium", "high"],
+              "description": "How often state changes"
+            },
+            "data_relationships": {
+              "type": "string",
+              "enum": ["simple", "complex", "cyclic"],
+              "description": "How state values relate to each other"
+            },
+            "async_operations": {
+              "type": "boolean",
+              "description": "Heavy async state operations needed"
+            }
+          }
+        },
+        "performance_concerns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "unnecessary_re_renders",
+              "large_bundle_size",
+              "slow_state_updates",
+              "prop_drilling"
+            ]
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "minimal_dependencies",
+              "typescript_required",
+              "devtools_critical",
+              "backward_compatible",
+              "offline_support",
+              "time_travel_debugging"
+            ]
+          }
+        }
+      }
+    },
+    "architectural_context": {
+      "type": "object",
+      "properties": {
+        "component_tree_depth": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Average component tree depth"
+        },
+        "shared_state_consumers": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "How many components need same state"
+        },
+        "is_mono_repo": {
+          "type": "boolean"
+        },
+        "other_libraries": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Other state management or data fetching libraries in use"
+        }
+      }
+    },
+    "team_preferences": {
+      "type": "object",
+      "properties": {
+        "prefer_minimal_boilerplate": {
+          "type": "boolean"
+        },
+        "prefer_strict_patterns": {
+          "type": "boolean"
+        },
+        "learning_curve_tolerance": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "ecosystem_maturity_required": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

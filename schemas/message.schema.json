@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.io/schemas/message.schema.json",
+  "title": "Agent Message Schema",
+  "description": "Schema for inter-agent communication messages",
+  "type": "object",
+  "required": ["id", "from", "to", "type", "timestamp"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique message identifier"
+    },
+    "correlationId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Workflow or parent message ID for tracing"
+    },
+    "from": {
+      "type": "string",
+      "description": "Sender agent ID"
+    },
+    "to": {
+      "type": "string",
+      "description": "Recipient agent ID or 'broadcast'"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["request", "response", "event", "error"],
+      "description": "Message type"
+    },
+    "action": {
+      "type": "string",
+      "description": "Action or method to invoke"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Message data"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "priority": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 5,
+      "description": "Message priority (0=lowest, 10=highest)"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "retryCount": { "type": "integer" },
+        "ttl": { "type": "integer", "description": "Time to live in milliseconds" },
+        "traceId": { "type": "string" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" },
+        "details": { "type": "object" }
+      },
+      "description": "Error details if type=error"
+    }
+  }
+}

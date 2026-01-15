@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@react-specialist.input.schema.json",
+  "title": "@react-specialist Agent Input Schema",
+  "description": "Input contract for the @react-specialist agent (React Frontend Implementation)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@code-architect"],
+      "description": "@react-specialist agent is triggered by @code-architect"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 13,
+      "description": "@react-specialist agent runs in phase 13 (React implementation)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["frontend_architecture", "components_to_build"],
+      "properties": {
+        "frontend_architecture": {
+          "type": "object",
+          "required": ["folder_structure", "component_patterns", "state_management"],
+          "properties": {
+            "folder_structure": {
+              "type": "string",
+              "description": "Frontend folder structure from @code-architect"
+            },
+            "component_patterns": {
+              "type": "array",
+              "items": { "type": "string" },
+              "examples": ["Base UI Component", "Feature Component", "Page Component", "Custom Hook"],
+              "description": "Component patterns to implement"
+            },
+            "state_management": {
+              "type": "string",
+              "enum": ["Zustand", "Redux", "TanStack Query", "Context API"],
+              "description": "State management library to use"
+            }
+          }
+        },
+        "components_to_build": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["component_name", "component_type"],
+            "properties": {
+              "component_name": {
+                "type": "string",
+                "pattern": "^[A-Z][a-zA-Z0-9]*$",
+                "description": "PascalCase component name"
+              },
+              "component_type": {
+                "type": "string",
+                "enum": ["ui", "feature", "page"],
+                "description": "Component category"
+              },
+              "props": {
+                "type": "object",
+                "description": "Component props interface"
+              },
+              "features": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Required features (form validation, API integration, etc)"
+              }
+            }
+          },
+          "description": "List of React components to generate"
+        },
+        "api_integration": {
+          "type": "object",
+          "properties": {
+            "base_url": { "type": "string" },
+            "authentication": {
+              "type": "string",
+              "enum": ["jwt", "oauth2", "apikey"]
+            },
+            "endpoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "method": { "type": "string", "enum": ["GET", "POST", "PUT", "DELETE"] },
+                  "path": { "type": "string" },
+                  "response_type": { "type": "string" }
+                }
+              }
+            }
+          },
+          "description": "API integration details"
+        },
+        "styling_framework": {
+          "type": "string",
+          "enum": ["Tailwind CSS", "CSS Modules", "Styled Components", "Material UI"],
+          "default": "Tailwind CSS",
+          "description": "CSS framework to use"
+        },
+        "testing_framework": {
+          "type": "string",
+          "enum": ["Vitest", "Jest", "React Testing Library"],
+          "default": "Vitest",
+          "description": "Testing framework for unit tests"
+        }
+      }
+    }
+  }
+}

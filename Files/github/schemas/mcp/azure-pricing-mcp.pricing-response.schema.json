@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/mcp/azure-pricing-mcp.pricing-response.schema.json",
+  "title": "Azure Pricing MCP - Pricing Response Schema",
+  "description": "Response schema for Azure service pricing query",
+  "type": "object",
+  "required": ["resource_type", "pricing", "timestamp"],
+  "properties": {
+    "resource_type": {
+      "type": "string",
+      "description": "Queried resource type"
+    },
+    "region": {
+      "type": "string",
+      "description": "Pricing region"
+    },
+    "pricing": {
+      "type": "object",
+      "required": ["monthly_cost", "hourly_cost"],
+      "properties": {
+        "hourly_cost": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Hourly cost in specified currency"
+        },
+        "monthly_cost": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated monthly cost (730 hours)"
+        },
+        "annual_cost": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Estimated annual cost"
+        },
+        "reserved_1_year_monthly": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Monthly cost with 1-year reservation"
+        },
+        "reserved_3_year_monthly": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Monthly cost with 3-year reservation"
+        },
+        "savings_1_year_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Savings percentage with 1-year reservation"
+        },
+        "savings_3_year_percent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Savings percentage with 3-year reservation"
+        }
+      }
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency code"
+    },
+    "billing_model": {
+      "type": "string",
+      "description": "Billing model used"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When pricing was retrieved"
+    },
+    "effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when pricing becomes effective"
+    }
+  }
+}

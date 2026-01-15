@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Docker Container Patterns Skill - Output Schema",
+  "description": "Output schema for docker-container-patterns skill containing Dockerfile patterns",
+  "type": "object",
+  "required": ["pattern", "dockerfile"],
+  "properties": {
+    "pattern": {
+      "type": "string",
+      "description": "Name of the pattern provided"
+    },
+    "dockerfile": {
+      "type": "string",
+      "description": "Complete, ready-to-use Dockerfile content"
+    },
+    "dockerignore": {
+      "type": "string",
+      "description": "Recommended .dockerignore content"
+    },
+    "explanation": {
+      "type": "object",
+      "properties": {
+        "overview": {
+          "type": "string",
+          "description": "High-level description of the pattern"
+        },
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "purpose": {"type": "string"},
+              "keyInstructions": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            }
+          },
+          "description": "Explanation of each Dockerfile stage"
+        },
+        "caching": {
+          "type": "string",
+          "description": "How layer caching is optimized"
+        },
+        "security": {
+          "type": "string",
+          "description": "Security features included"
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Docker best practices applied in this pattern"
+    },
+    "variations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "changes": {
+            "type": "array",
+            "items": {"type": "string"}
+          }
+        }
+      },
+      "description": "Alternative variations of this pattern"
+    },
+    "commonModifications": {
+      "type": "object",
+      "additionalProperties": {"type": "string"},
+      "description": "How to modify the pattern for common use cases"
+    }
+  }
+}

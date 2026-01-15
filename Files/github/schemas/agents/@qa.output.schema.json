@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@qa.output.schema.json",
+  "title": "@qa Agent Output Schema",
+  "description": "Output contract for the @qa agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@qa",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 4,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "validation_complete",
+        "testing_strategies",
+        "quality_metrics_defined",
+        "validation_gates",
+        "next_phase",
+        "next_agent"
+      ],
+      "properties": {
+        "validation_complete": {
+          "type": "boolean",
+          "description": "Whether validation framework is complete"
+        },
+        "testing_strategies": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 6,
+          "description": "Number of testing strategies defined (unit, integration, E2E, perf, security, accessibility)"
+        },
+        "quality_metrics_defined": {
+          "type": "integer",
+          "minimum": 10,
+          "description": "Number of quality metrics with targets"
+        },
+        "validation_gates": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 5,
+          "description": "Number of validation gate levels"
+        },
+        "tools_identified": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of testing/quality tools identified"
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Compliance framework created for these requirements"
+        },
+        "next_phase": {
+          "type": "integer",
+          "const": 5,
+          "description": "Next phase number"
+        },
+        "next_agent": {
+          "type": "string",
+          "enum": ["@reporter"],
+          "description": "Next agent to execute"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {"type": "string"},
+          "path": {"type": "string"},
+          "artifact_type": {
+            "type": "string",
+            "enum": [
+              "testing_strategy",
+              "quality_metrics",
+              "validation_gates",
+              "compliance_framework",
+              "success_criteria"
+            ]
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "Quality and validation artifacts created"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {"type": "integer", "minimum": 0},
+        "testing_frameworks_selected": {"type": "integer", "minimum": 0},
+        "high_risk_items_identified": {"type": "integer", "minimum": 0}
+      }
+    }
+  }
+}

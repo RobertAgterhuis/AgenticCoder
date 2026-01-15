@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@bicep-specialist.input.schema.json",
+  "title": "@bicep-specialist Agent Input Schema",
+  "description": "Input contract for the @bicep-specialist agent (Bicep IaC Generation)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@azure-architect"],
+      "description": "@bicep-specialist agent is triggered by @azure-architect"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 9,
+      "description": "@bicep-specialist agent runs in phase 9 (Bicep IaC)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["azure_resources", "resource_groups"],
+      "properties": {
+        "azure_resources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {"type": "string"},
+              "name": {"type": "string"},
+              "sku": {"type": "string"},
+              "properties": {"type": "object"}
+            }
+          },
+          "description": "Azure resources from @azure-architect"
+        },
+        "resource_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "environment": {"type": "string"},
+              "location": {"type": "string"}
+            }
+          }
+        },
+        "environments": {
+          "type": "array",
+          "items": {"type": "string"},
+          "default": ["dev", "production"]
+        },
+        "networking": {
+          "type": "object",
+          "properties": {
+            "vnet_enabled": {"type": "boolean"},
+            "private_endpoints": {"type": "boolean"}
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "managed_identity": {"type": "boolean"},
+            "key_vault": {"type": "boolean"}
+          }
+        },
+        "use_avm_modules": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to use Azure Verified Modules"
+        }
+      }
+    }
+  }
+}

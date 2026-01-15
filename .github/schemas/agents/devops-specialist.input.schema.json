@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/devops-specialist.input.schema.json",
+  "type": "object",
+  "title": "DevOps Specialist Input",
+  "description": "Plan deployment and infrastructure",
+  "required": [
+    "architecture",
+    "requirements"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "requirements": {
+      "type": "object"
+    },
+    "deployment_target": {
+      "type": "string"
+    },
+    "ci_cd_preference": {
+      "type": "string"
+    }
+  }
+}

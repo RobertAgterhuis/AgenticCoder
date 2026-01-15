@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/ci-cd-specialist.output.schema.json",
+  "type": "object",
+  "title": "CI/CD Specialist Output",
+  "description": "Generated pipeline configuration",
+  "required": [
+    "pipeline_files"
+  ],
+  "properties": {
+    "pipeline_files": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

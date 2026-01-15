@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Feedback Request Schema",
+  "description": "Schema for agents requesting clarification from users",
+  "type": "object",
+  "required": ["request_id", "agent", "questions"],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "pattern": "^feedback-[a-z0-9-]+$",
+      "description": "Unique feedback request identifier"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When feedback was requested"
+    },
+    "agent": {
+      "type": "string",
+      "pattern": "^@[a-z0-9-]+$",
+      "description": "Agent requesting clarification"
+    },
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "clarification",
+        "selection",
+        "confirmation",
+        "approval",
+        "specification",
+        "preference"
+      ],
+      "description": "Type of feedback needed"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "user_request": {"type": "string"},
+        "current_state": {"type": "object"},
+        "why_needed": {
+          "type": "string",
+          "description": "Explanation of why this feedback is required"
+        }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "question"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^q-[a-z0-9-]+$",
+            "description": "Question identifier"
+          },
+          "question": {
+            "type": "string",
+            "description": "The question to ask user"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["text", "choice", "multiple_choice", "boolean", "number", "range"],
+            "default": "text"
+          },
+          "choices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {"type": "string"},
+                "label": {"type": "string"},
+                "description": {"type": "string"}
+              }
+            },
+            "description": "Options if type is 'choice' or 'multiple_choice'"
+          },
+          "examples": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Example answers"
+          },
+          "default": {
+            "type": ["string", "number", "boolean"],
+            "description": "Default answer if user doesn't respond"
+          },
+          "criticality": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"],
+            "default": "medium",
+            "description": "How important this question is"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Question IDs this depends on (conditional)"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "timeout": {
+      "type": "integer",
+      "minimum": 30,
+      "maximum": 3600,
+      "description": "How long to wait for response (seconds)"
+    },
+    "timeout_behavior": {
+      "type": "string",
+      "enum": ["use_defaults", "block_execution", "skip_step", "auto_approve"],
+      "description": "What to do if timeout reached"
+    },
+    "required": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether blocking execution until answered"
+    },
+    "allow_skip": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether user can skip these questions"
+    },
+    "responses": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Collected responses (key: question id, value: answer)"
+    },
+    "response_metadata": {
+      "type": "object",
+      "properties": {
+        "responded_by": {"type": "string"},
+        "responded_at": {"type": "string", "format": "date-time"},
+        "response_time_seconds": {"type": "number"},
+        "all_answered": {"type": "boolean"},
+        "unanswered_questions": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    },
+    "follow_up": {
+      "type": "object",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "based_on_responses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "if_response": {
+                "type": "object",
+                "properties": {
+                  "question_id": {"type": "string"},
+                  "value": {"type": ["string", "number", "boolean"]}
+                }
+              },
+              "then_ask": {
+                "type": "array",
+                "items": {"type": "string"},
+                "description": "Additional question IDs to ask"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

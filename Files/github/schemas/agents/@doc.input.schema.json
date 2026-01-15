@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@doc.input.schema.json",
+  "title": "@doc Agent Input Schema",
+  "description": "Input contract for the @doc agent (Document Writer)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@plan"],
+      "description": "@doc agent is triggered by @plan"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 1,
+      "description": "@doc agent runs in phase 1 (documentation)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["project_plan_folder", "discovery_answers", "project_type"],
+      "properties": {
+        "project_plan_folder": {
+          "type": "string",
+          "description": "Path to ProjectPlan folder created by @plan",
+          "pattern": "^.*ProjectPlan/?$"
+        },
+        "discovery_answers": {
+          "type": "object",
+          "required": ["project_name", "organization", "business_goals"],
+          "properties": {
+            "project_name": {"type": "string"},
+            "organization": {"type": "string"},
+            "business_goals": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "stakeholders": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "timeline": {"type": "string"},
+            "team_size": {"type": "integer"},
+            "backend_stack": {"type": "string"},
+            "frontend_stack": {"type": "string"},
+            "cloud_provider": {
+              "type": "string",
+              "enum": ["Azure", "AWS", "GCP", "On-Premises", "Hybrid"]
+            },
+            "database": {"type": "string"},
+            "auth_strategy": {"type": "string"},
+            "test_coverage_target": {"type": "number"},
+            "compliance_requirements": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "phases_count": {"type": "integer"},
+            "release_strategy": {"type": "string"}
+          },
+          "description": "Complete discovery questionnaire responses from Phase 0"
+        },
+        "project_type": {
+          "type": "string",
+          "enum": [
+            "Startup MVP",
+            "Enterprise Platform",
+            "Internal Tool",
+            "API/Service",
+            "Mobile App",
+            "Data Platform",
+            "E-commerce",
+            "SaaS Product"
+          ],
+          "description": "Project classification that determines documentation depth"
+        },
+        "documentation_scope": {
+          "type": "string",
+          "enum": ["minimal", "balanced", "comprehensive"],
+          "default": "balanced",
+          "description": "Determines which documentation sections are required"
+        },
+        "artifacts_from_previous_phase": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "path": {"type": "string"}
+            }
+          },
+          "description": "Phase 0 outputs from @plan agent"
+        }
+      }
+    }
+  }
+}

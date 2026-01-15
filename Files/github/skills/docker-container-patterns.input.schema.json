@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Docker Container Patterns Skill - Input Schema",
+  "description": "Input schema for docker-container-patterns skill providing structured Dockerfile patterns",
+  "type": "object",
+  "required": ["language", "pattern"],
+  "properties": {
+    "language": {
+      "type": "string",
+      "enum": ["nodejs", "python", "golang", "java", "dotnet", "rust", "ruby", "php"],
+      "description": "Programming language/runtime"
+    },
+    "pattern": {
+      "type": "string",
+      "enum": ["simple", "multistage", "microservice", "web-app", "api", "worker", "monolith"],
+      "description": "Dockerfile pattern type to generate"
+    },
+    "framework": {
+      "type": "string",
+      "description": "Specific framework (e.g., 'express', 'fastapi', 'gin', 'spring-boot')"
+    },
+    "buildTool": {
+      "type": "string",
+      "description": "Build tool if applicable (e.g., 'maven', 'gradle', 'cargo')"
+    },
+    "packageManager": {
+      "type": "string",
+      "description": "Package manager (e.g., 'npm', 'pip', 'go mod')"
+    },
+    "baseImage": {
+      "type": "object",
+      "properties": {
+        "preference": {
+          "type": "string",
+          "enum": ["alpine", "slim", "full", "scratch", "distroless"],
+          "description": "Base image size preference"
+        },
+        "version": {
+          "type": "string",
+          "description": "Specific image version (e.g., '18.16-alpine')"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "system": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "System dependencies needed"
+        },
+        "includeDevDeps": {
+          "type": "boolean",
+          "description": "Include development dependencies in Dockerfile"
+        }
+      }
+    },
+    "optimization": {
+      "type": "object",
+      "properties": {
+        "includeHealthCheck": {
+          "type": "boolean",
+          "description": "Add health check instruction"
+        },
+        "nonRootUser": {
+          "type": "boolean",
+          "description": "Create non-root user"
+        },
+        "minimizeSize": {
+          "type": "boolean",
+          "description": "Apply aggressive size reduction techniques"
+        }
+      }
+    },
+    "comments": {
+      "type": "boolean",
+      "description": "Include explanatory comments in Dockerfile"
+    }
+  }
+}

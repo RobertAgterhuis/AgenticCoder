@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/kubernetes-specialist.output.schema.json",
+  "type": "object",
+  "title": "Kubernetes Specialist Output",
+  "description": "Generated K8s manifests",
+  "required": [
+    "manifests"
+  ],
+  "properties": {
+    "manifests": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

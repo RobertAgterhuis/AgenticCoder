@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  schemas:
+    name: Schema Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate JSON schemas
+        run: node scripts/validate-schemas.js
+
+  mcp-servers:
+    name: MCP Servers Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - server: servers/mcp-azure-pricing
+            port: 3001
+          - server: servers/mcp-azure-resource-graph
+            port: 3002
+          - server: servers/mcp-azure-docs
+            port: 3003
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.server }}/package-lock.json
+      - name: Install dependencies and run tests
+        working-directory: ${{ matrix.server }}
+        env:
+          PORT: ${{ matrix.port }}
+        run: |
+          npm ci || npm install
+          npm test
+
+  agents:
+    name: Agent Framework Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: agents/package-lock.json
+      - name: Install dependencies
+        working-directory: agents
+        run: npm ci || npm install
+      - name: Run tests
+        working-directory: agents
+        run: npm test

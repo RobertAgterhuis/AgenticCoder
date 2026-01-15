@@ -1,0 +1,11 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Java Specialist Agent Output",
+  "description": "Output schema for java-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectStructure": { "type": "object" },
+    "modules": { "type": "array", "items": { "type": "object" } }
+  },
+  "required": ["projectStructure"]
+}

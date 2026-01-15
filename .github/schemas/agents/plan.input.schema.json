@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/plan.input.schema.json",
+  "type": "object",
+  "title": "Requirements Planner Agent Input",
+  "description": "Parses user requirements and generates structured requirement documents",
+  "required": [
+    "requirements_text"
+  ],
+  "properties": {
+    "requirements_text": {
+      "type": "string",
+      "description": "Raw requirements provided by user",
+      "minLength": 10
+    },
+    "project_name": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "industry": {
+          "type": "string"
+        },
+        "existing_systems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

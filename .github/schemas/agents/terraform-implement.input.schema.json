@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/terraform-implement.input.schema.json",
+  "type": "object",
+  "title": "Terraform Implement Agent Input",
+  "description": "Generate Terraform configuration",
+  "required": [
+    "plan"
+  ],
+  "properties": {
+    "plan": {
+      "type": "object"
+    },
+    "cloud_provider": {
+      "type": "string"
+    }
+  }
+}

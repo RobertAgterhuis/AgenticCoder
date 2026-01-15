@@ -1,0 +1,314 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase4-qa-framework.schema.json",
+  "title": "Phase 4 QA & Validation Framework Artifact",
+  "description": "Validates QA framework output from @qa agent (Phase 4) - testing strategies, metrics, validation gates",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "testing_strategies", "quality_metrics"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "qa_framework",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@qa",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 4,
+      "description": "Phase number"
+    },
+    "testing_strategies": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["type", "coverage_target"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "Unit Testing",
+              "Integration Testing",
+              "E2E Testing",
+              "Load Testing",
+              "Security Testing",
+              "Performance Testing",
+              "Chaos Testing",
+              "Compliance Testing",
+              "Accessibility Testing"
+            ]
+          },
+          "coverage_target": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Target coverage percentage"
+          },
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Testing tools (Jest, Playwright, etc.)"
+          },
+          "focus": {
+            "type": "string",
+            "maxLength": 500,
+            "description": "What to focus testing on"
+          },
+          "effort_weeks": {
+            "type": "number",
+            "description": "Estimated effort in weeks"
+          }
+        }
+      },
+      "description": "Testing strategies and approaches"
+    },
+    "quality_metrics": {
+      "type": "array",
+      "minItems": 5,
+      "items": {
+        "type": "object",
+        "required": ["name", "target"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "number",
+                "description": "Numeric target (percentage, milliseconds, etc.)"
+              },
+              {
+                "type": "string",
+                "description": "String target (e.g., '99.9% uptime', '<200ms')"
+              }
+            ]
+          },
+          "critical": {
+            "type": "boolean",
+            "description": "Is this metric critical to launch?"
+          },
+          "measurement_method": {
+            "type": "string",
+            "description": "How to measure this metric"
+          },
+          "baseline": {
+            "oneOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "description": "Current baseline (if improving existing)"
+          }
+        }
+      },
+      "description": "Quality metrics and targets"
+    },
+    "validation_gates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["phase_gate", "gate_name", "criteria"],
+        "properties": {
+          "phase_gate": {
+            "type": "string",
+            "enum": ["Development", "Pre-Production", "Staging", "Production", "Post-Launch"],
+            "description": "When this gate is evaluated"
+          },
+          "gate_name": {
+            "type": "string",
+            "minLength": 5
+          },
+          "criteria": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1,
+            "description": "Criteria that must be met"
+          },
+          "blocker": {
+            "type": "boolean",
+            "description": "Does failure block deployment?"
+          },
+          "owner": {
+            "type": "string",
+            "description": "Who owns this gate (QA, DevOps, PM)"
+          }
+        }
+      },
+      "description": "Validation gates for different phases"
+    },
+    "test_scenarios": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "scenario_name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "expected_behavior": {
+            "type": "string"
+          },
+          "test_data": {
+            "type": "string",
+            "description": "Sample test data or data generation strategy"
+          }
+        }
+      },
+      "description": "Specific test scenarios"
+    },
+    "regression_test_suite": {
+      "type": "object",
+      "properties": {
+        "total_tests": {
+          "type": "integer",
+          "minimum": 10
+        },
+        "critical_paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Critical user journeys to test"
+        },
+        "edge_cases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Edge cases identified"
+        }
+      }
+    },
+    "performance_targets": {
+      "type": "object",
+      "properties": {
+        "api_response_time_p95": {
+          "type": "string",
+          "description": "95th percentile API response time"
+        },
+        "api_response_time_p99": {
+          "type": "string",
+          "description": "99th percentile API response time"
+        },
+        "page_load_time": {
+          "type": "string"
+        },
+        "concurrent_users": {
+          "type": "integer",
+          "description": "Target number of concurrent users"
+        },
+        "throughput_rps": {
+          "type": "integer",
+          "description": "Requests per second target"
+        }
+      }
+    },
+    "security_testing": {
+      "type": "object",
+      "properties": {
+        "owasp_top10_coverage": {
+          "type": "boolean",
+          "description": "OWASP Top 10 covered"
+        },
+        "penetration_testing": {
+          "type": "string",
+          "enum": ["Not Planned", "Internal", "Third-Party", "Annual"]
+        },
+        "vulnerability_scan_frequency": {
+          "type": "string",
+          "enum": ["Weekly", "Monthly", "Quarterly"]
+        },
+        "security_patch_timeline": {
+          "type": "string",
+          "description": "How quickly security patches deployed"
+        }
+      }
+    },
+    "compliance_testing": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Compliance requirements to test (HIPAA, PCI, GDPR, etc.)"
+    },
+    "test_environment_setup": {
+      "type": "object",
+      "properties": {
+        "environments": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Development", "Staging", "Production", "Load Test", "Chaos Test"]
+          }
+        },
+        "data_strategy": {
+          "type": "string",
+          "description": "How test data is generated/managed"
+        },
+        "data_privacy": {
+          "type": "string",
+          "description": "How to handle sensitive data in tests"
+        }
+      }
+    },
+    "defect_tracking": {
+      "type": "object",
+      "properties": {
+        "tool": {
+          "type": "string",
+          "description": "Tool used (Jira, Azure DevOps, etc.)"
+        },
+        "severity_levels": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Critical", "High", "Medium", "Low"]
+          }
+        },
+        "critical_defect_sla": {
+          "type": "string",
+          "description": "SLA for critical bug fixes (e.g., 4 hours)"
+        }
+      }
+    },
+    "test_reporting": {
+      "type": "object",
+      "properties": {
+        "daily_report": {
+          "type": "boolean"
+        },
+        "weekly_summary": {
+          "type": "boolean"
+        },
+        "metrics_dashboard": {
+          "type": "boolean"
+        },
+        "coverage_report": {
+          "type": "boolean"
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.dev/schemas/skills/vue-component-patterns.output.schema.json",
+  "title": "Vue Component Patterns Skill Output Schema",
+  "description": "Output from Vue component pattern generation",
+  "type": "object",
+  "required": ["component_code", "component_metadata"],
+  "properties": {
+    "component_code": {
+      "type": "string",
+      "description": "Complete Vue component code (.vue file content)"
+    },
+    "component_metadata": {
+      "type": "object",
+      "required": ["name", "type", "line_count"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Component name"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["common", "feature", "layout", "page", "renderless", "composable"]
+        },
+        "line_count": {
+          "type": "integer",
+          "description": "Number of lines in component"
+        },
+        "props_count": {
+          "type": "integer",
+          "description": "Number of props"
+        },
+        "events_count": {
+          "type": "integer",
+          "description": "Number of emitted events"
+        },
+        "slots_count": {
+          "type": "integer",
+          "description": "Number of slots"
+        },
+        "composables_used": {
+          "type": "array",
+          "description": "List of composables used",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "test_file": {
+      "type": "string",
+      "description": "Generated test file content (.spec.ts)"
+    },
+    "usage_example": {
+      "type": "string",
+      "description": "Example of how to use the component"
+    },
+    "documentation": {
+      "type": "string",
+      "description": "Component documentation in markdown"
+    }
+  }
+}

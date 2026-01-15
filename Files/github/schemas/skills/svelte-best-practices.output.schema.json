@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Svelte Best Practices Skill Output",
+  "description": "Output schema for svelte-best-practices skill",
+  "type": "object",
+  "properties": {
+    "practices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "goodExample": { "type": "string" },
+          "badExample": { "type": "string" },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "checklist": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["practices"]
+}

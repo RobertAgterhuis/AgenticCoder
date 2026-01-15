@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Java Specialist Agent Input",
+  "description": "Input schema for java-specialist agent",
+  "type": "object",
+  "properties": {
+    "projectName": { "type": "string" },
+    "framework": { "type": "string", "enum": ["spring-boot", "quarkus", "helidon"] },
+    "features": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["projectName", "framework"]
+}

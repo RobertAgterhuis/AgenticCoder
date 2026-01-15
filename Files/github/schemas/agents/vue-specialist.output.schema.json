@@ -1,0 +1,617 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agenticcoder.dev/schemas/agents/vue-specialist.output.schema.json",
+  "title": "Vue.js Specialist Agent Output Schema",
+  "description": "Output schema for Vue.js Specialist agent containing generated Vue 3 application code and configuration",
+  "type": "object",
+  "required": [
+    "application_structure",
+    "configuration_files",
+    "components",
+    "documentation"
+  ],
+  "properties": {
+    "application_structure": {
+      "type": "object",
+      "description": "Complete application directory structure with all generated files",
+      "required": ["src", "public", "root_files"],
+      "properties": {
+        "src": {
+          "type": "object",
+          "description": "Source code directory structure",
+          "properties": {
+            "main_ts": {
+              "type": "string",
+              "description": "Application entry point (main.ts content)"
+            },
+            "app_vue": {
+              "type": "string",
+              "description": "Root component (App.vue content)"
+            },
+            "components": {
+              "type": "array",
+              "description": "Generated Vue components",
+              "items": {
+                "type": "object",
+                "required": ["path", "content"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Component file path relative to src/",
+                    "examples": ["components/common/Button.vue", "components/features/UserCard.vue"]
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Component file content"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["common", "feature", "layout", "page"],
+                    "description": "Component category"
+                  }
+                }
+              }
+            },
+            "views": {
+              "type": "array",
+              "description": "Route view components",
+              "items": {
+                "type": "object",
+                "required": ["path", "content", "route"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "View file path",
+                    "examples": ["views/Home.vue", "views/Dashboard.vue"]
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "View component content"
+                  },
+                  "route": {
+                    "type": "string",
+                    "description": "Associated route path",
+                    "examples": ["/", "/dashboard", "/users/:id"]
+                  }
+                }
+              }
+            },
+            "composables": {
+              "type": "array",
+              "description": "Reusable composables",
+              "items": {
+                "type": "object",
+                "required": ["path", "content"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Composable file path",
+                    "examples": ["composables/useAuth.ts", "composables/useApi.ts"]
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Composable content"
+                  },
+                  "exports": {
+                    "type": "array",
+                    "description": "Exported functions/types",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "stores": {
+              "type": "array",
+              "description": "Pinia stores",
+              "items": {
+                "type": "object",
+                "required": ["path", "content", "store_name"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Store file path",
+                    "examples": ["stores/auth.ts", "stores/users.ts"]
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Store definition content"
+                  },
+                  "store_name": {
+                    "type": "string",
+                    "description": "Store identifier",
+                    "examples": ["auth", "users", "preferences"]
+                  }
+                }
+              }
+            },
+            "router": {
+              "type": "object",
+              "description": "Vue Router configuration",
+              "required": ["index_ts"],
+              "properties": {
+                "index_ts": {
+                  "type": "string",
+                  "description": "Router configuration file content"
+                },
+                "guards_ts": {
+                  "type": "string",
+                  "description": "Navigation guards file content"
+                }
+              }
+            },
+            "types": {
+              "type": "array",
+              "description": "TypeScript type definitions",
+              "items": {
+                "type": "object",
+                "required": ["path", "content"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Type definition file path",
+                    "examples": ["types/models.ts", "types/api.ts"]
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Type definitions content"
+                  }
+                }
+              }
+            },
+            "utils": {
+              "type": "array",
+              "description": "Utility functions",
+              "items": {
+                "type": "object",
+                "required": ["path", "content"],
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Utility file path"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Utility functions content"
+                  }
+                }
+              }
+            },
+            "assets": {
+              "type": "object",
+              "description": "Static assets",
+              "properties": {
+                "styles": {
+                  "type": "array",
+                  "description": "Stylesheet files",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "path": {
+                        "type": "string",
+                        "examples": ["assets/styles/main.scss", "assets/styles/variables.scss"]
+                      },
+                      "content": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "public": {
+          "type": "object",
+          "description": "Public assets directory",
+          "properties": {
+            "index_html": {
+              "type": "string",
+              "description": "HTML template content"
+            },
+            "favicon": {
+              "type": "boolean",
+              "description": "Whether favicon is included"
+            }
+          }
+        },
+        "root_files": {
+          "type": "object",
+          "description": "Root configuration files",
+          "properties": {
+            "additional_files": {
+              "type": "array",
+              "description": "Other root files",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "examples": [".gitignore", ".editorconfig", ".npmrc"]
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "configuration_files": {
+      "type": "object",
+      "description": "Configuration files for build, TypeScript, linting, etc.",
+      "required": ["package_json", "vite_config", "tsconfig"],
+      "properties": {
+        "package_json": {
+          "type": "object",
+          "description": "Package.json content",
+          "required": ["name", "version", "scripts", "dependencies", "devDependencies"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Project name"
+            },
+            "version": {
+              "type": "string",
+              "description": "Project version"
+            },
+            "scripts": {
+              "type": "object",
+              "description": "NPM scripts",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "dependencies": {
+              "type": "object",
+              "description": "Production dependencies",
+              "additionalProperties": {
+                "type": "string"
+              }
+            },
+            "devDependencies": {
+              "type": "object",
+              "description": "Development dependencies",
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "vite_config": {
+          "type": "string",
+          "description": "Vite configuration file content (vite.config.ts)"
+        },
+        "tsconfig": {
+          "type": "string",
+          "description": "TypeScript configuration file content (tsconfig.json)"
+        },
+        "tsconfig_node": {
+          "type": "string",
+          "description": "TypeScript Node configuration file content (tsconfig.node.json)"
+        },
+        "eslint_config": {
+          "type": "string",
+          "description": "ESLint configuration file content (.eslintrc.js)"
+        },
+        "prettier_config": {
+          "type": "string",
+          "description": "Prettier configuration file content (.prettierrc)"
+        },
+        "vitest_config": {
+          "type": "string",
+          "description": "Vitest configuration file content (vitest.config.ts)"
+        },
+        "env_files": {
+          "type": "array",
+          "description": "Environment variable files",
+          "items": {
+            "type": "object",
+            "properties": {
+              "filename": {
+                "type": "string",
+                "examples": [".env", ".env.production", ".env.local"]
+              },
+              "content": {
+                "type": "string",
+                "description": "Environment variables content"
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "description": "Summary of generated components",
+      "properties": {
+        "total_count": {
+          "type": "integer",
+          "description": "Total number of components generated"
+        },
+        "by_category": {
+          "type": "object",
+          "description": "Component count by category",
+          "properties": {
+            "common": {
+              "type": "integer",
+              "description": "Number of common/reusable components"
+            },
+            "feature": {
+              "type": "integer",
+              "description": "Number of feature-specific components"
+            },
+            "layout": {
+              "type": "integer",
+              "description": "Number of layout components"
+            },
+            "page": {
+              "type": "integer",
+              "description": "Number of page/view components"
+            }
+          }
+        },
+        "component_list": {
+          "type": "array",
+          "description": "List of all generated components",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Component name"
+              },
+              "path": {
+                "type": "string",
+                "description": "Component file path"
+              },
+              "category": {
+                "type": "string",
+                "enum": ["common", "feature", "layout", "page"]
+              },
+              "props": {
+                "type": "array",
+                "description": "Component props",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "events": {
+                "type": "array",
+                "description": "Component emitted events",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "slots": {
+                "type": "array",
+                "description": "Component slots",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "description": "Application routes",
+      "items": {
+        "type": "object",
+        "required": ["path", "name", "component"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Route path",
+            "examples": ["/", "/dashboard", "/users/:id"]
+          },
+          "name": {
+            "type": "string",
+            "description": "Route name"
+          },
+          "component": {
+            "type": "string",
+            "description": "Component path"
+          },
+          "meta": {
+            "type": "object",
+            "description": "Route metadata",
+            "properties": {
+              "requiresAuth": {
+                "type": "boolean"
+              },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "title": {
+                "type": "string"
+              }
+            }
+          },
+          "children": {
+            "type": "array",
+            "description": "Child routes",
+            "items": {
+              "$ref": "#/properties/routes/items"
+            }
+          }
+        }
+      }
+    },
+    "stores": {
+      "type": "array",
+      "description": "Pinia stores summary",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Store name"
+          },
+          "file": {
+            "type": "string",
+            "description": "Store file path"
+          },
+          "state": {
+            "type": "array",
+            "description": "Store state properties",
+            "items": {
+              "type": "string"
+            }
+          },
+          "getters": {
+            "type": "array",
+            "description": "Store getters",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "description": "Store actions",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "documentation": {
+      "type": "object",
+      "description": "Generated documentation",
+      "required": ["readme"],
+      "properties": {
+        "readme": {
+          "type": "string",
+          "description": "README.md content with setup instructions"
+        },
+        "component_docs": {
+          "type": "array",
+          "description": "Individual component documentation",
+          "items": {
+            "type": "object",
+            "properties": {
+              "component": {
+                "type": "string",
+                "description": "Component name"
+              },
+              "documentation": {
+                "type": "string",
+                "description": "Component documentation markdown"
+              }
+            }
+          }
+        },
+        "api_integration_guide": {
+          "type": "string",
+          "description": "Guide for API integration"
+        },
+        "deployment_guide": {
+          "type": "string",
+          "description": "Deployment instructions"
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "description": "Generated tests",
+      "properties": {
+        "unit_tests": {
+          "type": "array",
+          "description": "Unit test files",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Test file path"
+              },
+              "content": {
+                "type": "string",
+                "description": "Test file content"
+              },
+              "coverage_target": {
+                "type": "string",
+                "description": "File/component being tested"
+              }
+            }
+          }
+        },
+        "test_utilities": {
+          "type": "array",
+          "description": "Test helper utilities",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Code generation metrics",
+      "properties": {
+        "total_files": {
+          "type": "integer",
+          "description": "Total number of files generated"
+        },
+        "total_lines": {
+          "type": "integer",
+          "description": "Total lines of code generated"
+        },
+        "components_generated": {
+          "type": "integer",
+          "description": "Number of Vue components"
+        },
+        "stores_generated": {
+          "type": "integer",
+          "description": "Number of Pinia stores"
+        },
+        "composables_generated": {
+          "type": "integer",
+          "description": "Number of composables"
+        },
+        "routes_configured": {
+          "type": "integer",
+          "description": "Number of routes"
+        },
+        "estimated_bundle_size": {
+          "type": "string",
+          "description": "Estimated production bundle size",
+          "examples": ["245 KB", "1.2 MB"]
+        }
+      }
+    },
+    "next_steps": {
+      "type": "array",
+      "description": "Recommended next steps for development",
+      "items": {
+        "type": "string",
+        "examples": [
+          "Run 'npm install' to install dependencies",
+          "Configure environment variables in .env.local",
+          "Review and customize theme colors in assets/styles/variables.scss",
+          "Run 'npm run dev' to start development server",
+          "Run 'npm run test' to execute tests",
+          "Update API base URL in .env files"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false
+}

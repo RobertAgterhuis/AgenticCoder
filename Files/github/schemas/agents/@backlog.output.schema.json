@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@backlog.output.schema.json",
+  "title": "@backlog Agent Output Schema",
+  "description": "Output contract for the @backlog agent",
+  "type": "object",
+  "required": ["agent_id", "phase", "output", "artifacts"],
+  "properties": {
+    "agent_id": {
+      "type": "string",
+      "const": "@backlog",
+      "description": "Agent identifier"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 2,
+      "description": "Phase completed"
+    },
+    "output": {
+      "type": "object",
+      "required": [
+        "backlog_completed",
+        "epics_created",
+        "stories_created",
+        "nfrs_defined",
+        "risks_identified",
+        "release_milestones",
+        "next_phase",
+        "next_agent"
+      ],
+      "properties": {
+        "backlog_completed": {
+          "type": "boolean",
+          "description": "Whether backlog is complete"
+        },
+        "epics_created": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of epics created"
+        },
+        "stories_created": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of user stories created"
+        },
+        "nfrs_defined": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of non-functional requirements defined"
+        },
+        "risks_identified": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of risks identified and assessed"
+        },
+        "release_milestones": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of release milestones planned"
+        },
+        "total_story_points": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total estimated story points"
+        },
+        "quality_checks": {
+          "type": "object",
+          "properties": {
+            "epics_linked_to_goals": {"type": "boolean"},
+            "stories_have_acceptance_criteria": {"type": "boolean"},
+            "stories_estimated": {"type": "boolean"},
+            "stories_tagged": {"type": "boolean"},
+            "dependencies_documented": {"type": "boolean"},
+            "nfrs_measurable": {"type": "boolean"},
+            "risks_assessed": {"type": "boolean"},
+            "release_plan_realistic": {"type": "boolean"},
+            "dod_clear": {"type": "boolean"}
+          },
+          "description": "Quality checklist validation results"
+        },
+        "next_phase": {
+          "type": "integer",
+          "const": 3,
+          "description": "Next phase number"
+        },
+        "next_agent": {
+          "type": "string",
+          "enum": ["@coordinator"],
+          "description": "Next agent to execute"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "artifact_type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Artifact filename"
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path to artifact"
+          },
+          "artifact_type": {
+            "type": "string",
+            "enum": ["epics", "stories", "nfr", "risks", "release_plan", "dod"],
+            "description": "Type of backlog artifact"
+          },
+          "epic_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of epics (if artifact_type=epics)"
+          },
+          "story_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of stories (if artifact_type=stories)"
+          },
+          "nfr_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of NFRs (if artifact_type=nfr)"
+          },
+          "risk_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of risks (if artifact_type=risks)"
+          }
+        }
+      },
+      "minItems": 1,
+      "description": "List of backlog artifacts created"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "execution_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Execution time in milliseconds"
+        },
+        "avg_story_points_per_epic": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average story points per epic"
+        },
+        "high_risk_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of high-severity risks"
+        }
+      },
+      "description": "Execution metadata"
+    }
+  }
+}

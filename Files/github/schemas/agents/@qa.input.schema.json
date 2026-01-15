@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/@qa.input.schema.json",
+  "title": "@qa Agent Input Schema",
+  "description": "Input contract for the @qa agent (QA & Validation Architect)",
+  "type": "object",
+  "required": ["source", "phase", "input"],
+  "properties": {
+    "source": {
+      "type": "string",
+      "enum": ["@coordinator"],
+      "description": "@qa agent is triggered by @coordinator"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 4,
+      "description": "@qa agent runs in phase 4 (quality & validation)"
+    },
+    "input": {
+      "type": "object",
+      "required": ["project_plan_folder", "project_risk_level"],
+      "properties": {
+        "project_plan_folder": {
+          "type": "string",
+          "description": "Path to ProjectPlan folder",
+          "pattern": "^.*ProjectPlan/?$"
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "phase_number": {"type": "integer"},
+              "name": {"type": "string"},
+              "duration_days": {"type": "integer"}
+            }
+          },
+          "description": "Implementation phases from @coordinator"
+        },
+        "project_type": {
+          "type": "string",
+          "enum": [
+            "Startup MVP",
+            "Enterprise Platform",
+            "Internal Tool",
+            "API/Service",
+            "Mobile App",
+            "Data Platform"
+          ],
+          "description": "Project type (affects testing strategy)"
+        },
+        "project_risk_level": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High", "Critical"],
+          "description": "Risk level (determines testing depth)"
+        },
+        "tech_stack": {
+          "type": "object",
+          "properties": {
+            "backend": {"type": "string"},
+            "frontend": {"type": "string"},
+            "database": {"type": "string"},
+            "cloud": {"type": "string"},
+            "mobile": {"type": "string"}
+          },
+          "description": "Technology stack (determines testing tools)"
+        },
+        "team_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of team members"
+        },
+        "compliance_requirements": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "GDPR, HIPAA, SOC2, PCI-DSS, etc."
+        },
+        "performance_targets": {
+          "type": "object",
+          "properties": {
+            "api_response_time_ms": {"type": "integer"},
+            "frontend_load_time_ms": {"type": "integer"},
+            "uptime_percent": {"type": "number"}
+          }
+        }
+      }
+    }
+  }
+}

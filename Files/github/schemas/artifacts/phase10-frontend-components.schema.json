@@ -1,0 +1,519 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticCoder.dev/schemas/artifacts/phase10-frontend-components.schema.json",
+  "title": "Phase 10 Frontend Components Artifact",
+  "description": "Validates frontend components and pages output from @frontend-specialist agent (Phase 10)",
+  "type": "object",
+  "required": ["artifact_type", "agent_id", "phase", "frontend_metadata", "components", "pages"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "frontend_components",
+      "description": "Artifact category"
+    },
+    "agent_id": {
+      "type": "string",
+      "const": "@frontend-specialist",
+      "description": "Agent that produced this artifact"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 10,
+      "description": "Phase number"
+    },
+    "frontend_metadata": {
+      "type": "object",
+      "required": ["framework", "language", "components_created", "pages_created"],
+      "properties": {
+        "framework": {
+          "type": "string",
+          "enum": ["React", "Vue", "Angular", "Svelte", "Next.js", "Nuxt", "Remix", "SolidJS"]
+        },
+        "language": {
+          "type": "string",
+          "enum": ["TypeScript", "JavaScript"]
+        },
+        "components_created": {
+          "type": "integer",
+          "minimum": 10
+        },
+        "pages_created": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "component_directory": {
+          "type": "string",
+          "description": "Path to components folder"
+        },
+        "pages_directory": {
+          "type": "string",
+          "description": "Path to pages folder"
+        },
+        "ui_library": {
+          "type": "string",
+          "description": "UI library used (Material-UI, Tailwind, etc.)"
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["component_name", "component_path", "component_type"],
+        "properties": {
+          "component_name": {
+            "type": "string"
+          },
+          "component_path": {
+            "type": "string",
+            "description": "File path relative to project root"
+          },
+          "component_type": {
+            "type": "string",
+            "enum": ["Functional", "Class", "Custom Hook", "HOC"]
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "reusable": {
+            "type": "boolean"
+          },
+          "props": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "prop_name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "boolean"
+                },
+                "default_value": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "array"
+                    }
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "state_management": {
+            "type": "string",
+            "description": "Local state, Redux, Zustand, etc."
+          },
+          "hooks_used": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "styling_approach": {
+            "type": "string",
+            "enum": ["CSS Modules", "Styled Components", "Tailwind", "SASS/SCSS", "CSS-in-JS"]
+          },
+          "accessibility": {
+            "type": "object",
+            "properties": {
+              "aria_labels": {
+                "type": "boolean"
+              },
+              "keyboard_navigation": {
+                "type": "boolean"
+              },
+              "screen_reader_tested": {
+                "type": "boolean"
+              }
+            }
+          },
+          "testing_status": {
+            "type": "string",
+            "enum": ["Unit Tested", "Partially Tested", "Not Tested"]
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Other components this depends on"
+          },
+          "usage_examples": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["page_name", "page_path", "route"],
+        "properties": {
+          "page_name": {
+            "type": "string"
+          },
+          "page_path": {
+            "type": "string"
+          },
+          "route": {
+            "type": "string",
+            "description": "URL route path"
+          },
+          "description": {
+            "type": "string"
+          },
+          "components_used": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "state_management": {
+            "type": "string"
+          },
+          "api_calls": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "endpoint": {
+                  "type": "string"
+                },
+                "method": {
+                  "type": "string"
+                },
+                "trigger": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "authentication_required": {
+            "type": "boolean"
+          },
+          "permission_requirements": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "performance_optimizations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "og_tags": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "properties": {
+        "routing_library": {
+          "type": "string",
+          "enum": ["React Router", "Vue Router", "Angular Router", "Next.js", "Nuxt"]
+        },
+        "routes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              },
+              "component": {
+                "type": "string"
+              },
+              "exact": {
+                "type": "boolean"
+              },
+              "protected": {
+                "type": "boolean"
+              },
+              "roles_required": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "lazy_loading_routes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "state_management": {
+      "type": "object",
+      "properties": {
+        "library": {
+          "type": "string",
+          "enum": ["Redux", "Zustand", "Jotai", "Recoil", "Pinia", "Vuex", "Context API"]
+        },
+        "store_structure": {
+          "type": "string",
+          "description": "Description of store organization"
+        },
+        "store_location": {
+          "type": "string",
+          "description": "Path to store/state folder"
+        },
+        "global_stores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "store_name": {
+                "type": "string"
+              },
+              "state_properties": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "styling": {
+      "type": "object",
+      "properties": {
+        "css_framework": {
+          "type": "string"
+        },
+        "css_preprocessor": {
+          "type": "string",
+          "enum": ["SASS", "SCSS", "PostCSS", "None"]
+        },
+        "styling_approach": {
+          "type": "string",
+          "enum": ["CSS Modules", "Styled Components", "Tailwind", "SASS/SCSS", "Emotion", "CSS-in-JS"]
+        },
+        "theme_support": {
+          "type": "boolean"
+        },
+        "dark_mode": {
+          "type": "boolean"
+        },
+        "responsive_breakpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "pixel_width": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "forms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "form_name": {
+            "type": "string"
+          },
+          "form_location": {
+            "type": "string"
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "field_name": {
+                  "type": "string"
+                },
+                "field_type": {
+                  "type": "string",
+                  "enum": ["text", "email", "password", "number", "checkbox", "radio", "select", "textarea", "file"]
+                },
+                "validation_rules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "form_library": {
+            "type": "string"
+          },
+          "submission_handler": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "api_integration": {
+      "type": "object",
+      "properties": {
+        "http_client": {
+          "type": "string",
+          "enum": ["Axios", "Fetch API", "React Query", "SWR", "Apollo Client"]
+        },
+        "base_url": {
+          "type": "string"
+        },
+        "request_interceptors": {
+          "type": "boolean"
+        },
+        "response_interceptors": {
+          "type": "boolean"
+        },
+        "api_services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "service_name": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "endpoints": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "testing_framework": {
+          "type": "string",
+          "enum": ["Jest", "Vitest", "Mocha", "Jasmine"]
+        },
+        "component_testing_library": {
+          "type": "string",
+          "enum": ["React Testing Library", "Vue Test Utils", "Angular Testing Utilities", "Enzyme"]
+        },
+        "e2e_testing_framework": {
+          "type": "string",
+          "enum": ["Cypress", "Playwright", "Selenium"]
+        },
+        "test_coverage_target": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "test_files_location": {
+          "type": "string"
+        }
+      }
+    },
+    "performance_optimization": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Performance optimization techniques used"
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "wcag_compliance_level": {
+          "type": "string",
+          "enum": ["A", "AA", "AAA"]
+        },
+        "keyboard_navigation_support": {
+          "type": "boolean"
+        },
+        "screen_reader_support": {
+          "type": "boolean"
+        },
+        "color_contrast_tested": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "production_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dev_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "peer_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

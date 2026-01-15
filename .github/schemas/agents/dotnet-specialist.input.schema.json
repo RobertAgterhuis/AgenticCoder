@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/dotnet-specialist.input.schema.json",
+  "type": "object",
+  "title": ".NET Specialist Input",
+  "description": "Generate .NET backend code",
+  "required": [
+    "architecture"
+  ],
+  "properties": {
+    "architecture": {
+      "type": "object"
+    },
+    "dotnet_version": {
+      "type": "string"
+    },
+    "framework": {
+      "type": "string"
+    }
+  }
+}

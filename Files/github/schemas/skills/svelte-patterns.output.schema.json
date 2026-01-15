@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Svelte Patterns Skill Output",
+  "description": "Output schema for svelte-patterns skill",
+  "type": "object",
+  "properties": {
+    "patterns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "code": { "type": "string" },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  },
+  "required": ["patterns"]
+}

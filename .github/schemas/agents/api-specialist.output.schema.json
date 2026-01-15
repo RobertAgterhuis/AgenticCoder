@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/api-specialist.output.schema.json",
+  "type": "object",
+  "title": "API Specialist Output",
+  "description": "Generated API specifications",
+  "required": [
+    "specifications"
+  ],
+  "properties": {
+    "specifications": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

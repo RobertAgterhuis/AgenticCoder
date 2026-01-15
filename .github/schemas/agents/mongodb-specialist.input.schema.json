@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agenticcoder.com/schemas/agents/mongodb-specialist.input.schema.json",
+  "type": "object",
+  "title": "MongoDB Specialist Input",
+  "description": "Generate MongoDB collections and indexes",
+  "required": [
+    "schema_design"
+  ],
+  "properties": {
+    "schema_design": {
+      "type": "object"
+    },
+    "replica_set": {
+      "type": "boolean"
+    },
+    "sharding_strategy": {
+      "type": "string"
+    }
+  }
+}

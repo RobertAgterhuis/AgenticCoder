@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MySQL Schema Patterns Skill Output",
+  "description": "Output schema for mysql-schema-patterns skill",
+  "type": "object",
+  "properties": {
+    "patterns": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "examples": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "required": ["patterns"]
+}

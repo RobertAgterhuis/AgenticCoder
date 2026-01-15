@@ -1,0 +1,38 @@
+{
+  "mcpServers": {
+    "azure-pricing-mcp": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "azure_pricing_mcp"],
+      "cwd": "${workspaceFolder}/.github/mcp/azure-pricing-mcp",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/.github/mcp/azure-pricing-mcp"
+      },
+      "timeout": 30000,
+      "description": "Real-time Azure pricing data for cost estimation"
+    },
+    "azure-resource-graph-mcp": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "azure_resource_graph_mcp"],
+      "cwd": "${workspaceFolder}/.github/mcp/azure-resource-graph-mcp",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/.github/mcp/azure-resource-graph-mcp",
+        "AZURE_SUBSCRIPTION_ID": "${env:AZURE_SUBSCRIPTION_ID}"
+      },
+      "timeout": 30000,
+      "description": "Azure Resource Graph queries for governance and compliance"
+    },
+    "microsoft-docs-mcp": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["-m", "microsoft_docs_mcp"],
+      "cwd": "${workspaceFolder}/.github/mcp/microsoft-docs-mcp",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}/.github/mcp/microsoft-docs-mcp"
+      },
+      "timeout": 30000,
+      "description": "Microsoft documentation search for best practices"
+    }
+  }
+}
