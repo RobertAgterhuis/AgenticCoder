@@ -5,8 +5,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\" \"bicep-avm-resolver/**/test/**/*.test.js\"",
-    "test:watch": "node --test --watch \"test/**/*.test.js\" \"bicep-avm-resolver/**/test/**/*.test.js\"",
+    "test": "node scripts/run-tests.mjs",
+    "test:watch": "node scripts/run-tests.mjs --watch",
     "start": "node examples/simple-workflow.js",
     "lint": "eslint .",
     "format": "prettier --write ."
