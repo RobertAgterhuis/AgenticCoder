@@ -1,6 +1,6 @@
 # Branch protection checklist (main)
 
-This repo uses trunk-based development (see `TRUNK-BASED-WORKFLOW.md`).
+This repo uses trunk-based development (see [TRUNK-BASED-WORKFLOW.md](TRUNK-BASED-WORKFLOW.md)).
 
 ## Recommended settings
 
