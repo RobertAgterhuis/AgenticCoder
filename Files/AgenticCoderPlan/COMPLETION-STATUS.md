@@ -118,14 +118,21 @@ DynamicResourceAnalyzer.js    # 647 lines - Main analyzer
 
 ## 🎯 Remaining Work (Future Phases)
 
-### Phase 2: Enhanced Validation
+### ✅ Phase 2: Enhanced Validation - COMPLETE
+- ✅ ValidationFramework (6/6) - `agents/validation/validators/`
+- ✅ SyntaxValidator, DependencyValidator, TestRunner, GateManager
 - [ ] Azure MCP strict schema validation (`AGENTICCODER_TEST_AZURE_MCP_SCHEMA=1`)
 - [ ] Real-time pricing updates
 - [ ] Multi-region cost comparison
 
-### Phase 3: Intelligence
-- [ ] Self-learning from deployments
-- [ ] Feedback loop integration
+### ✅ Phase 3: Execution & Feedback - COMPLETE
+- ✅ ExecutionBridge (6/6) - `agents/core/execution/`
+- ✅ TransportSelector, ExecutionContext, AgentInvoker, OutputCollector, LifecycleManager, ResultHandler
+- ✅ FeedbackLoop (6/6) - `agents/core/feedback/`
+- ✅ StatusUpdater, MetricsCollector, ResultAggregator, PlanUpdater, NotificationSystem, DecisionEngine
+
+### 🟡 Phase 4: Intelligence - NOW UNBLOCKED
+- [ ] SelfLearning (0/12) - Now unblocked by FeedbackLoop
 - [ ] Custom template builder UI
 
 ---
@@ -135,16 +142,19 @@ DynamicResourceAnalyzer.js    # 647 lines - Main analyzer
 Run this to verify the system:
 
 ```bash
-cd d:\repositories\AgenticCoder
-node --test agents/test/BaseAgent.test.js agents/test/WorkflowEngine.test.js agents/test/S01ScenarioRunner.test.js
+cd d:\repositories\AgenticCoder\agents
+node scripts/run-tests.mjs
 ```
 
 Expected output:
 ```
 ✔ BaseAgent (7 tests)
-✔ WorkflowEngine (14 tests)  
-✔ S01 scenario runner generates expected artifacts
-ℹ tests 21 | pass 21 | fail 0
+✔ WorkflowEngine (14 tests)
+✔ ValidatorSuite (72 tests)
+✔ ExecutionBridge (30 tests)
+✔ FeedbackLoop (38 tests)
+✔ Scenarios (17 tests)
+ℹ tests 180 | pass 180 | fail 0
 ```
 
 ---
