@@ -171,19 +171,7 @@ A standalone alternative to VS Code - run AgenticCoder anywhere!
 - [ ] Personalized suggestions
 - [ ] Team style learning
 
-### 🌐 Multi-Cloud Support
 
-| Cloud | Status |
-|-------|--------|
-| Azure | ✅ Complete |
-| AWS | 📋 Q3 2026 |
-| GCP | 📋 Q3 2026 |
-
-**New Agents:**
-- @aws-architect
-- @gcp-architect
-- @terraform-specialist
-- @cloudformation-specialist
 
 ---
 
