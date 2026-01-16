@@ -63,3 +63,6 @@ Desktop.ini
 
 # Devcontainer caches
 .devcontainer/.cache/
+# Temporary and planning folders (not for GitHub)
+TEMP/
+Files/AgenticCoderPlan/
