@@ -7,7 +7,7 @@
 **AgenticCoder** is an intelligent multi-agent orchestration system that generates complete, production-ready codebases from project specifications. It uses **26 specialized AI agents** working through **16 orchestrated phases** to deliver fully functional applications with CI/CD pipelines, infrastructure-as-code, and comprehensive documentation.
 
 <p align="center">
-  <img src="Files/github/phase-flow.svg" alt="AgenticCoder Phase Flow" width="600">
+  <img src="./images/StackDroidSmall.jpg" alt="AgenticCoder Phase Flow" width="600">
 </p>
 
 ---
