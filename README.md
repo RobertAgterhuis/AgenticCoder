@@ -1,102 +1,245 @@
-# AgenticCoder Enhanced
+# AgenticCoder
 
-AI-powered multi-agent system for Azure infrastructure management and deployment.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
+[![Azure](https://img.shields.io/badge/Azure-Enabled-0078D4.svg)](https://azure.microsoft.com/)
 
-## 🎯 Project Status
+**AgenticCoder** is an intelligent multi-agent orchestration system that generates complete, production-ready codebases from project specifications. It uses **26 specialized AI agents** working through **16 orchestrated phases** to deliver fully functional applications with CI/CD pipelines, infrastructure-as-code, and comprehensive documentation.
 
-- ✅ **Phase 1**: MCP Servers (Complete)
-  - 3 operational servers with live Azure integration
-  - 23 tests passing
-  - CI/CD automated testing
+<p align="center">
+  <img src="Files/github/phase-flow.svg" alt="AgenticCoder Phase Flow" width="600">
+</p>
 
-- ✅ **Phase 2**: Agent Framework (Core complete)
-  - Core framework + additional agents implemented
-  - Workflow orchestration engine
-  - Message bus + HTTP MCP client
+---
 
-- ✅ **Phase 3**: Bicep AVM Resolver
-  - Implemented under `agents/bicep-avm-resolver/`
+## ✨ Features
 
-- 📋 **Phase 4-6**: Planned (see [ProjectPlan/](ProjectPlan/))
+| Feature | Description |
+|---------|-------------|
+| 🤖 **26 Specialized Agents** | From planning to deployment, each agent has expertise in its domain |
+| 🔄 **16-Phase Orchestration** | Systematic workflow from requirements to production-ready code |
+| ☁️ **Azure-First** | Native Azure integration with Bicep IaC and AVM modules |
+| 🧪 **Self-Learning** | Error classification, pattern detection, and automatic fix generation |
+| 📊 **Real-time Monitoring** | Dashboard, alerts, and execution tracking |
+| 🔌 **MCP Integration** | Model Context Protocol servers for Azure pricing, docs, and resource graph |
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Docker Desktop (for Dev Container)
-- Node.js 20+
-- Azure CLI (for authentication)
-- Azure subscription (for live queries)
+- **Node.js 20+** 
+- **Azure CLI** (for Azure authentication)
+- **VS Code** with GitHub Copilot (recommended)
+- **Docker Desktop** (optional, for Dev Container)
 
-### Option 1: Dev Container (Recommended)
+### Installation
 
-1. Open this folder in VS Code
-2. Click "Reopen in Container"
-3. All dependencies pre-installed
+```bash
+# Clone the repository
+git clone https://github.com/YOUR-ORG/AgenticCoder.git
+cd AgenticCoder
 
-### Option 2: Local Setup
-
-#### Phase 1: MCP Servers
-
-```powershell
-# Azure Pricing Server (Port 3001)
-cd servers/mcp-azure-pricing
-npm install
-npm start
-
-# Azure Resource Graph Server (Port 3002)
-cd servers/mcp-azure-resource-graph
-npm install
-npm start
-
-# Azure Docs Server (Port 3003)
-cd servers/mcp-azure-docs
-npm install
-npm start
-
-# Run Tests
-npm test  # In each server directory
+# Install dependencies
+cd agents && npm install
+cd ../servers/mcp-azure-pricing && npm install
+cd ../mcp-azure-docs && npm install
+cd ../mcp-azure-resource-graph && npm install
 ```
 
-#### Phase 2: Agent Framework
+### Run Your First Project
 
-```powershell
+```bash
+# Start the agent framework
 cd agents
-npm install
-
-# Run example workflow
 npm start
 
-# Run tests
+# Run tests to verify setup
 npm test
 ```
 
-## 📚 Documentation
+### Dev Container (Recommended)
 
-- [QUICK-REFERENCE.md](QUICK-REFERENCE.md) - Quick reference guide
-- [PHASE1-SETUP-GUIDE.md](PHASE1-SETUP-GUIDE.md) - MCP server setup (Azure credentials)
-- [PHASE2-AGENT-FRAMEWORK.md](PHASE2-AGENT-FRAMEWORK.md) - Agent framework guide
-- [PHASE2-COMPLETION-STATUS.md](PHASE2-COMPLETION-STATUS.md) - Current progress
-- [MCP-TRANSPORT-GUIDE.md](MCP-TRANSPORT-GUIDE.md) - Safe migration from HTTP stubs to MCP stdio
-- [ProjectPlan/](ProjectPlan/) - Complete 6-phase project plan
+1. Open folder in VS Code
+2. Click **"Reopen in Container"** when prompted
+3. All dependencies are pre-installed
 
-## 🏗️ Architecture
+---
+
+## 📖 Documentation
+
+| Document | Description |
+|----------|-------------|
+| **[Wiki Home](../../wiki)** | Complete documentation hub |
+| **[Getting Started](../../wiki/Getting-Started)** | Step-by-step setup guide |
+| **[User Guide](../../wiki/User-Guide)** | How to use AgenticCoder |
+| **[Developer Guide](../../wiki/Developer-Guide)** | Contributing and extending |
+| **[API Reference](../../wiki/API-Reference)** | Technical API documentation |
+| **[Roadmap](../../wiki/Roadmap)** | Future plans and releases |
+
+---
+
+## 🏗️ Architecture Overview
 
 ```
-User Request
-     ↓
-Workflow Orchestration (WorkflowEngine)
-     ↓
-Agent Layer (TaskExtraction → ResourceAnalyzer → CostEstimator → ...)
-     ↓
-MCP Servers (Pricing | Resource Graph | Docs)
-     ↓
-Azure Services
+┌─────────────────────────────────────────────────────────────┐
+│                     USER REQUEST                             │
+│              (Project Specification + Goals)                 │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │   ORCHESTRATION TIER          │
+          │   Phases 1-8 (9 agents)       │
+          │   @plan → @doc → @architect   │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │   ARCHITECTURE TIER           │
+          │   Phases 9-12 (4 agents)      │
+          │   @azure-architect → @bicep   │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │   IMPLEMENTATION TIER         │
+          │   Phases 13-15 (13 agents)    │
+          │   Frontend + Backend + DB     │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │        MCP SERVERS            │
+          │   Pricing | Docs | Resources  │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │      AZURE SERVICES           │
+          └───────────────────────────────┘
 ```
 
-## 🔧 Components
+---
 
-### MCP Servers (Phase 1)
+## 🎯 Supported Technology Stacks
+
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | React, Vue, Angular, Svelte |
+| **Backend** | Node.js, .NET, Python, Go, Java |
+| **Database** | PostgreSQL, MySQL, MongoDB |
+| **Cloud** | Azure (primary), AWS, GCP (planned) |
+| **IaC** | Bicep (Azure), Terraform (planned) |
+| **CI/CD** | GitHub Actions, Azure DevOps |
+
+---
+
+## 📦 Project Structure
+
+```
+AgenticCoder/
+├── agents/                    # Agent framework and implementations
+│   ├── core/                  # Core orchestration engine
+│   │   ├── execution/         # Execution bridge
+│   │   ├── feedback/          # Feedback loop system
+│   │   ├── orchestration/     # Monitoring & dashboards
+│   │   └── self-learning/     # Error learning system
+│   ├── bicep-avm-resolver/    # Azure Bicep AVM pipeline
+│   ├── task/                  # Task extraction engine
+│   └── validation/            # Validation framework
+├── servers/                   # MCP servers
+│   ├── mcp-azure-pricing/     # Azure pricing queries
+│   ├── mcp-azure-docs/        # Azure documentation
+│   └── mcp-azure-resource-graph/  # Resource graph queries
+├── .github/                   # GitHub Copilot agents & skills
+│   ├── agents/                # 17 agent definitions
+│   ├── skills/                # 15 skill definitions
+│   └── scenarios/             # 10 test scenarios
+└── Files/                     # Project plans & documentation
+    └── AgenticCoderPlan/      # Detailed implementation plans
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+cd agents && npm test
+
+# Run specific test suites
+npm test -- --grep "WorkflowEngine"
+npm test -- --grep "SelfLearning"
+
+# Test with Azure MCP (requires Azure credentials)
+AGENTICCODER_TEST_AZURE_MCP_SCHEMA=1 npm test
+```
+
+**Test Coverage:**
+- ✅ 70+ unit tests passing
+- ✅ Integration tests for all core components
+- ✅ 17 scenario tests (S01-S17)
+
+---
+
+## 🗺️ Roadmap
+
+### ✅ Completed (v2.0)
+- 26 specialized agents
+- 16-phase orchestration
+- Azure Bicep AVM resolver
+- Self-learning error system
+- Real-time monitoring dashboard
+
+### 🔜 Q1 2026 (v2.1)
+- Local AI assistant (Docker container)
+- Enhanced framework support (Remix, SvelteKit, Next.js)
+- 40% faster execution
+
+### 📋 Q2 2026 (v2.2)
+- Microservices architecture patterns
+- Enterprise features (multi-region, DR)
+- Additional database agents
+
+See full [Roadmap](../../wiki/Roadmap) for details.
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](../../wiki/Contributing) for details.
+
+```bash
+# Fork the repository
+# Create feature branch
+git checkout -b feature/amazing-feature
+
+# Make changes and test
+npm test
+
+# Commit with conventional commits
+git commit -m "feat: add amazing feature"
+
+# Push and create PR
+git push origin feature/amazing-feature
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Azure Verified Modules (AVM) team
+- GitHub Copilot team
+- All contributors
+
+---
+
+<p align="center">
+  <b>Built with ❤️ for the Azure community</b>
+</p>
 
 | Server | Port | Features | Tests |
 |--------|------|----------|-------|
