@@ -161,24 +161,60 @@ AgenticCoder/
 
 ---
 
+## 🔌 MCP Integration
+
+### Python MCP Servers
+
+| Server | Transport | Description |
+|--------|-----------|-------------|
+| **azure-pricing-mcp** | Stdio | Real-time Azure pricing via Retail Prices API |
+| **azure-resource-graph-mcp** | Stdio | KQL queries for resource discovery |
+| **microsoft-docs-mcp** | Stdio | Microsoft Learn documentation search |
+
+### TypeScript MCP Layer (`src/mcp/`)
+
+| Component | Description |
+|-----------|-------------|
+| **MCPGateway** | Unified entry point for all MCP operations |
+| **MCPClientManager** | Connection pool and lifecycle management |
+| **MCPBridge** | JavaScript agent integration bridge |
+| **19+ Server Adapters** | GitHub, Docker, Kubernetes, Azure, etc. |
+| **Health Monitoring** | Circuit breaker, retry policies, metrics |
+
+### Usage Example
+
+```typescript
+import { MCPBridge } from './src/mcp/bridge';
+
+const bridge = new MCPBridge({ workspaceFolder: process.cwd() });
+await bridge.initialize();
+
+// Azure pricing
+const price = await bridge.getAzurePrice('Standard_B2s', 'westeurope');
+
+// Resource discovery  
+const vms = await bridge.listResourcesByType('Microsoft.Compute/virtualMachines');
+
+// Documentation search
+const docs = await bridge.getAzureBestPractices('security');
+```
+
+---
+
 ## 🧪 Testing
 
 ```bash
 # Run all tests
 cd agents && npm test
-
-# Run specific test suites
-npm test -- --grep "WorkflowEngine"
-npm test -- --grep "SelfLearning"
-
-# Test with Azure MCP (requires Azure credentials)
-AGENTICCODER_TEST_AZURE_MCP_SCHEMA=1 npm test
 ```
 
 **Test Coverage:**
-- ✅ 70+ unit tests passing
-- ✅ Integration tests for all core components
-- ✅ 17 scenario tests (S01-S17)
+- ✅ 38+ MCP integration tests (CircuitBreaker, RetryPolicy)
+- ✅ TypeScript compilation passing
+- ✅ Health monitoring tests
+
+Optional environment variables for live tests:
+- `AGENTICCODER_RUN_LIVE_PRICING_TESTS=1` enables live Azure Retail Prices calls
 
 ---
 
@@ -190,6 +226,9 @@ AGENTICCODER_TEST_AZURE_MCP_SCHEMA=1 npm test
 - Azure Bicep AVM resolver
 - Self-learning error system
 - Real-time monitoring dashboard
+- **TypeScript MCP integration layer**
+- **19+ MCP server adapters**
+- **Circuit breaker & retry policies**
 
 ### 🔜 Q1 2026 (v2.1)
 - Local AI assistant (Docker container)
@@ -244,146 +283,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   <b>Built with ❤️ for the Azure community</b>
 </p>
 
-| Server | Transport | Features | Location |
-|--------|-----------|----------|----------|
-| **Azure Pricing** | Stdio | Real-time pricing, cost estimation | `.github/mcp/azure-pricing-mcp/` |
-| **Resource Graph** | Stdio | KQL queries, resource discovery | `.github/mcp/azure-resource-graph-mcp/` |
-| **Microsoft Docs** | Stdio | Documentation search | `.github/mcp/microsoft-docs-mcp/` |
-
-### TypeScript MCP Layer
-
-| Component | Description |
-|-----------|-------------|
-| **MCPGateway** | Unified entry point for all MCP operations |
-| **MCPClientManager** | Connection pool and lifecycle management |
-| **MCPBridge** | JavaScript agent integration bridge |
-| **19+ Server Adapters** | GitHub, Azure, Docker, Kubernetes, etc. |
-| **Health Monitoring** | Circuit breaker, retry policies, metrics |
-
-### Agent Framework
-
-| Component | Type | Description |
-|-----------|------|-------------|
-| **BaseAgent** | Core | Abstract base with lifecycle, validation, retry |
-| **AgentRegistry** | Core | Agent discovery, dependency resolution |
-| **WorkflowEngine** | Core | Multi-agent orchestration, error handling |
-| **TaskExtractionAgent** | Task | Natural language → structured tasks |
-| **ResourceAnalyzerAgent** | Infrastructure | Task → Azure resource requirements |
-| **CostEstimatorAgent** | Infrastructure | Resources → cost estimates + optimization |
-
-## 🧪 Testing
-
-```powershell
-# Agent Framework & MCP Tests
-cd agents && npm test
-```
-
-Optional environment variables for live tests:
-
-- `AGENTICCODER_RUN_LIVE_PRICING_TESTS=1` enables live Azure Retail Prices calls
-
-## 📦 Example Usage
-
-### Execute Workflow
-
-```javascript
-import { AgentRegistry, WorkflowEngine } from '@agenticcoder/agents';
-import { TaskExtractionAgent, ResourceAnalyzerAgent, CostEstimatorAgent } from '@agenticcoder/agents';
-
-const registry = new AgentRegistry();
-const workflowEngine = new WorkflowEngine(registry);
-
-// Register agents
-const taskAgent = new TaskExtractionAgent();
-await taskAgent.initialize();
-registry.register(taskAgent);
-// ... register other agents
-
-// Define workflow
-const workflow = {
-  id: 'deployment',
-  steps: [
-    { id: 'extract', agentId: 'task-extraction', inputs: {} },
-    { id: 'analyze', agentId: 'resource-analyzer', dependsOn: ['extract'] },
-    { id: 'estimate', agentId: 'cost-estimator', dependsOn: ['analyze'] }
-  ]
-};
-
-// Execute
-const result = await workflowEngine.execute('deployment', {
-  userRequest: 'Deploy Azure Function with storage in West Europe'
-});
-
-console.log(`Cost: $${result.outputs.cost.toFixed(2)}/month`);
-```
-
-### Use MCP Bridge (TypeScript)
-
-```typescript
-import { MCPBridge } from './src/mcp/bridge';
-
-const bridge = new MCPBridge({ workspaceFolder: process.cwd() });
-await bridge.initialize();
-
-// Search Azure pricing
-const price = await bridge.getAzurePrice('Standard_B2s', 'westeurope');
-console.log(`VM Price: $${price}/hour`);
-
-// Query resources
-const resources = await bridge.listResourcesByType('Microsoft.Compute/virtualMachines');
-console.log(`Found ${resources.length} VMs`);
-
-// Search documentation
-const docs = await bridge.getAzureBestPractices('security');
-```
-
-See [agents/examples/simple-workflow.js](agents/examples/simple-workflow.js) for complete example.
-
-## 🔐 Configuration
-
-### Azure Authentication
-
-MCP servers use DefaultAzureCredential:
-1. Azure CLI: `az login`
-2. Environment variables (see [PHASE1-SETUP-GUIDE.md](PHASE1-SETUP-GUIDE.md))
-3. Managed Identity (Azure VMs)
-
-### Environment Variables
-
-Each server needs `.env`:
-
-```env
-# Resource Graph Server
-AZURE_SUBSCRIPTION_ID=your-subscription-id
-AZURE_TENANT_ID=your-tenant-id
-AZURE_CLIENT_ID=your-client-id
-AZURE_CLIENT_SECRET=your-client-secret
-```
-
-See `.env.sample` in each server directory.
-
-## 🚦 CI/CD
-
-GitHub Actions runs:
-- MCP server tests (matrix build)
-- Agent framework tests
-- Automated on push/PR
-
-See [.github/workflows/ci.yml](.github/workflows/ci.yml)
-
-## 🗺️ Roadmap
-
-- ✅ Phase 1: MCP Servers (Complete)
-- ✅ Phase 2: Agent Framework (Core complete)
-- ✅ Phase 3: Bicep AVM Resolver
-- 📋 Phase 4: DevOps Integration
-- 📋 Phase 5: Advanced Features
-- 📋 Phase 6: Production Hardening
-
-## 🤝 Contributing
-
-See full project plan in [ProjectPlan/](ProjectPlan/) for detailed architecture and implementation roadmap.
-
-## 📄 License
-
-MIT
