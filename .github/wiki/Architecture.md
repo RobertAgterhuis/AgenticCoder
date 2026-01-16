@@ -302,32 +302,112 @@ messageBus.subscribe('phase-complete', (msg) => {
 
 ## MCP Integration
 
-### Server Architecture
+AgenticCoder uses a **TypeScript MCP integration layer** (`src/mcp/`) that provides unified, reliable access to MCP servers.
+
+### Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      MCP CLIENT                                  │
-│  (WorkflowEngine / Agent)                                       │
-└───────────────────┬─────────────────────────────────────────────┘
-                    │ stdio/HTTP
-                    ▼
+│               JavaScript Agents (agents/core/)                   │
+│                                                                  │
+│  WorkflowEngine │ BaseAgent │ TaskExtractionAgent               │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │ require()
+                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                    MCP SERVER                                    │
-│  ┌─────────────────────────────────────────────────────────────┐│
-│  │                    Tool Registry                            ││
-│  │  - search-azure-docs                                        ││
-│  │  - query-azure-pricing                                      ││
-│  │  - query-resource-graph                                     ││
-│  └─────────────────────────────────────────────────────────────┘│
-└───────────────────┬─────────────────────────────────────────────┘
-                    │
-                    ▼
+│                    MCPBridge (bridge.ts)                         │
+│   - Simplified API for JS agents                                 │
+│   - Convenience methods for Azure pricing, resources, docs       │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                   AZURE SERVICES                                 │
-│  - Azure Pricing API                                             │
-│  - Azure Docs API                                                │
-│  - Azure Resource Graph                                          │
-└─────────────────────────────────────────────────────────────────┘
+│                   MCPGateway (integration/)                      │
+│   - Unified entry point                                          │
+│   - Server discovery and registration                            │
+│   - Tool routing                                                 │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                MCPClientManager (core/)                          │
+│   - Connection pooling                                           │
+│   - Server lifecycle management                                  │
+│   - Request/response handling                                    │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                 Health Monitoring (health/)                      │
+│   - CircuitBreaker (38 tests)                                    │
+│   - RetryPolicy (exponential backoff)                            │
+│   - HealthMonitor (periodic checks)                              │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                Transport Layer (transport/)                      │
+│   - StdioTransport (Python servers)                              │
+│   - SSETransport (streaming)                                     │
+│   - HTTPTransport (REST APIs)                                    │
+│   - WebSocketTransport (bidirectional)                           │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+    ┌───────────────────────┼───────────────────────┐
+    ▼                       ▼                       ▼
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  Python MCP │     │Official MCP │     │External MCP │
+│  (.github/  │     │ (GitHub,    │     │ (Custom)    │
+│   mcp/)     │     │  Docker...) │     │             │
+└─────────────┘     └─────────────┘     └─────────────┘
+```
+
+### Server Adapters (19+)
+
+| Category | Adapters |
+|----------|----------|
+| **Azure** | AzurePricingMCP, AzureResourceGraphMCP, MicrosoftDocsMCP |
+| **Official** | GitHub, Filesystem, Git, Fetch, Puppeteer, Memory, SQLite, Sequential |
+| **Deployment** | Docker, Kubernetes, AzureDevOps, GitHub Actions |
+| **Security** | Semgrep, Trivy, OWASP Dependency Check |
+| **Data** | PostgreSQL, MongoDB, Redis |
+| **Testing** | Playwright |
+
+### Key Features
+
+**Reliability:**
+- **Circuit Breaker** - Prevents cascading failures
+- **Retry Policy** - Exponential backoff with jitter
+- **Health Monitoring** - Periodic health checks
+
+**Performance:**
+- **Connection Pooling** - Reuse connections
+- **Request Caching** - Cache repeated queries
+- **Parallel Execution** - Multi-server queries
+
+**Observability:**
+- **Metrics Collection** - Latency, error rates
+- **Event Emission** - Real-time monitoring
+- **Logging** - Structured logs
+
+### Usage Example
+
+```typescript
+import { MCPBridge } from './src/mcp/bridge';
+
+const bridge = new MCPBridge();
+await bridge.initialize();
+
+// Azure pricing
+const price = await bridge.getAzurePrice('Standard_B2s', 'westeurope');
+
+// Resource discovery
+const vms = await bridge.listResourcesByType('Microsoft.Compute/virtualMachines');
+
+// Documentation
+const docs = await bridge.getAzureBestPractices('security');
+
+await bridge.disconnect();
 ```
 
 ---

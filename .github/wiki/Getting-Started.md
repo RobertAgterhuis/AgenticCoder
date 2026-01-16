@@ -69,25 +69,12 @@ The easiest way to get started - everything pre-configured!
    npm install
    ```
 
-3. **Install MCP Servers** (optional, for Azure integration)
+3. **Verify Installation**
    ```bash
-   cd ../servers/mcp-azure-pricing
-   npm install
-   
-   cd ../mcp-azure-docs
-   npm install
-   
-   cd ../mcp-azure-resource-graph
-   npm install
-   ```
-
-4. **Verify Installation**
-   ```bash
-   cd ../../agents
    npm test
    ```
    
-   You should see: `✓ 70+ tests passing`
+   You should see: `✓ 38+ tests passing`
 
 ---
 
@@ -102,11 +89,10 @@ npm test
 
 **Expected output:**
 ```
-✓ WorkflowEngine tests (17 tests)
-✓ SelfLearning tests (46 tests)
-✓ Execution tests (30 tests)
+✓ CircuitBreaker tests (19 tests)
+✓ RetryPolicy tests (19 tests)
 ...
-ℹ tests 70+, pass 70+, fail 0
+ℹ tests 38+, pass 38+, fail 0
 ```
 
 ### Check Azure Connection (Optional)
@@ -184,13 +170,19 @@ AgenticCoder/
 │   ├── bicep-avm-resolver/ # Azure Bicep pipeline
 │   ├── task/              # Task extraction
 │   └── validation/        # Validation framework
-├── servers/               # 🔌 MCP servers
-│   ├── mcp-azure-pricing/ # Azure pricing API
-│   ├── mcp-azure-docs/    # Azure docs search
-│   └── mcp-azure-resource-graph/ # Resource queries
+├── src/mcp/               # 🔌 TypeScript MCP layer
+│   ├── core/              # Client manager, registry
+│   ├── transport/         # Stdio, SSE, HTTP
+│   ├── servers/           # 19+ server adapters
+│   ├── health/            # Circuit breaker, retry
+│   └── bridge.ts          # JS integration bridge
 ├── .github/               # 📋 Agent definitions
 │   ├── agents/           # 17 agent specs
 │   ├── skills/           # 15 skill specs
+│   ├── mcp/              # Python MCP servers
+│   │   ├── azure-pricing-mcp/
+│   │   ├── azure-resource-graph-mcp/
+│   │   └── microsoft-docs-mcp/
 │   └── scenarios/        # Test scenarios
 └── Files/                # 📚 Documentation
     └── AgenticCoderPlan/ # Implementation plans

@@ -147,10 +147,19 @@ Each phase has specialized agents that collaborate via message passing.
 
 ### What are MCP servers?
 
-MCP (Model Context Protocol) servers provide real-time Azure integration:
-- **mcp-azure-pricing** - Query Azure pricing
-- **mcp-azure-docs** - Search Azure documentation
-- **mcp-azure-resource-graph** - Query Azure resources
+MCP (Model Context Protocol) servers provide real-time Azure integration through a unified TypeScript layer:
+
+**Python MCP Servers** (`.github/mcp/`):
+- **azure-pricing-mcp** - Query Azure Retail Prices API
+- **azure-resource-graph-mcp** - Query Azure resources with KQL
+- **microsoft-docs-mcp** - Search Microsoft Learn documentation
+
+**TypeScript MCP Layer** (`src/mcp/`):
+- **MCPGateway** - Unified entry point for all MCP operations
+- **MCPClientManager** - Connection pooling and lifecycle management
+- **MCPBridge** - JavaScript agent integration
+- **19+ Server Adapters** - GitHub, Docker, Kubernetes, etc.
+- **Health Monitoring** - Circuit breaker, retry policies
 
 ### How does self-learning work?
 

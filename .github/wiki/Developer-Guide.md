@@ -37,17 +37,11 @@ Guide for developers who want to contribute to AgenticCoder or extend its functi
 git clone https://github.com/YOUR-ORG/AgenticCoder.git
 cd AgenticCoder
 
-# Install all dependencies
+# Install dependencies
 cd agents && npm install
-cd ../servers/mcp-azure-pricing && npm install
-cd ../mcp-azure-docs && npm install
-cd ../mcp-azure-resource-graph && npm install
-
-# Return to root
-cd ../../..
 
 # Verify setup
-cd agents && npm test
+npm test
 ```
 
 ### VS Code Configuration
@@ -490,58 +484,153 @@ export class MySkill {
 
 ## MCP Server Development
 
-### Server Structure
+AgenticCoder uses a **TypeScript MCP integration layer** that provides unified access to multiple MCP servers.
+
+### Architecture Overview
 
 ```
-servers/mcp-my-service/
-├── index.js           # Entry point
-├── handlers/          # Request handlers
-├── services/          # Business logic
-├── test/              # Tests
-├── package.json
-└── README.md
+┌─────────────────────────────────────────────────────────────┐
+│                    MCPBridge (JS Integration)                │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                      MCPGateway                              │
+│  - Unified entry point for all MCP operations               │
+│  - Automatic server discovery and registration              │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                   MCPClientManager                           │
+│  - Connection pooling                                        │
+│  - Circuit breaker & retry policies                          │
+│  - Health monitoring                                         │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│                  Transport Layer                             │
+│  Stdio │ SSE │ HTTP │ WebSocket                             │
+└─────────────────────────┬───────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────┐
+│              MCP Servers (Python / External)                 │
+│  azure-pricing-mcp │ azure-resource-graph-mcp │ docs-mcp    │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-### Basic MCP Server
+### Directory Structure
+
+```
+src/mcp/
+├── core/                    # Core components
+│   ├── MCPClientManager.ts  # Connection management
+│   ├── MCPConnectionPool.ts # Connection pooling
+│   ├── MCPServerRegistry.ts # Server definitions
+│   └── MCPServiceRegistry.ts # Service discovery
+├── transport/               # Transport implementations
+│   ├── BaseTransport.ts     # Abstract base
+│   ├── StdioTransport.ts    # Stdio (Python servers)
+│   ├── SSETransport.ts      # Server-sent events
+│   └── HTTPTransport.ts     # HTTP REST
+├── servers/                 # Server adapters
+│   ├── azure/               # Local Python MCP servers
+│   │   ├── AzurePricingMCPAdapter.ts
+│   │   ├── AzureResourceGraphMCPAdapter.ts
+│   │   └── MicrosoftDocsMCPAdapter.ts
+│   ├── official/            # Official MCP servers
+│   ├── deployment/          # CI/CD servers
+│   └── ...
+├── health/                  # Reliability
+│   ├── CircuitBreaker.ts    # Circuit breaker pattern
+│   ├── RetryPolicy.ts       # Retry strategies
+│   └── HealthMonitor.ts     # Health checks
+├── integration/             # Gateway
+│   └── MCPGateway.ts        # Unified entry point
+└── bridge.ts                # JS agent integration
+```
+
+### Creating a Server Adapter
+
+```typescript
+// src/mcp/servers/custom/MyServiceAdapter.ts
+import { BaseServerAdapter } from '../BaseServerAdapter';
+import { MCPClientManager } from '../../core/MCPClientManager';
+import { MCPServerDefinition, ToolCallResponse } from '../../types';
+
+export interface MyResult {
+  status: string;
+  data: unknown;
+}
+
+export class MyServiceAdapter extends BaseServerAdapter {
+  constructor(clientManager: MCPClientManager) {
+    super(clientManager);
+  }
+
+  getServerId(): string {
+    return 'my-service-mcp';
+  }
+
+  getDefinition(): MCPServerDefinition {
+    return {
+      id: 'my-service-mcp',
+      name: 'My Service MCP',
+      description: 'Custom MCP server',
+      category: 'custom',
+      transport: 'stdio',
+      command: 'python',
+      args: ['-m', 'my_service_mcp'],
+      enabled: true,
+    };
+  }
+
+  async myTool(query: string): Promise<ToolCallResponse<MyResult>> {
+    return this.callTool<MyResult>('my_tool', { query });
+  }
+}
+```
+
+### Using MCPBridge (JavaScript Integration)
 
 ```javascript
-// servers/mcp-my-service/index.js
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+// From JavaScript agents
+const { MCPBridge } = require('./src/mcp/bridge');
 
-const server = new Server({
-  name: 'mcp-my-service',
-  version: '1.0.0'
-}, {
-  capabilities: {
-    tools: {}
-  }
+const bridge = new MCPBridge({ 
+  workspaceFolder: process.cwd() 
 });
+await bridge.initialize();
 
-// Register tools
-server.setRequestHandler('tools/list', async () => ({
-  tools: [{
-    name: 'my-tool',
-    description: 'Description of my tool',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        query: { type: 'string' }
-      }
-    }
-  }]
-}));
+// Call any registered tool
+const result = await bridge.callTool(
+  'azure-pricing-mcp', 
+  'price_search', 
+  { sku: 'Standard_B2s' }
+);
 
-server.setRequestHandler('tools/call', async (request) => {
-  if (request.params.name === 'my-tool') {
-    const result = await handleMyTool(request.params.arguments);
-    return { content: [{ type: 'text', text: JSON.stringify(result) }] };
-  }
-});
+// Use convenience methods
+const price = await bridge.getAzurePrice('Standard_B2s', 'westeurope');
+const resources = await bridge.listResourcesByType('Microsoft.Compute/virtualMachines');
+const docs = await bridge.getAzureBestPractices('security');
 
-// Start server
-const transport = new StdioServerTransport();
-await server.connect(transport);
+// Cleanup
+await bridge.disconnect();
+```
+
+### Python MCP Server Location
+
+Local Python MCP servers are in `.github/mcp/`:
+
+```
+.github/mcp/
+├── azure-pricing-mcp/           # Azure Retail Prices API
+│   ├── azure_pricing_mcp/
+│   │   └── __main__.py
+│   ├── pyproject.toml
+│   └── README.md
+├── azure-resource-graph-mcp/    # Azure Resource Graph
+│   └── ...
+└── microsoft-docs-mcp/          # Microsoft Learn search
+    └── ...
 ```
 
 ---

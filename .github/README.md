@@ -43,9 +43,6 @@ cd AgenticCoder
 
 # Install dependencies
 cd agents && npm install
-cd ../servers/mcp-azure-pricing && npm install
-cd ../mcp-azure-docs && npm install
-cd ../mcp-azure-resource-graph && npm install
 ```
 
 ### Run Your First Project
@@ -144,13 +141,19 @@ AgenticCoder/
 │   ├── bicep-avm-resolver/    # Azure Bicep AVM pipeline
 │   ├── task/                  # Task extraction engine
 │   └── validation/            # Validation framework
-├── servers/                   # MCP servers
-│   ├── mcp-azure-pricing/     # Azure pricing queries
-│   ├── mcp-azure-docs/        # Azure documentation
-│   └── mcp-azure-resource-graph/  # Resource graph queries
+├── src/mcp/                   # TypeScript MCP integration layer
+│   ├── core/                  # Client manager, connection pool
+│   ├── transport/             # Stdio, SSE, HTTP transports
+│   ├── servers/               # 19+ server adapters
+│   ├── health/                # Circuit breaker, retry policies
+│   └── bridge.ts              # JS agent integration bridge
 ├── .github/                   # GitHub Copilot agents & skills
 │   ├── agents/                # 17 agent definitions
 │   ├── skills/                # 15 skill definitions
+│   ├── mcp/                   # Python MCP servers
+│   │   ├── azure-pricing-mcp/     # Azure pricing queries
+│   │   ├── azure-resource-graph-mcp/ # Resource graph queries
+│   │   └── microsoft-docs-mcp/    # Documentation search
 │   └── scenarios/             # 10 test scenarios
 └── Files/                     # Project plans & documentation
     └── AgenticCoderPlan/      # Detailed implementation plans
@@ -241,13 +244,23 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
   <b>Built with ❤️ for the Azure community</b>
 </p>
 
-| Server | Port | Features | Tests |
-|--------|------|----------|-------|
-| **Azure Pricing** | 3001 | Real-time pricing, caching, rate limiting | 7 ✅ |
-| **Resource Graph** | 3002 | KQL queries, Azure auth, multi-subscription | 8 ✅ |
-| **Azure Docs** | 3003 | Microsoft Learn search, facet filtering | 8 ✅ |
+| Server | Transport | Features | Location |
+|--------|-----------|----------|----------|
+| **Azure Pricing** | Stdio | Real-time pricing, cost estimation | `.github/mcp/azure-pricing-mcp/` |
+| **Resource Graph** | Stdio | KQL queries, resource discovery | `.github/mcp/azure-resource-graph-mcp/` |
+| **Microsoft Docs** | Stdio | Documentation search | `.github/mcp/microsoft-docs-mcp/` |
 
-### Agent Framework (Phase 2)
+### TypeScript MCP Layer
+
+| Component | Description |
+|-----------|-------------|
+| **MCPGateway** | Unified entry point for all MCP operations |
+| **MCPClientManager** | Connection pool and lifecycle management |
+| **MCPBridge** | JavaScript agent integration bridge |
+| **19+ Server Adapters** | GitHub, Azure, Docker, Kubernetes, etc. |
+| **Health Monitoring** | Circuit breaker, retry policies, metrics |
+
+### Agent Framework
 
 | Component | Type | Description |
 |-----------|------|-------------|
@@ -261,20 +274,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🧪 Testing
 
 ```powershell
-# MCP Servers
-cd servers/mcp-azure-pricing && npm test
-cd servers/mcp-azure-resource-graph && npm test
-cd servers/mcp-azure-docs && npm test
-
-# Agent Framework
+# Agent Framework & MCP Tests
 cd agents && npm test
 ```
 
-Run tests per package (`servers/*`, `agents/`) for current totals.
+Optional environment variables for live tests:
 
-Optional live tests:
-
-- `AGENTICCODER_RUN_LIVE_PRICING_TESTS=1` enables a live Azure Retail Prices call from the agent MCP stdio integration test.
+- `AGENTICCODER_RUN_LIVE_PRICING_TESTS=1` enables live Azure Retail Prices calls
 
 ## 📦 Example Usage
 
@@ -309,6 +315,26 @@ const result = await workflowEngine.execute('deployment', {
 });
 
 console.log(`Cost: $${result.outputs.cost.toFixed(2)}/month`);
+```
+
+### Use MCP Bridge (TypeScript)
+
+```typescript
+import { MCPBridge } from './src/mcp/bridge';
+
+const bridge = new MCPBridge({ workspaceFolder: process.cwd() });
+await bridge.initialize();
+
+// Search Azure pricing
+const price = await bridge.getAzurePrice('Standard_B2s', 'westeurope');
+console.log(`VM Price: $${price}/hour`);
+
+// Query resources
+const resources = await bridge.listResourcesByType('Microsoft.Compute/virtualMachines');
+console.log(`Found ${resources.length} VMs`);
+
+// Search documentation
+const docs = await bridge.getAzureBestPractices('security');
 ```
 
 See [agents/examples/simple-workflow.js](agents/examples/simple-workflow.js) for complete example.
