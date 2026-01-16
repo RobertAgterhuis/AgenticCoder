@@ -456,3 +456,36 @@ interface InvocationResult {
 ---
 
 **Status**: ✅ **SPECIFICATION COMPLETE** → Ready for implementation.
+
+---
+
+## 📋 ADDENDUM: Implementation (January 2026)
+
+### Implementation Location
+```
+agents/core/execution/AgentInvoker.js (~300 lines)
+```
+
+### Implemented Features
+- ✅ 4 invocation methods: webhook/api, process, docker, mcp-stdio
+- ✅ Timeout handling with AbortController (webhook) and process kill
+- ✅ Retry support for webhook transport
+- ✅ Real-time stdout/stderr streaming via events
+- ✅ JSON artifact extraction from stdout
+- ✅ Platform-aware process termination (Windows taskkill, Unix SIGTERM/SIGKILL)
+- ✅ Integration with ToolClientFactory for MCP-stdio
+
+### Key Classes/Methods
+```javascript
+class AgentInvoker extends EventEmitter {
+  invoke(transport, context)          // Main invocation method
+  _invokeViaWebhook(config, context)  // HTTP POST
+  _invokeViaProcess(config, context)  // spawn subprocess
+  _invokeViaDocker(config, context)   // docker run
+  _invokeViaMcpStdio(config, context) // MCP JSON-RPC
+}
+```
+
+### Tests
+- Integration test in `core/test/execution.test.js`
+- All tests passing ✅

@@ -47,6 +47,24 @@ async function collectTestFiles(cwd) {
     if (normalized.includes('/test/')) testFiles.push(p);
   }
 
+  // Core execution module tests (ExecutionBridge)
+  const executionTestFile = path.join(cwd, 'core', 'test', 'execution.test.js');
+  try {
+    await fs.access(executionTestFile);
+    testFiles.push(executionTestFile);
+  } catch {
+    // File doesn't exist, skip
+  }
+
+  // Core feedback module tests (FeedbackLoop)
+  const feedbackTestFile = path.join(cwd, 'core', 'test', 'feedback.test.js');
+  try {
+    await fs.access(feedbackTestFile);
+    testFiles.push(feedbackTestFile);
+  } catch {
+    // File doesn't exist, skip
+  }
+
   // Deterministic order.
   testFiles.sort((a, b) => a.localeCompare(b));
   return testFiles;

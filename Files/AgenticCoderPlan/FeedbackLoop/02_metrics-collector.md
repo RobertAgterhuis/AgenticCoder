@@ -649,3 +649,32 @@ function getDashboardMetrics(
 ---
 
 **Status**: ✅ **SPECIFICATION COMPLETE** → Ready for implementation.
+
+---
+
+## 📦 Implementation Addendum (January 2026)
+
+### ✅ IMPLEMENTED
+
+**Location**: `agents/core/feedback/MetricsCollector.js`
+
+**Features Implemented**:
+- 5 metric types (counter, gauge, histogram, summary, duration)
+- 7 component sources (TEE, OE, VF, EB, BAR, FL, SL)
+- Per-execution metrics collections
+- Component-specific metric methods (recordTaskExtraction, recordOrchestration, etc.)
+- Percentile calculation (p50, p90, p95, p99)
+- Histogram bucket calculation with configurable buckets
+- Dashboard generation with overview and per-component stats
+- Prometheus export format
+- Retention period with automatic cleanup
+- EventEmitter for metric events
+
+**Key Classes**:
+- `MetricsCollector` - Main class (~450 lines)
+- `METRIC_TYPES` - Type enum export
+- `COMPONENTS` - Component enum export
+
+**Test Coverage**: 6 unit tests in `core/test/feedback.test.js`
+
+**UNBLOCKS**: OE/05_monitoring can now use MetricsCollector for real-time metrics

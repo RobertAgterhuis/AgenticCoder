@@ -454,3 +454,38 @@ null (no valid artifact extracted)
 ---
 
 **Status**: ✅ **SPECIFICATION COMPLETE** → Ready for implementation.
+
+---
+
+## 📋 ADDENDUM: Implementation (January 2026)
+
+### Implementation Location
+```
+agents/core/execution/OutputCollector.js (~350 lines)
+```
+
+### Implemented Features
+- ✅ Artifact extraction from stdout (JSON, marked sections)
+- ✅ Multiple artifact marker formats supported
+- ✅ Structured log parsing ([LEVEL] message, JSON logs, timestamp formats)
+- ✅ Log level inference from message content
+- ✅ Metrics extraction (duration, exit code, token usage)
+- ✅ File storage (artifacts, logs, stdout/stderr)
+- ✅ Output truncation for memory protection
+- ✅ Schema registration for artifact validation
+
+### Key Classes/Methods
+```javascript
+class OutputCollector extends EventEmitter {
+  collect(invocationResult, context)  // Main collection method
+  _extractArtifact(result, context)   // Extract artifact
+  _extractJsonFromText(text)          // Parse JSON from mixed output
+  _extractMarkedArtifact(text)        // Find marked artifact sections
+  _extractLogs(stdout, stderr, logs)  // Parse structured logs
+  _saveArtifact(artifact, dir, ...)   // Save to file
+}
+```
+
+### Tests
+- 6 unit tests in `core/test/execution.test.js`
+- All tests passing ✅

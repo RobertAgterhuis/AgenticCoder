@@ -478,3 +478,35 @@ const transport = await selectTransport("@custom-agent", config);
 ---
 
 **Status**: ✅ **SPECIFICATION COMPLETE** → Ready for implementation.
+
+---
+
+## 📋 ADDENDUM: Implementation (January 2026)
+
+### Implementation Location
+```
+agents/core/execution/TransportSelector.js (~250 lines)
+```
+
+### Implemented Features
+- ✅ 5 transport types: webhook, process, docker, api, mcp-stdio
+- ✅ Configuration loading from file or object
+- ✅ Agent-specific config registration
+- ✅ Transport type inference from config fields
+- ✅ Config validation with clear error messages
+- ✅ Default timeout values per transport type
+- ✅ EventEmitter for transport-selected/validation-failed events
+
+### Key Classes/Methods
+```javascript
+class TransportSelector extends EventEmitter {
+  loadConfig(configSource)        // Load agent configs
+  registerAgent(name, config)     // Register agent transport
+  selectTransport(agent, overrides) // Select transport for agent
+  getSupportedTransports()        // List all transport types
+}
+```
+
+### Tests
+- 7 unit tests in `core/test/execution.test.js`
+- All tests passing ✅

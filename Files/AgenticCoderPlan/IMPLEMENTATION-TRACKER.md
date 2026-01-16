@@ -13,9 +13,9 @@
 | BicepAVMResolver | 6 | 0 | 0 |
 | OrchestrationEngine | 4 | 1 | 0 |
 | TaskExtractionEngine | 3 | 1 | 1 |
-| ValidationFramework | 2 | 4 | 0 |
-| ExecutionBridge | 1 | 5 | 0 |
-| FeedbackLoop | 0 | 1 | 5 |
+| **ValidationFramework** | **6** | **0** | **0** |
+| **ExecutionBridge** | **6** | **0** | **0** |
+| **FeedbackLoop** | **6** | **0** | **0** |
 | SelfLearning | 0 | 0 | 12 |
 | Features (F01-F15) | 0 | 0 | 15 |
 
@@ -87,45 +87,49 @@
 | Orchestration Planner | `TaskExtractionEngine/04_orchestration-planner.md` | ✅ | - | Workflow integration |
 | Feedback System | `TaskExtractionEngine/05_feedback-system.md` | 🔴 BLOCKED | FeedbackLoop | ⚠️ DUPLICATE - same as FeedbackLoop |
 
-### ValidationFramework (2/6 Complete) ⚠️ BLOCKS ExecutionBridge
-| Component | Plan Location | Status | Blocked By | Notes |
-|-----------|---------------|--------|------------|-------|
-| Schema Validator | `ValidationFramework/01_schema-validator.md` | ✅ | - | JSON schema validation |
-| Syntax Validator | `ValidationFramework/02_syntax-validator.md` | ⚠️ | - | Basic checks - NEEDS WORK |
-| Dependency Resolver | `ValidationFramework/03_dependency-resolver.md` | ⚠️ | - | In DynamicResourceAnalyzer - NEEDS WORK |
-| Security Scanner | `ValidationFramework/04_security-scanner.md` | ✅ | - | `_validateSecurity()` |
-| Test Runner | `ValidationFramework/05_test-runner.md` | ⚠️ | - | Node test runner - NEEDS WORK |
-| Gate Manager | `ValidationFramework/06_gate-manager.md` | 🔴 BLOCKED | VF/02,03,05 | Requires ALL validators complete |
+### ValidationFramework (6/6 Complete) ✅ UNBLOCKS ExecutionBridge
+| Component | Plan Location | Status | Implementation | Notes |
+|-----------|---------------|--------|----------------|-------|
+| Schema Validator | `ValidationFramework/01_schema-validator.md` | ✅ | `ValidationAgent._validateTemplate()` | JSON schema validation |
+| Syntax Validator | `ValidationFramework/02_syntax-validator.md` | ✅ | `validators/SyntaxValidator.js` | JS/TS/JSON/YAML/Bicep |
+| Dependency Resolver | `ValidationFramework/03_dependency-resolver.md` | ✅ | `validators/DependencyValidator.js` | Import resolution, circular deps |
+| Security Scanner | `ValidationFramework/04_security-scanner.md` | ✅ | `ValidationAgent._validateSecurity()` | Azure security checks |
+| Test Runner | `ValidationFramework/05_test-runner.md` | ✅ | `validators/TestRunner.js` | Jest/Mocha/Node/pytest |
+| Gate Manager | `ValidationFramework/06_gate-manager.md` | ✅ | `validators/GateManager.js` | Orchestrates all validators |
 
-### ExecutionBridge (1/6 Complete) 🔴 BLOCKED BY ValidationFramework
-| Component | Plan Location | Status | Blocked By | Notes |
-|-----------|---------------|--------|------------|-------|
-| Transport Selector | `ExecutionBridge/01_transport-selector.md` | 🔴 BLOCKED | VF/06 | `ToolClientFactory` partial |
-| Execution Context | `ExecutionBridge/02_execution-context.md` | 🔴 BLOCKED | EB/01 | Passed through agents |
-| Agent Invoker | `ExecutionBridge/03_agent-invoker.md` | ✅ | - | `AgentRegistry` |
-| Output Collector | `ExecutionBridge/04_output-collector.md` | 🔴 BLOCKED | EB/03 | In workflow |
-| Lifecycle Manager | `ExecutionBridge/05_lifecycle-manager.md` | 🔴 BLOCKED | EB/04 | `BaseAgent` lifecycle |
-| Result Handler | `ExecutionBridge/06_result-handler.md` | 🔴 BLOCKED | EB/05 | In agents |
+### ExecutionBridge (6/6 Complete) ✅ UNBLOCKS FeedbackLoop
+| Component | Plan Location | Status | Implementation | Notes |
+|-----------|---------------|--------|----------------|-------|
+| Transport Selector | `ExecutionBridge/01_transport-selector.md` | ✅ | `execution/TransportSelector.js` | Webhook/process/docker/MCP |
+| Execution Context | `ExecutionBridge/02_execution-context.md` | ✅ | `execution/ExecutionContext.js` | Context + builder pattern |
+| Agent Invoker | `ExecutionBridge/03_agent-invoker.md` | ✅ | `execution/AgentInvoker.js` | 4 transport methods |
+| Output Collector | `ExecutionBridge/04_output-collector.md` | ✅ | `execution/OutputCollector.js` | Artifact extraction |
+| Lifecycle Manager | `ExecutionBridge/05_lifecycle-manager.md` | ✅ | `execution/LifecycleManager.js` | Full lifecycle orchestration |
+| Result Handler | `ExecutionBridge/06_result-handler.md` | ✅ | `execution/ResultHandler.js` | Retry logic, artifact registry |
 
-**Note**: ExecutionBridge functionality is distributed across WorkflowEngine, BaseAgent, and ToolClientFactory. No dedicated module exists.
-
-**⚠️ BLOCKER**: ValidationFramework/06_gate-manager must be complete before ExecutionBridge can proceed.
+**Tests**: 30 unit tests passing (`core/test/execution.test.js`)
 
 ---
 
 ## ❌ NOT STARTED - Future Phases
 
-### FeedbackLoop (0/6 Complete) 🔴 BLOCKED BY ExecutionBridge
-| Component | Plan Location | Blocked By | Notes |
-|-----------|---------------|------------|-------|
-| Status Updater | `FeedbackLoop/01_status-updater.md` | EB/06 | Update @plan with progress |
-| Metrics Collector | `FeedbackLoop/02_metrics-collector.md` | EB/05 | Execution metrics |
-| Result Aggregator | `FeedbackLoop/03_result-aggregator.md` | EB/04 | Aggregate ExecutionBridge outputs |
-| Plan Updater | `FeedbackLoop/04_plan-updater.md` | FL/01,03 | Write back to plan files |
-| Notification System | `FeedbackLoop/05_notification-system.md` | FL/01 | Alerts/notifications |
-| Decision Engine | `FeedbackLoop/06_decision-engine.md` | FL/01-05 | Auto-remediation - LAST |
+### FeedbackLoop (6/6 Complete) ✅ UNBLOCKS SelfLearning & OE/05
+| Component | Plan Location | Status | Implementation | Notes |
+|-----------|---------------|--------|----------------|-------|
+| Status Updater | `FeedbackLoop/01_status-updater.md` | ✅ | `feedback/StatusUpdater.js` | Real-time progress tracking |
+| Metrics Collector | `FeedbackLoop/02_metrics-collector.md` | ✅ | `feedback/MetricsCollector.js` | Performance metrics → UNBLOCKS OE/05 |
+| Result Aggregator | `FeedbackLoop/03_result-aggregator.md` | ✅ | `feedback/ResultAggregator.js` | Consolidated outputs |
+| Plan Updater | `FeedbackLoop/04_plan-updater.md` | ✅ | `feedback/PlanUpdater.js` | Write back to plan files |
+| Notification System | `FeedbackLoop/05_notification-system.md` | ✅ | `feedback/NotificationSystem.js` | Multi-channel alerts |
+| Decision Engine | `FeedbackLoop/06_decision-engine.md` | ✅ | `feedback/DecisionEngine.js` | Auto-remediation → UNBLOCKS SL |
 
-### SelfLearning (0/12 Complete)
+**Tests**: 38 unit tests passing (`core/test/feedback.test.js`)
+
+---
+
+## ❌ NOT STARTED - Future Phases
+
+### SelfLearning (0/12 Complete) 🟡 NOW UNBLOCKED BY FeedbackLoop
 | Component | Plan Location | Priority |
 |-----------|---------------|----------|
 | Design | `SelfLearning/01_DESIGN.md` | Future |
@@ -155,50 +159,52 @@
 > **Full Dependency Chain**:
 > ```
 > ValidationFramework → ExecutionBridge → FeedbackLoop → SelfLearning
->        ↓                    ↓                ↓
+>        ✅                   ✅              ✅              🟡
 >   (validates)          (executes)       (collects)      (learns)
 > ```
 
-### 🔴 Phase 1: ValidationFramework Voltooien (2/6 → 6/6)
-**CRITICAL**: ExecutionBridge kan niet correct werken zonder volledige validatie!
+### ✅ Phase 1: ValidationFramework COMPLETE (6/6)
+**DONE**: All validators implemented and integrated into ValidationAgent!
+
+| # | Component | Status | Implementation |
+|---|-----------|--------|----------------|
+| 1 | **VF/02_syntax-validator.md** | ✅ DONE | `validators/SyntaxValidator.js` |
+| 2 | **VF/03_dependency-resolver.md** | ✅ DONE | `validators/DependencyValidator.js` |
+| 3 | **VF/05_test-runner.md** | ✅ DONE | `validators/TestRunner.js` |
+| 4 | **VF/06_gate-manager.md** | ✅ DONE | `validators/GateManager.js` |
+
+### ✅ Phase 2: ExecutionBridge COMPLETE (6/6)
+**DONE**: All components implemented in `agents/core/execution/`!
+
+| # | Component | Status | Implementation |
+|---|-----------|--------|----------------|
+| 5 | **EB/01_transport-selector.md** | ✅ DONE | `execution/TransportSelector.js` |
+| 6 | **EB/02_execution-context.md** | ✅ DONE | `execution/ExecutionContext.js` |
+| 7 | **EB/03_agent-invoker.md** | ✅ DONE | `execution/AgentInvoker.js` |
+| 8 | **EB/04_output-collector.md** | ✅ DONE | `execution/OutputCollector.js` |
+| 9 | **EB/05_lifecycle-manager.md** | ✅ DONE | `execution/LifecycleManager.js` |
+| 10 | **EB/06_result-handler.md** | ✅ DONE | `execution/ResultHandler.js` |
+
+### ✅ Phase 3: FeedbackLoop COMPLETE (6/6)
+**DONE**: All components implemented in `agents/core/feedback/`!
+
+| # | Component | Status | Implementation |
+|---|-----------|--------|----------------|
+| 11 | **FL/01_status-updater.md** | ✅ DONE | `feedback/StatusUpdater.js` |
+| 12 | **FL/02_metrics-collector.md** | ✅ DONE | `feedback/MetricsCollector.js` |
+| 13 | **FL/03_result-aggregator.md** | ✅ DONE | `feedback/ResultAggregator.js` |
+| 14 | **FL/04_plan-updater.md** | ✅ DONE | `feedback/PlanUpdater.js` |
+| 15 | **FL/05_notification-system.md** | ✅ DONE | `feedback/NotificationSystem.js` |
+| 16 | **FL/06_decision-engine.md** | ✅ DONE | `feedback/DecisionEngine.js` |
+
+### 🟡 Phase 4: NOW UNBLOCKED Components
+**Requires**: FeedbackLoop complete (✅ DONE!)
 
 | # | Component | Status | Why |
 |---|-----------|--------|-----|
-| 1 | **VF/02_syntax-validator.md** | ⚠️→✅ | Complete syntax validation |
-| 2 | **VF/03_dependency-resolver.md** | ⚠️→✅ | Resource dependency checks |
-| 3 | **VF/05_test-runner.md** | ⚠️→✅ | Automated test execution |
-| 4 | **VF/06_gate-manager.md** | 🔴→✅ | **UNBLOCKS ExecutionBridge** |
-
-### 🔴 Phase 2: ExecutionBridge Voltooien (1/6 → 6/6)
-**Requires**: VF/06_gate-manager complete
-
-| # | Component | Status | Why |
-|---|-----------|--------|-----|
-| 5 | **EB/01_transport-selector.md** | 🔴→✅ | Unified transport layer |
-| 6 | **EB/02_execution-context.md** | 🔴→✅ | Context propagation |
-| 7 | **EB/04_output-collector.md** | 🔴→✅ | Collect all outputs |
-| 8 | **EB/05_lifecycle-manager.md** | 🔴→✅ | Track execution lifecycle |
-| 9 | **EB/06_result-handler.md** | 🔴→✅ | **UNBLOCKS FeedbackLoop** |
-
-### 🔴 Phase 3: FeedbackLoop Implementeren (0/6 → 6/6)
-**Requires**: EB/06_result-handler complete
-
-| # | Component | Status | Why |
-|---|-----------|--------|-----|
-| 10 | **FL/01_status-updater.md** | ❌→✅ | Real-time progress tracking |
-| 11 | **FL/02_metrics-collector.md** | ❌→✅ | **UNBLOCKS OE/05_monitoring** |
-| 12 | **FL/03_result-aggregator.md** | ❌→✅ | Aggregate ExecutionBridge results |
-| 13 | **FL/04_plan-updater.md** | ❌→✅ | Write back to plan files |
-| 14 | **FL/05_notification-system.md** | ❌→✅ | Alerts/notifications |
-| 15 | **FL/06_decision-engine.md** | ❌→✅ | **UNBLOCKS SelfLearning** |
-
-### 🔴 Phase 4: Unblocked Components
-**Requires**: FeedbackLoop complete
-
-| # | Component | Status | Why |
-|---|-----------|--------|-----|
-| 16 | **OE/05_monitoring.md** | 🔴→✅ | Now has FL/02 metrics data |
-| 17 | **TEE/05_feedback-system.md** | 🔴→✅ | ⚠️ DUPLICATE of FeedbackLoop - consolidate |
+| 17 | **OE/05_monitoring.md** | 🟡 READY | FL/02 provides metrics data |
+| 18 | **SelfLearning** | 🟡 READY | FL/06 provides decision engine |
+| 19 | **TEE/05_feedback-system.md** | ✅→CONSOLIDATED | ⚠️ Same as FeedbackLoop - use FL instead |
 
 ### 🔴 Phase 5: SelfLearning (0/12 → 12/12)
 **Requires**: FeedbackLoop generating data

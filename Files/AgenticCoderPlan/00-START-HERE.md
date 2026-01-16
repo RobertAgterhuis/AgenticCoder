@@ -110,7 +110,15 @@ AgenticCoder/
 │   │   ├── EnhancedMessageBus.js     # Phase-aware routing
 │   │   ├── UnifiedWorkflow.js        # 12-phase workflow
 │   │   ├── agents/                   # 14 specialized agents
-│   │   └── tooling/                  # Tool clients
+│   │   ├── tooling/                  # Tool clients
+│   │   └── execution/                # ⭐ ExecutionBridge (NEW)
+│   │       ├── TransportSelector.js  # Transport selection
+│   │       ├── ExecutionContext.js   # Context management
+│   │       ├── AgentInvoker.js       # Agent invocation
+│   │       ├── OutputCollector.js    # Output processing
+│   │       ├── LifecycleManager.js   # Lifecycle orchestration
+│   │       ├── ResultHandler.js      # Result processing
+│   │       └── index.js              # Exports + ExecutionBridge facade
 │   ├── infrastructure/               # Infrastructure agents
 │   │   ├── ResourceAnalyzerAgent.js
 │   │   ├── CostEstimatorAgent.js
@@ -120,7 +128,14 @@ AgenticCoder/
 │   │       ├── config/               # Modular configs
 │   │       └── schema-discovery/     # 94 providers
 │   ├── task/                         # Task extraction
-│   ├── validation/                   # ValidationAgent
+│   ├── validation/                   # ValidationAgent + validators
+│   │   ├── ValidationAgent.js
+│   │   └── validators/               # ⭐ ValidationFramework (NEW)
+│   │       ├── SyntaxValidator.js
+│   │       ├── DependencyValidator.js
+│   │       ├── TestRunner.js
+│   │       ├── GateManager.js
+│   │       └── index.js
 │   ├── bicep-avm-resolver/           # AVM integration
 │   ├── scenarios/                    # Scenario runner
 │   └── test/                         # Test files
@@ -177,27 +192,32 @@ These documents contain the **original design vision**. Use them as reference, b
 
 > **Full Dependency Chain**: ValidationFramework → ExecutionBridge → FeedbackLoop → SelfLearning
 
-### Phase 2A: ValidationFramework Voltooien (Currently 2/6) ⚠️ START HERE
-Moet compleet zijn VOORDAT ExecutionBridge kan werken.
-- [ ] Syntax Validator - Complete syntax validation
-- [ ] Dependency Resolver - Resource dependency checks
-- [ ] Test Runner - Automated test execution
-- [ ] Gate Manager - **UNBLOCKS ExecutionBridge**
+### ✅ Phase 2A: ValidationFramework COMPLETE (6/6)
+Alle validators geïmplementeerd in `agents/validation/validators/`:
+- [x] SyntaxValidator - JS/TS/JSON/YAML/Bicep syntax validation
+- [x] DependencyValidator - Import resolution, circular dependency detection
+- [x] TestRunner - Jest/Mocha/Node/pytest support
+- [x] GateManager - Orchestrates all validators, makes pass/fail decisions
 
-### Phase 2B: ExecutionBridge Voltooien (Currently 1/6)
-Geblokkeerd door ValidationFramework/06_gate-manager.
-- [ ] Transport Selector - Unified transport layer
-- [ ] Execution Context - Context propagation
-- [ ] Output Collector - Collect execution outputs
-- [ ] Lifecycle Manager - Track execution lifecycle
-- [ ] Result Handler - **UNBLOCKS FeedbackLoop**
+### ✅ Phase 2B: ExecutionBridge COMPLETE (6/6) ← JUST COMPLETED
+Alle componenten geïmplementeerd in `agents/core/execution/`:
+- [x] TransportSelector - Webhook/process/docker/MCP-stdio transport selection
+- [x] ExecutionContext - Context management with builder pattern
+- [x] AgentInvoker - 4 transport method implementations
+- [x] OutputCollector - Artifact extraction and log parsing
+- [x] LifecycleManager - Full lifecycle orchestration (setup/execute/collect/cleanup)
+- [x] ResultHandler - Retry logic, artifact registry, validation integration
 
-### Phase 2C: FeedbackLoop Implementeren (Currently 0/6)
-Geblokkeerd door ExecutionBridge/06_result-handler.
+**Tests**: 30 unit tests passing (`core/test/execution.test.js`)
+
+### 🟡 Phase 2C: FeedbackLoop Implementeren (Currently 0/6) ← START HERE
+Nu unblocked door ExecutionBridge completion.
 - [ ] Status Updater - Real-time progress tracking
 - [ ] Metrics Collector - **UNBLOCKS OE/05_monitoring**
 - [ ] Result Aggregator - Aggregate results
 - [ ] Plan Updater - Write back to plan files
+- [ ] Notification System - Alerts and notifications
+- [ ] Decision Engine - Auto-remediation
 
 ### Phase 3: SelfLearning (Requires FeedbackLoop Data)
 Kan pas starten wanneer FeedbackLoop data genereert.

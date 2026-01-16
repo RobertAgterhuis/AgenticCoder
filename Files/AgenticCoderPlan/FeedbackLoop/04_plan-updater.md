@@ -577,3 +577,29 @@ async function savePlanWithVersioning(
 ---
 
 **Status**: ✅ **SPECIFICATION COMPLETE** → Ready for implementation.
+
+---
+
+## 📦 Implementation Addendum (January 2026)
+
+### ✅ IMPLEMENTED
+
+**Location**: `agents/core/feedback/PlanUpdater.js`
+
+**Features Implemented**:
+- 4 update modes (merge, append, replace, version)
+- Plan loading with caching
+- Backup creation with version history
+- Task status updates (@execution.tasks)
+- Phase status updates (@execution.phases)
+- Execution summary (@execution + @summary sections)
+- Recommendations and next steps
+- Version restoration
+- Async file I/O with fs/promises
+- EventEmitter for plan events
+
+**Key Classes**:
+- `PlanUpdater` - Main class (~350 lines)
+- `UPDATE_MODES` - Update mode enum
+
+**Test Coverage**: 4 unit tests in `core/test/feedback.test.js`

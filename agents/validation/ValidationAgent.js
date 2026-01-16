@@ -1,10 +1,19 @@
 import { BaseAgent } from '../core/BaseAgent.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { GateManager, SyntaxValidator, DependencyValidator, TestRunner } from './validators/index.js';
 
 /**
- * ValidationAgent - Validates Azure configurations
- * Checks for security, compliance, best practices, and common issues
+ * ValidationAgent - Validates Azure configurations and code artifacts
+ * Checks for security, compliance, best practices, syntax, dependencies, and more
+ * 
+ * Integrates ValidationFramework components:
+ * - VF-01: Schema Validator (JSON schema validation)
+ * - VF-02: Syntax Validator (JS/TS/JSON/YAML/Bicep syntax)
+ * - VF-03: Dependency Validator (import resolution, circular deps)
+ * - VF-04: Security Scanner (Azure security best practices)
+ * - VF-05: Test Runner (discover and execute tests)
+ * - VF-06: Gate Manager (orchestrate all validators, make decisions)
  */
 export class ValidationAgent extends BaseAgent {
   constructor() {
@@ -98,6 +107,20 @@ export class ValidationAgent extends BaseAgent {
     };
 
     super(definition);
+
+    // Initialize ValidationFramework components
+    this.gateManager = new GateManager({
+      runTests: false, // Tests off by default (can be enabled via input)
+      thresholds: {
+        criticalIssuesBlock: true,
+        highIssuesBlock: true,
+        moderateIssuesReview: 3,
+        minPassingScore: 70
+      }
+    });
+    this.syntaxValidator = new SyntaxValidator();
+    this.dependencyValidator = new DependencyValidator();
+    this.testRunner = new TestRunner();
   }
 
   async _onExecute(input, context, executionId) {
@@ -105,15 +128,68 @@ export class ValidationAgent extends BaseAgent {
       resources, 
       template, 
       validationRules = [], 
-      complianceFramework = 'azure-security-benchmark' 
+      complianceFramework = 'azure-security-benchmark',
+      // New ValidationFramework inputs
+      code,
+      files,
+      filePath,
+      projectRoot,
+      validateSyntax = false,
+      validateDependencies = false,
+      runTests = false,
+      useGateManager = false
     } = input;
 
     const validationResults = [];
+    let gateManagerResult = null;
+    let syntaxResults = null;
+    let dependencyResults = null;
+    let testResults = null;
+
+    // === NEW: ValidationFramework Integration ===
+
+    // If useGateManager is true, run full validation pipeline
+    if (useGateManager) {
+      gateManagerResult = await this.gateManager.validate({
+        resources,
+        code,
+        files,
+        filePath,
+        projectRoot,
+        schema: input.schema,
+        data: input.data
+      }, context);
+    }
+
+    // Individual validator calls
+    if (validateSyntax && (code || files)) {
+      if (code) {
+        syntaxResults = await this.syntaxValidator.validate(code, filePath || '');
+      } else if (files) {
+        syntaxResults = await this.syntaxValidator.validateMany(files);
+      }
+    }
+
+    if (validateDependencies && (code || projectRoot)) {
+      if (projectRoot) {
+        dependencyResults = await this.dependencyValidator.validateProject(projectRoot);
+      } else if (code && filePath) {
+        dependencyResults = await this.dependencyValidator.validate(code, filePath, projectRoot);
+      }
+    }
+
+    if (runTests && projectRoot) {
+      testResults = await this.testRunner.run(projectRoot, { runTests: true, coverage: false });
+    }
+
+    // === EXISTING: Azure Resource Validation ===
     
-    // Validate each resource
-    for (const resource of resources) {
-      const resourceResults = await this._validateResource(resource, complianceFramework);
-      validationResults.push(...resourceResults);
+    // Validate each resource (if provided)
+    if (resources && resources.length > 0) {
+      for (const resource of resources) {
+        const resourceResults = await this._validateResource(resource, complianceFramework);
+        validationResults.push(...resourceResults);
+      }
     }
 
     // Apply custom validation rules
@@ -132,7 +208,11 @@ export class ValidationAgent extends BaseAgent {
     const summary = this._calculateSummary(validationResults);
     
     // Overall validation passes if no critical or high issues
-    const isValid = summary.criticalIssues === 0 && summary.highIssues === 0;
+    // Also consider GateManager decision if used
+    let isValid = summary.criticalIssues === 0 && summary.highIssues === 0;
+    if (gateManagerResult) {
+      isValid = isValid && gateManagerResult.decision.canHandoff;
+    }
 
     // Optional: attach best-effort docs search results for the first failing rule.
     // Only do this in MCP mode (or when explicitly enabled) to keep default runs fast.
@@ -154,6 +234,11 @@ export class ValidationAgent extends BaseAgent {
       validationResults,
       summary,
       documentationResults,
+      // New ValidationFramework results
+      gateManagerResult,
+      syntaxResults,
+      dependencyResults,
+      testResults,
       metadata: {
         executionId,
         complianceFramework,
