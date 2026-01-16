@@ -1,9 +1,18 @@
 # AgenticCoder Complete Plan - Master Index
 
-**Last Updated**: January 13, 2026  
+**Last Updated**: January 2026 (Azure-only focus)  
 **Total Documents**: 13 comprehensive guides (8 plans + 5 navigation)  
 **Total Coverage**: 148+ pages, 50,000+ words  
-**Status**: ✅ Complete - All Critical Gaps Closed
+**Status**: ✅ Core Infrastructure Complete
+
+---
+
+> ## ⚠️ Important: Azure-Only Platform
+> 
+> AgenticCoder is focused exclusively on **Microsoft Azure**. 
+> References to AWS/GCP/multi-cloud in these documents are historical and should be ignored.
+> 
+> **Current implementation**: See [00-START-HERE.md](./00-START-HERE.md)
 
 ---
 

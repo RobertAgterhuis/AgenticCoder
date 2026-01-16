@@ -7,7 +7,11 @@
   "scripts": {
     "test": "node scripts/run-tests.mjs",
     "test:watch": "node scripts/run-tests.mjs --watch",
+    "test:azure-mcp": "node scripts/test-azure-mcp.mjs",
+    "test:azure-mcp:quick": "node scripts/test-azure-mcp.mjs --quick",
     "start": "node examples/simple-workflow.js",
+    "scenario": "node scripts/run-scenario.mjs",
+    "scenario:s01": "node scripts/run-scenario.mjs --scenario ../test-data/S01-simple-app-service.json --out ../output/S01 --offline",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

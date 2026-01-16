@@ -54,3 +54,10 @@ const result = await agent.execute({
 3. **Execute** - Core agent logic runs
 4. **Output** - Structured output with metadata
 5. **Cleanup** - Resources released
+
+## Live MCP Tests (Opt-in)
+
+Some MCP integration tests can optionally hit live external endpoints (e.g. Azure Retail Prices via the pricing MCP).
+
+- Enable live pricing calls: set `AGENTICCODER_RUN_LIVE_PRICING_TESTS=1`
+- Default behavior: live calls are skipped (offline/deterministic)

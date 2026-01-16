@@ -30,9 +30,13 @@ export class CostEstimatorAgent extends BaseAgent {
             items: {
               type: 'object',
               properties: {
+                id: { type: 'string' },
                 type: { type: 'string' },
-                sku: { type: 'string' },
+                name: { type: 'string' },
+                sku: { oneOf: [{ type: 'string' }, { type: 'object' }] },
                 location: { type: 'string' },
+                properties: { type: 'object' },
+                tags: { type: 'object' },
                 quantity: { type: 'number' }
               }
             }
@@ -69,7 +73,7 @@ export class CostEstimatorAgent extends BaseAgent {
               properties: {
                 resourceId: { type: 'string' },
                 resourceType: { type: 'string' },
-                sku: { type: 'string' },
+                sku: { oneOf: [{ type: 'string' }, { type: 'object' }] },
                 unitPrice: { type: 'number' },
                 quantity: { type: 'number' },
                 cost: { type: 'number' }
@@ -317,7 +321,11 @@ export class CostEstimatorAgent extends BaseAgent {
 
     // Storage optimization
     const storageResources = breakdown.filter(r => r.resourceType.includes('Storage'));
-    if (storageResources.some(r => r.sku?.includes('Premium'))) {
+    const hasPremiumStorage = storageResources.some(r => {
+      const skuName = typeof r.sku === 'string' ? r.sku : r.sku?.name;
+      return skuName?.includes('Premium');
+    });
+    if (hasPremiumStorage) {
       recommendations.push('Review Premium storage usage - Standard storage may be sufficient for some workloads');
     }
 

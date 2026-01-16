@@ -1,0 +1,21 @@
+{
+  "id": "S15",
+  "name": "SQL + App Service",
+  "description": "Data-driven web application",
+  "userRequest": "Build a data-driven web application with SQL database and App Service in eastus",
+  "constraints": {
+    "region": "eastus",
+    "budget": 200,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Sql/servers",
+      "Microsoft.Web/sites"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 80,
+      "max": 200
+    }
+  }
+}

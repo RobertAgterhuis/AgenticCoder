@@ -1,0 +1,752 @@
+{
+  "generatedAt": "2026-01-16T00:00:00.000Z",
+  "note": "Auto-generated from Azure Bicep MCP. These resource types have confirmed Bicep schema support.",
+  "providers": {
+    "Microsoft.Web": {
+      "latestApiVersions": {
+        "Microsoft.Web/sites": "2024-04-01",
+        "Microsoft.Web/serverfarms": "2024-04-01",
+        "Microsoft.Web/staticSites": "2024-04-01",
+        "Microsoft.Web/certificates": "2024-04-01",
+        "Microsoft.Web/hostingEnvironments": "2024-04-01",
+        "Microsoft.Web/kubeEnvironments": "2024-04-01"
+      }
+    },
+    "Microsoft.Compute": {
+      "latestApiVersions": {
+        "Microsoft.Compute/virtualMachines": "2024-03-01",
+        "Microsoft.Compute/virtualMachineScaleSets": "2024-03-01",
+        "Microsoft.Compute/disks": "2024-03-02",
+        "Microsoft.Compute/snapshots": "2024-03-02",
+        "Microsoft.Compute/images": "2024-03-01",
+        "Microsoft.Compute/galleries": "2023-07-03",
+        "Microsoft.Compute/availabilitySets": "2024-03-01",
+        "Microsoft.Compute/proximityPlacementGroups": "2024-03-01",
+        "Microsoft.Compute/sshPublicKeys": "2024-03-01",
+        "Microsoft.Compute/hostGroups": "2024-03-01",
+        "Microsoft.Compute/hostGroups/hosts": "2024-03-01",
+        "Microsoft.Compute/diskAccesses": "2024-03-02",
+        "Microsoft.Compute/diskEncryptionSets": "2024-03-02",
+        "Microsoft.Compute/capacityReservationGroups": "2024-03-01",
+        "Microsoft.Compute/restorePointCollections": "2024-03-01"
+      }
+    },
+    "Microsoft.Storage": {
+      "latestApiVersions": {
+        "Microsoft.Storage/storageAccounts": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/blobServices": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/blobServices/containers": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/fileServices": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/fileServices/shares": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/queueServices": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/queueServices/queues": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/tableServices": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/tableServices/tables": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/managementPolicies": "2023-05-01",
+        "Microsoft.Storage/storageAccounts/encryptionScopes": "2023-05-01"
+      }
+    },
+    "Microsoft.Sql": {
+      "latestApiVersions": {
+        "Microsoft.Sql/servers": "2023-08-01-preview",
+        "Microsoft.Sql/servers/databases": "2023-08-01-preview",
+        "Microsoft.Sql/servers/elasticPools": "2023-08-01-preview",
+        "Microsoft.Sql/servers/firewallRules": "2023-08-01-preview",
+        "Microsoft.Sql/servers/virtualNetworkRules": "2023-08-01-preview",
+        "Microsoft.Sql/managedInstances": "2023-08-01-preview",
+        "Microsoft.Sql/managedInstances/databases": "2023-08-01-preview"
+      }
+    },
+    "Microsoft.Network": {
+      "latestApiVersions": {
+        "Microsoft.Network/virtualNetworks": "2024-01-01",
+        "Microsoft.Network/virtualNetworks/subnets": "2024-01-01",
+        "Microsoft.Network/networkSecurityGroups": "2024-01-01",
+        "Microsoft.Network/publicIPAddresses": "2024-01-01",
+        "Microsoft.Network/networkInterfaces": "2024-01-01",
+        "Microsoft.Network/loadBalancers": "2024-01-01",
+        "Microsoft.Network/applicationGateways": "2024-01-01",
+        "Microsoft.Network/privateDnsZones": "2024-01-01",
+        "Microsoft.Network/privateEndpoints": "2024-01-01",
+        "Microsoft.Network/bastionHosts": "2024-01-01",
+        "Microsoft.Network/natGateways": "2024-01-01",
+        "Microsoft.Network/routeTables": "2024-01-01",
+        "Microsoft.Network/firewallPolicies": "2024-01-01",
+        "Microsoft.Network/azureFirewalls": "2024-01-01",
+        "Microsoft.Network/frontDoors": "2024-01-01",
+        "Microsoft.Network/trafficManagerProfiles": "2024-01-01",
+        "Microsoft.Network/dnsZones": "2024-01-01",
+        "Microsoft.Network/expressRouteCircuits": "2024-01-01",
+        "Microsoft.Network/virtualNetworkGateways": "2024-01-01",
+        "Microsoft.Network/connections": "2024-01-01"
+      }
+    },
+    "Microsoft.KeyVault": {
+      "latestApiVersions": {
+        "Microsoft.KeyVault/vaults": "2023-07-01",
+        "Microsoft.KeyVault/vaults/secrets": "2023-07-01",
+        "Microsoft.KeyVault/vaults/keys": "2023-07-01",
+        "Microsoft.KeyVault/vaults/accessPolicies": "2023-07-01",
+        "Microsoft.KeyVault/managedHSMs": "2023-07-01"
+      }
+    },
+    "Microsoft.Insights": {
+      "latestApiVersions": {
+        "Microsoft.Insights/components": "2020-02-02",
+        "Microsoft.Insights/actionGroups": "2023-01-01",
+        "Microsoft.Insights/metricAlerts": "2018-03-01",
+        "Microsoft.Insights/activityLogAlerts": "2020-10-01",
+        "Microsoft.Insights/diagnosticSettings": "2021-05-01-preview"
+      }
+    },
+    "Microsoft.OperationalInsights": {
+      "latestApiVersions": {
+        "Microsoft.OperationalInsights/workspaces": "2023-09-01"
+      }
+    },
+    "Microsoft.ContainerService": {
+      "latestApiVersions": {
+        "Microsoft.ContainerService/managedClusters": "2024-01-01"
+      }
+    },
+    "Microsoft.ContainerRegistry": {
+      "latestApiVersions": {
+        "Microsoft.ContainerRegistry/registries": "2023-11-01-preview"
+      }
+    },
+    "Microsoft.ManagedIdentity": {
+      "latestApiVersions": {
+        "Microsoft.ManagedIdentity/userAssignedIdentities": "2023-01-31"
+      }
+    },
+    "Microsoft.DocumentDB": {
+      "latestApiVersions": {
+        "Microsoft.DocumentDB/databaseAccounts": "2024-05-15",
+        "Microsoft.DocumentDB/databaseAccounts/sqlDatabases": "2024-05-15",
+        "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers": "2024-05-15",
+        "Microsoft.DocumentDB/databaseAccounts/mongodbDatabases": "2024-05-15",
+        "Microsoft.DocumentDB/databaseAccounts/gremlinDatabases": "2024-05-15",
+        "Microsoft.DocumentDB/databaseAccounts/tables": "2024-05-15"
+      }
+    },
+    "Microsoft.Cache": {
+      "latestApiVersions": {
+        "Microsoft.Cache/redis": "2024-03-01",
+        "Microsoft.Cache/redisEnterprise": "2024-02-01"
+      }
+    },
+    "Microsoft.ServiceBus": {
+      "latestApiVersions": {
+        "Microsoft.ServiceBus/namespaces": "2022-10-01-preview",
+        "Microsoft.ServiceBus/namespaces/queues": "2022-10-01-preview",
+        "Microsoft.ServiceBus/namespaces/topics": "2022-10-01-preview",
+        "Microsoft.ServiceBus/namespaces/topics/subscriptions": "2022-10-01-preview"
+      }
+    },
+    "Microsoft.EventHub": {
+      "latestApiVersions": {
+        "Microsoft.EventHub/namespaces": "2024-01-01",
+        "Microsoft.EventHub/namespaces/eventhubs": "2024-01-01",
+        "Microsoft.EventHub/namespaces/eventhubs/consumergroups": "2024-01-01"
+      }
+    },
+    "Microsoft.EventGrid": {
+      "latestApiVersions": {
+        "Microsoft.EventGrid/topics": "2024-06-01-preview",
+        "Microsoft.EventGrid/eventSubscriptions": "2024-06-01-preview",
+        "Microsoft.EventGrid/domains": "2024-06-01-preview",
+        "Microsoft.EventGrid/systemTopics": "2024-06-01-preview"
+      }
+    },
+    "Microsoft.Logic": {
+      "latestApiVersions": {
+        "Microsoft.Logic/workflows": "2019-05-01",
+        "Microsoft.Logic/integrationAccounts": "2019-05-01"
+      }
+    },
+    "Microsoft.ApiManagement": {
+      "latestApiVersions": {
+        "Microsoft.ApiManagement/service": "2023-09-01-preview"
+      }
+    },
+    "Microsoft.CognitiveServices": {
+      "latestApiVersions": {
+        "Microsoft.CognitiveServices/accounts": "2024-04-01-preview"
+      }
+    },
+    "Microsoft.MachineLearningServices": {
+      "latestApiVersions": {
+        "Microsoft.MachineLearningServices/workspaces": "2024-04-01"
+      }
+    },
+    "Microsoft.BotService": {
+      "latestApiVersions": {
+        "Microsoft.BotService/botServices": "2022-09-15"
+      }
+    },
+    "Microsoft.Search": {
+      "latestApiVersions": {
+        "Microsoft.Search/searchServices": "2024-03-01-preview"
+      }
+    },
+    "Microsoft.SignalRService": {
+      "latestApiVersions": {
+        "Microsoft.SignalRService/signalR": "2024-03-01",
+        "Microsoft.SignalRService/webPubSub": "2024-03-01"
+      }
+    },
+    "Microsoft.Synapse": {
+      "latestApiVersions": {
+        "Microsoft.Synapse/workspaces": "2021-06-01",
+        "Microsoft.Synapse/workspaces/sqlPools": "2021-06-01",
+        "Microsoft.Synapse/workspaces/bigDataPools": "2021-06-01",
+        "Microsoft.Synapse/workspaces/firewallRules": "2021-06-01"
+      }
+    },
+    "Microsoft.DataFactory": {
+      "latestApiVersions": {
+        "Microsoft.DataFactory/factories": "2018-06-01",
+        "Microsoft.DataFactory/factories/pipelines": "2018-06-01",
+        "Microsoft.DataFactory/factories/datasets": "2018-06-01",
+        "Microsoft.DataFactory/factories/linkedservices": "2018-06-01",
+        "Microsoft.DataFactory/factories/integrationRuntimes": "2018-06-01"
+      }
+    },
+    "Microsoft.Databricks": {
+      "latestApiVersions": {
+        "Microsoft.Databricks/workspaces": "2024-05-01"
+      }
+    },
+    "Microsoft.StreamAnalytics": {
+      "latestApiVersions": {
+        "Microsoft.StreamAnalytics/streamingjobs": "2021-10-01-preview"
+      }
+    },
+    "Microsoft.Cdn": {
+      "latestApiVersions": {
+        "Microsoft.Cdn/profiles": "2024-02-01",
+        "Microsoft.Cdn/profiles/endpoints": "2024-02-01"
+      }
+    },
+    "Microsoft.App": {
+      "latestApiVersions": {
+        "Microsoft.App/containerApps": "2024-03-01",
+        "Microsoft.App/managedEnvironments": "2024-03-01"
+      }
+    },
+    "Microsoft.Authorization": {
+      "latestApiVersions": {
+        "Microsoft.Authorization/roleAssignments": "2022-04-01",
+        "Microsoft.Authorization/policyAssignments": "2024-04-01",
+        "Microsoft.Authorization/policyDefinitions": "2024-04-01"
+      }
+    },
+    "Microsoft.Consumption": {
+      "latestApiVersions": {
+        "Microsoft.Consumption/budgets": "2023-11-01"
+      }
+    },
+    "Microsoft.RecoveryServices": {
+      "latestApiVersions": {
+        "Microsoft.RecoveryServices/vaults": "2024-04-01"
+      }
+    },
+    "Microsoft.DevTestLab": {
+      "latestApiVersions": {
+        "Microsoft.DevTestLab/labs": "2018-09-15",
+        "Microsoft.DevTestLab/labs/virtualNetworks": "2018-09-15"
+      }
+    },
+    "Microsoft.Maps": {
+      "latestApiVersions": {
+        "Microsoft.Maps/accounts": "2024-01-01-preview"
+      }
+    },
+    "Microsoft.NotificationHubs": {
+      "latestApiVersions": {
+        "Microsoft.NotificationHubs/namespaces": "2023-09-01",
+        "Microsoft.NotificationHubs/namespaces/notificationHubs": "2023-09-01"
+      }
+    },
+    "Microsoft.Relay": {
+      "latestApiVersions": {
+        "Microsoft.Relay/namespaces": "2021-11-01",
+        "Microsoft.Relay/namespaces/hybridConnections": "2021-11-01"
+      }
+    },
+    "Microsoft.AppConfiguration": {
+      "latestApiVersions": {
+        "Microsoft.AppConfiguration/configurationStores": "2023-03-01"
+      }
+    },
+    "Microsoft.AlertsManagement": {
+      "latestApiVersions": {
+        "Microsoft.AlertsManagement/smartDetectorAlertRules": "2021-04-01"
+      }
+    },
+    "Microsoft.DBforMySQL": {
+      "latestApiVersions": {
+        "Microsoft.DBforMySQL/flexibleServers": "2023-12-30"
+      }
+    },
+    "Microsoft.DBforPostgreSQL": {
+      "latestApiVersions": {
+        "Microsoft.DBforPostgreSQL/flexibleServers": "2024-03-01-preview"
+      }
+    },
+    "Microsoft.Devices": {
+      "latestApiVersions": {
+        "Microsoft.Devices/IotHubs": "2023-06-30",
+        "Microsoft.Devices/IotHubs/certificates": "2023-06-30",
+        "Microsoft.Devices/IotHubs/eventHubEndpoints/ConsumerGroups": "2023-06-30",
+        "Microsoft.Devices/iotHubs/privateEndpointConnections": "2023-06-30",
+        "Microsoft.Devices/provisioningServices": "2022-12-12",
+        "Microsoft.Devices/provisioningServices/certificates": "2022-12-12",
+        "Microsoft.Devices/provisioningServices/privateEndpointConnections": "2022-12-12"
+      }
+    },
+    "Microsoft.DigitalTwins": {
+      "latestApiVersions": {
+        "Microsoft.DigitalTwins/digitalTwinsInstances": "2023-01-31",
+        "Microsoft.DigitalTwins/digitalTwinsInstances/endpoints": "2023-01-31",
+        "Microsoft.DigitalTwins/digitalTwinsInstances/privateEndpointConnections": "2023-01-31",
+        "Microsoft.DigitalTwins/digitalTwinsInstances/timeSeriesDatabaseConnections": "2023-01-31"
+      }
+    },
+    "Microsoft.Communication": {
+      "latestApiVersions": {
+        "Microsoft.Communication/communicationServices": "2025-05-01",
+        "Microsoft.Communication/emailServices": "2025-05-01",
+        "Microsoft.Communication/emailServices/domains": "2025-05-01",
+        "Microsoft.Communication/emailServices/domains/senderUsernames": "2025-05-01"
+      }
+    },
+    "Microsoft.DesktopVirtualization": {
+      "latestApiVersions": {
+        "Microsoft.DesktopVirtualization/hostPools": "2024-04-03",
+        "Microsoft.DesktopVirtualization/hostPools/sessionHosts": "2024-04-03",
+        "Microsoft.DesktopVirtualization/hostPools/msixPackages": "2024-04-03",
+        "Microsoft.DesktopVirtualization/applicationGroups": "2024-04-03",
+        "Microsoft.DesktopVirtualization/applicationGroups/applications": "2024-04-03",
+        "Microsoft.DesktopVirtualization/applicationGroups/desktops": "2024-04-03",
+        "Microsoft.DesktopVirtualization/workspaces": "2024-04-03",
+        "Microsoft.DesktopVirtualization/scalingPlans": "2024-04-03",
+        "Microsoft.DesktopVirtualization/scalingPlans/pooledSchedules": "2024-04-03",
+        "Microsoft.DesktopVirtualization/scalingPlans/personalSchedules": "2024-04-03",
+        "Microsoft.DesktopVirtualization/appAttachPackages": "2024-04-03"
+      }
+    },
+    "Microsoft.ContainerInstance": {
+      "latestApiVersions": {
+        "Microsoft.ContainerInstance/containerGroups": "2023-05-01",
+        "Microsoft.ContainerInstance/containerGroupProfiles": "2024-05-01-preview"
+      }
+    },
+    "Microsoft.Batch": {
+      "latestApiVersions": {
+        "Microsoft.Batch/batchAccounts": "2024-02-01",
+        "Microsoft.Batch/batchAccounts/pools": "2024-02-01",
+        "Microsoft.Batch/batchAccounts/certificates": "2024-02-01"
+      }
+    },
+    "Microsoft.Resources": {
+      "latestApiVersions": {
+        "Microsoft.Resources/deployments": "2025-04-01",
+        "Microsoft.Resources/resourceGroups": "2025-04-01",
+        "Microsoft.Resources/tags": "2025-04-01",
+        "Microsoft.Resources/templateSpecs": "2025-04-01",
+        "Microsoft.Resources/deploymentScripts": "2023-08-01",
+        "Microsoft.Resources/deploymentStacks": "2024-03-01"
+      }
+    },
+    "Microsoft.Management": {
+      "latestApiVersions": {
+        "Microsoft.Management/managementGroups": "2024-02-01-preview",
+        "Microsoft.Management/managementGroups/settings": "2023-04-01",
+        "Microsoft.Management/managementGroups/subscriptions": "2023-04-01"
+      }
+    },
+    "Microsoft.Blueprint": {
+      "latestApiVersions": {
+        "Microsoft.Blueprint/blueprints": "2018-11-01-preview",
+        "Microsoft.Blueprint/blueprintAssignments": "2018-11-01-preview",
+        "Microsoft.Blueprint/blueprints/artifacts": "2018-11-01-preview",
+        "Microsoft.Blueprint/blueprints/versions": "2018-11-01-preview"
+      }
+    },
+    "Microsoft.Maintenance": {
+      "latestApiVersions": {
+        "Microsoft.Maintenance/maintenanceConfigurations": "2023-10-01-preview",
+        "Microsoft.Maintenance/configurationAssignments": "2023-10-01-preview",
+        "Microsoft.Maintenance/applyUpdates": "2023-10-01-preview"
+      }
+    },
+    "Microsoft.Purview": {
+      "latestApiVersions": {
+        "Microsoft.Purview/accounts": "2024-04-01-preview",
+        "Microsoft.Purview/accounts/privateEndpointConnections": "2024-04-01-preview",
+        "Microsoft.Purview/accounts/kafkaConfigurations": "2024-04-01-preview"
+      }
+    },
+    "Microsoft.TimeSeriesInsights": {
+      "latestApiVersions": {
+        "Microsoft.TimeSeriesInsights/environments": "2021-06-30-preview",
+        "Microsoft.TimeSeriesInsights/environments/eventSources": "2021-06-30-preview",
+        "Microsoft.TimeSeriesInsights/environments/referenceDataSets": "2021-06-30-preview"
+      }
+    },
+    "Microsoft.PowerBI": {
+      "latestApiVersions": {
+        "Microsoft.PowerBI/privateLinkServicesForPowerBI": "2020-06-01",
+        "Microsoft.PowerBI/workspaceCollections": "2016-01-29"
+      }
+    },
+    "Microsoft.HybridCompute": {
+      "latestApiVersions": {
+        "Microsoft.HybridCompute/machines": "2025-01-13",
+        "Microsoft.HybridCompute/machines/extensions": "2025-01-13",
+        "Microsoft.HybridCompute/privateLinkScopes": "2025-01-13",
+        "Microsoft.HybridCompute/licenses": "2025-01-13",
+        "Microsoft.HybridCompute/gateways": "2025-01-13"
+      }
+    },
+    "Microsoft.Advisor": {
+      "latestApiVersions": {
+        "Microsoft.Advisor/configurations": "2023-01-01",
+        "Microsoft.Advisor/recommendations": "2025-01-01",
+        "Microsoft.Advisor/assessments": "2023-09-01-preview"
+      }
+    },
+    "Microsoft.Migrate": {
+      "latestApiVersions": {
+        "Microsoft.Migrate/assessmentProjects": "2024-03-03-preview",
+        "Microsoft.Migrate/moveCollections": "2023-08-01",
+        "Microsoft.Migrate/migrateProjects": "2020-05-01",
+        "Microsoft.Migrate/modernizeProjects": "2024-03-03-preview"
+      }
+    },
+    "Microsoft.Automation": {
+      "latestApiVersions": {
+        "Microsoft.Automation/automationAccounts": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/runbooks": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/schedules": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/variables": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/credentials": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/jobs": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/certificates": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/connections": "2024-10-23",
+        "Microsoft.Automation/automationAccounts/modules": "2024-10-23"
+      }
+    },
+    "Microsoft.Security": {
+      "latestApiVersions": {
+        "Microsoft.Security/securityConnectors": "2024-08-01-preview",
+        "Microsoft.Security/assessments": "2021-06-01",
+        "Microsoft.Security/pricings": "2024-01-01",
+        "Microsoft.Security/automations": "2023-12-01-preview",
+        "Microsoft.Security/deviceSecurityGroups": "2019-08-01",
+        "Microsoft.Security/iotSecuritySolutions": "2019-08-01"
+      }
+    },
+    "Microsoft.PolicyInsights": {
+      "latestApiVersions": {
+        "Microsoft.PolicyInsights/remediations": "2024-10-01",
+        "Microsoft.PolicyInsights/attestations": "2024-10-01"
+      }
+    },
+    "Microsoft.DevCenter": {
+      "latestApiVersions": {
+        "Microsoft.DevCenter/devcenters": "2025-10-01-preview",
+        "Microsoft.DevCenter/projects": "2025-10-01-preview",
+        "Microsoft.DevCenter/projects/pools": "2025-10-01-preview",
+        "Microsoft.DevCenter/networkConnections": "2025-10-01-preview",
+        "Microsoft.DevCenter/devcenters/galleries": "2025-10-01-preview",
+        "Microsoft.DevCenter/devcenters/devboxdefinitions": "2025-10-01-preview"
+      }
+    },
+    "Microsoft.GuestConfiguration": {
+      "latestApiVersions": {
+        "Microsoft.GuestConfiguration/guestConfigurationAssignments": "2024-04-05"
+      }
+    },
+    "Microsoft.CostManagement": {
+      "latestApiVersions": {
+        "Microsoft.CostManagement/exports": "2025-03-01",
+        "Microsoft.CostManagement/budgets": "2025-03-01",
+        "Microsoft.CostManagement/views": "2025-03-01",
+        "Microsoft.CostManagement/scheduledActions": "2024-08-01",
+        "Microsoft.CostManagement/alerts": "2024-08-01"
+      }
+    },
+    "Microsoft.Kusto": {
+      "latestApiVersions": {
+        "Microsoft.Kusto/clusters": "2024-04-13",
+        "Microsoft.Kusto/clusters/databases": "2024-04-13",
+        "Microsoft.Kusto/clusters/databases/dataConnections": "2024-04-13",
+        "Microsoft.Kusto/clusters/attachedDatabaseConfigurations": "2024-04-13",
+        "Microsoft.Kusto/clusters/managedPrivateEndpoints": "2024-04-13"
+      }
+    },
+    "Microsoft.LoadTestService": {
+      "latestApiVersions": {
+        "Microsoft.LoadTestService/loadTests": "2024-12-01-preview",
+        "Microsoft.LoadTestService/playwrightWorkspaces": "2024-12-01-preview"
+      }
+    },
+    "Microsoft.Portal": {
+      "latestApiVersions": {
+        "Microsoft.Portal/dashboards": "2025-04-01-preview",
+        "Microsoft.Portal/tenantConfigurations": "2025-04-01-preview"
+      }
+    },
+    "Microsoft.Scheduler": {
+      "latestApiVersions": {
+        "Microsoft.Scheduler/jobCollections": "2016-03-01",
+        "Microsoft.Scheduler/jobCollections/jobs": "2016-03-01"
+      }
+    },
+    "Microsoft.HDInsight": {
+      "latestApiVersions": {
+        "Microsoft.HDInsight/clusters": "2025-01-15-preview",
+        "Microsoft.HDInsight/clusters/applications": "2025-01-15-preview",
+        "Microsoft.HDInsight/clusters/privateEndpointConnections": "2025-01-15-preview",
+        "Microsoft.HDInsight/clusterpools": "2024-05-01-preview",
+        "Microsoft.HDInsight/clusterpools/clusters": "2024-05-01-preview"
+      }
+    },
+    "Microsoft.NetApp": {
+      "latestApiVersions": {
+        "Microsoft.NetApp/netAppAccounts": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/capacityPools": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/capacityPools/volumes": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/capacityPools/volumes/snapshots": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/snapshotPolicies": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/backupPolicies": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/backupVaults": "2025-08-01",
+        "Microsoft.NetApp/netAppAccounts/volumeGroups": "2025-08-01"
+      }
+    },
+    "Microsoft.HealthcareApis": {
+      "latestApiVersions": {
+        "Microsoft.HealthcareApis/services": "2025-04-01-preview",
+        "Microsoft.HealthcareApis/workspaces": "2025-04-01-preview",
+        "Microsoft.HealthcareApis/workspaces/fhirservices": "2025-04-01-preview",
+        "Microsoft.HealthcareApis/workspaces/dicomservices": "2025-04-01-preview",
+        "Microsoft.HealthcareApis/workspaces/iotconnectors": "2025-04-01-preview",
+        "Microsoft.HealthcareApis/workspaces/iotconnectors/fhirdestinations": "2025-04-01-preview"
+      }
+    },
+    "Microsoft.AVS": {
+      "latestApiVersions": {
+        "Microsoft.AVS/privateClouds": "2024-09-01",
+        "Microsoft.AVS/privateClouds/clusters": "2024-09-01",
+        "Microsoft.AVS/privateClouds/authorizations": "2024-09-01",
+        "Microsoft.AVS/privateClouds/addons": "2024-09-01",
+        "Microsoft.AVS/privateClouds/globalReachConnections": "2024-09-01",
+        "Microsoft.AVS/privateClouds/cloudLinks": "2024-09-01",
+        "Microsoft.AVS/privateClouds/hcxEnterpriseSites": "2024-09-01",
+        "Microsoft.AVS/privateClouds/workloadNetworks": "2024-09-01",
+        "Microsoft.AVS/privateClouds/scriptExecutions": "2024-09-01"
+      }
+    },
+    "Microsoft.ServiceFabric": {
+      "latestApiVersions": {
+        "Microsoft.ServiceFabric/clusters": "2023-11-01-preview",
+        "Microsoft.ServiceFabric/managedClusters": "2025-06-01-preview",
+        "Microsoft.ServiceFabric/managedClusters/nodeTypes": "2025-06-01-preview",
+        "Microsoft.ServiceFabric/managedClusters/applications": "2025-06-01-preview",
+        "Microsoft.ServiceFabric/managedClusters/applications/services": "2025-06-01-preview"
+      }
+    },
+    "Microsoft.StorageSync": {
+      "latestApiVersions": {
+        "Microsoft.StorageSync/storageSyncServices": "2022-09-01",
+        "Microsoft.StorageSync/storageSyncServices/syncGroups": "2022-09-01",
+        "Microsoft.StorageSync/storageSyncServices/syncGroups/serverEndpoints": "2022-09-01",
+        "Microsoft.StorageSync/storageSyncServices/syncGroups/cloudEndpoints": "2022-09-01",
+        "Microsoft.StorageSync/storageSyncServices/registeredServers": "2022-09-01"
+      }
+    },
+    "Microsoft.DataLakeStore": {
+      "latestApiVersions": {
+        "Microsoft.DataLakeStore/accounts": "2016-11-01",
+        "Microsoft.DataLakeStore/accounts/firewallRules": "2016-11-01",
+        "Microsoft.DataLakeStore/accounts/trustedIdProviders": "2016-11-01",
+        "Microsoft.DataLakeStore/accounts/virtualNetworkRules": "2016-11-01"
+      }
+    },
+    "Microsoft.DataLakeAnalytics": {
+      "latestApiVersions": {
+        "Microsoft.DataLakeAnalytics/accounts": "2019-11-01-preview",
+        "Microsoft.DataLakeAnalytics/accounts/storageAccounts": "2019-11-01-preview",
+        "Microsoft.DataLakeAnalytics/accounts/dataLakeStoreAccounts": "2019-11-01-preview",
+        "Microsoft.DataLakeAnalytics/accounts/computePolicies": "2019-11-01-preview",
+        "Microsoft.DataLakeAnalytics/accounts/firewallRules": "2019-11-01-preview"
+      }
+    },
+    "Microsoft.LabServices": {
+      "latestApiVersions": {
+        "Microsoft.LabServices/labPlans": "2023-06-07",
+        "Microsoft.LabServices/labs": "2023-06-07",
+        "Microsoft.LabServices/labs/users": "2023-06-07",
+        "Microsoft.LabServices/labs/schedules": "2023-06-07",
+        "Microsoft.LabServices/labs/virtualMachines": "2023-06-07"
+      }
+    },
+    "Microsoft.Attestation": {
+      "latestApiVersions": {
+        "Microsoft.Attestation/attestationProviders": "2021-06-01",
+        "Microsoft.Attestation/attestationProviders/privateEndpointConnections": "2021-06-01"
+      }
+    },
+    "Microsoft.Chaos": {
+      "latestApiVersions": {
+        "Microsoft.Chaos/experiments": "2025-01-01",
+        "Microsoft.Chaos/targets": "2025-01-01",
+        "Microsoft.Chaos/targets/capabilities": "2025-01-01",
+        "Microsoft.Chaos/privateAccesses": "2024-11-01-preview"
+      }
+    },
+    "Microsoft.ConfidentialLedger": {
+      "latestApiVersions": {
+        "Microsoft.ConfidentialLedger/ledgers": "2025-06-10-preview",
+        "Microsoft.ConfidentialLedger/managedCCFs": "2025-06-10-preview"
+      }
+    },
+    "Microsoft.ManagedNetworkFabric": {
+      "latestApiVersions": {
+        "Microsoft.ManagedNetworkFabric/networkFabrics": "2023-06-15",
+        "Microsoft.ManagedNetworkFabric/networkFabricControllers": "2023-06-15",
+        "Microsoft.ManagedNetworkFabric/networkDevices": "2023-06-15",
+        "Microsoft.ManagedNetworkFabric/networkRacks": "2023-06-15",
+        "Microsoft.ManagedNetworkFabric/l2IsolationDomains": "2023-06-15",
+        "Microsoft.ManagedNetworkFabric/l3IsolationDomains": "2023-06-15"
+      }
+    },
+    "Microsoft.Orbital": {
+      "latestApiVersions": {
+        "Microsoft.Orbital/spacecrafts": "2022-11-01",
+        "Microsoft.Orbital/contactProfiles": "2022-11-01",
+        "Microsoft.Orbital/groundStations": "2024-03-01",
+        "Microsoft.Orbital/l2Connections": "2024-03-01",
+        "Microsoft.Orbital/edgeSites": "2024-03-01"
+      }
+    },
+    "Microsoft.Elastic": {
+      "latestApiVersions": {
+        "Microsoft.Elastic/monitors": "2025-06-01",
+        "Microsoft.Elastic/monitors/tagRules": "2025-06-01",
+        "Microsoft.Elastic/monitors/openAIIntegrations": "2025-06-01",
+        "Microsoft.Elastic/monitors/monitoredSubscriptions": "2025-06-01"
+      }
+    },
+    "Microsoft.Datadog": {
+      "latestApiVersions": {
+        "Microsoft.Datadog/monitors": "2023-10-20",
+        "Microsoft.Datadog/monitors/tagRules": "2023-10-20",
+        "Microsoft.Datadog/monitors/singleSignOnConfigurations": "2023-10-20",
+        "Microsoft.Datadog/agreements": "2023-10-20"
+      }
+    },
+    "Microsoft.Confluent": {
+      "latestApiVersions": {
+        "Microsoft.Confluent/organizations": "2025-08-18-preview",
+        "Microsoft.Confluent/agreements": "2025-08-18-preview",
+        "Microsoft.Confluent/organizations/environments": "2025-08-18-preview",
+        "Microsoft.Confluent/organizations/environments/clusters": "2025-08-18-preview"
+      }
+    },
+    "Microsoft.AppPlatform": {
+      "latestApiVersions": {
+        "Microsoft.AppPlatform/Spring": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/apps": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/apps/deployments": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/certificates": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/configServers": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/buildServices": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/gateways": "2024-05-01-preview",
+        "Microsoft.AppPlatform/Spring/apiPortals": "2024-05-01-preview"
+      }
+    },
+    "Microsoft.VoiceServices": {
+      "latestApiVersions": {
+        "Microsoft.VoiceServices/communicationsGateways": "2023-09-01",
+        "Microsoft.VoiceServices/communicationsGateways/testLines": "2023-09-01"
+      }
+    },
+    "Microsoft.VideoIndexer": {
+      "latestApiVersions": {
+        "Microsoft.VideoIndexer/accounts": "2025-04-01",
+        "Microsoft.VideoIndexer/accounts/privateEndpointConnections": "2025-04-01",
+        "Microsoft.VideoIndexer/accounts/privateLinkResources": "2025-04-01"
+      }
+    },
+    "Microsoft.Dashboard": {
+      "latestApiVersions": {
+        "Microsoft.Dashboard/grafana": "2025-09-01-preview",
+        "Microsoft.Dashboard/grafana/managedPrivateEndpoints": "2025-09-01-preview",
+        "Microsoft.Dashboard/grafana/privateEndpointConnections": "2025-09-01-preview",
+        "Microsoft.Dashboard/dashboards": "2025-09-01-preview"
+      }
+    },
+    "Microsoft.AgFoodPlatform": {
+      "latestApiVersions": {
+        "Microsoft.AgFoodPlatform/farmBeats": "2023-06-01-preview",
+        "Microsoft.AgFoodPlatform/farmBeats/extensions": "2023-06-01-preview",
+        "Microsoft.AgFoodPlatform/farmBeats/solutions": "2023-06-01-preview",
+        "Microsoft.AgFoodPlatform/farmBeats/dataConnectors": "2023-06-01-preview"
+      }
+    },
+    "Microsoft.Quantum": {
+      "latestApiVersions": {
+        "Microsoft.Quantum/workspaces": "2025-08-11-preview"
+      }
+    },
+    "Microsoft.HybridConnectivity": {
+      "latestApiVersions": {
+        "Microsoft.HybridConnectivity/endpoints": "2024-12-01",
+        "Microsoft.HybridConnectivity/endpoints/serviceConfigurations": "2024-12-01",
+        "Microsoft.HybridConnectivity/publicCloudConnectors": "2024-12-01",
+        "Microsoft.HybridConnectivity/solutionConfigurations": "2024-12-01"
+      }
+    },
+    "Microsoft.HybridNetwork": {
+      "latestApiVersions": {
+        "Microsoft.HybridNetwork/publishers": "2024-04-15",
+        "Microsoft.HybridNetwork/sites": "2024-04-15",
+        "Microsoft.HybridNetwork/networkFunctions": "2024-04-15",
+        "Microsoft.HybridNetwork/configurationGroupValues": "2024-04-15",
+        "Microsoft.HybridNetwork/siteNetworkServices": "2024-04-15"
+      }
+    },
+    "Microsoft.Workloads": {
+      "latestApiVersions": {
+        "Microsoft.Workloads/sapVirtualInstances": "2024-09-01",
+        "Microsoft.Workloads/sapVirtualInstances/applicationInstances": "2024-09-01",
+        "Microsoft.Workloads/sapVirtualInstances/centralInstances": "2024-09-01",
+        "Microsoft.Workloads/sapVirtualInstances/databaseInstances": "2024-09-01",
+        "Microsoft.Workloads/monitors": "2024-02-01-preview",
+        "Microsoft.Workloads/monitors/providerInstances": "2024-02-01-preview"
+      }
+    },
+    "Microsoft.StorageMover": {
+      "latestApiVersions": {
+        "Microsoft.StorageMover/storageMovers": "2025-07-01",
+        "Microsoft.StorageMover/storageMovers/projects": "2025-07-01",
+        "Microsoft.StorageMover/storageMovers/agents": "2025-07-01",
+        "Microsoft.StorageMover/storageMovers/endpoints": "2025-07-01",
+        "Microsoft.StorageMover/storageMovers/projects/jobDefinitions": "2025-07-01"
+      }
+    },
+    "Microsoft.OpenEnergyPlatform": {
+      "latestApiVersions": {
+        "Microsoft.OpenEnergyPlatform/energyServices": "2022-04-04-preview"
+      }
+    }
+  },
+  "totalProviders": 94,
+  "totalResourceTypes": 365,
+  "unsupportedProviders": [
+    "Microsoft.Media"
+  ]
+}

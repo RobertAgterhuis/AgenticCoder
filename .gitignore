@@ -17,6 +17,9 @@ pnpm-debug.log*
 dist/
 coverage/
 
+# Scenario runner outputs
+output/
+
 # Python
 __pycache__/
 *.py[cod]

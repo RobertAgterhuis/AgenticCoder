@@ -7,6 +7,29 @@
 
 ---
 
+> ## ⚠️ Implementation Reality (January 2026)
+> 
+> The scenario framework has **expanded significantly**:
+> 
+> | Planned | Implemented |
+> |---------|-------------|
+> | 5 scenarios (S01-S05) | **17 scenarios (S01-S17)** |
+> | JSON test data | ✅ `test-data/` folder |
+> | Validation approach | ✅ `agents/test/` tests |
+> 
+> ### Current Test Scenarios
+> 
+> | Scenario | Description | Status |
+> |----------|-------------|--------|
+> | S01-S05 | Original scenarios | ✅ |
+> | S06-S15 | Additional patterns | ✅ |
+> | S16 | Dependency Detection | ✅ |
+> | S17 | Solution Templates | ✅ |
+> 
+> **Run tests**: `node --test agents/test/S01ScenarioRunner.test.js`
+
+---
+
 ## 📋 Table of Contents
 
 1. [Executive Summary](#executive-summary)

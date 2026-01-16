@@ -51,7 +51,7 @@ export class BaseAgent extends EventEmitter {
       this.emit('lifecycle', { phase: 'ready', agentId: this.id });
     } catch (error) {
       this.state = 'error';
-      this.emit('error', { agentId: this.id, phase: 'initialize', error: error.message });
+      this.emit('agent:error', { agentId: this.id, phase: 'initialize', error: error.message });
       throw error;
     }
   }
@@ -172,7 +172,7 @@ export class BaseAgent extends EventEmitter {
         error: error.message
       };
       this.executionHistory.push(execution);
-      this.emit('error', { agentId: this.id, executionId, error: error.message });
+      this.emit('agent:error', { agentId: this.id, executionId, error: error.message });
       throw error;
     }
   }
@@ -181,13 +181,23 @@ export class BaseAgent extends EventEmitter {
    * Execute with timeout wrapper
    */
   async _executeWithTimeout(input, context, executionId) {
-    return Promise.race([
-      this._onExecute(input, context, executionId),
-      new Promise((_, reject) => 
-        setTimeout(() => reject(new Error(`Execution timeout after ${this.options.timeout}ms`)), 
-                   this.options.timeout)
-      )
-    ]);
+    let timeoutHandle;
+    const timeoutMs = this.options.timeout;
+    const timeoutPromise = new Promise((_, reject) => {
+      timeoutHandle = setTimeout(
+        () => reject(new Error(`Execution timeout after ${timeoutMs}ms`)),
+        timeoutMs
+      );
+    });
+
+    try {
+      return await Promise.race([
+        this._onExecute(input, context, executionId),
+        timeoutPromise
+      ]);
+    } finally {
+      if (timeoutHandle) clearTimeout(timeoutHandle);
+    }
   }
 
   /**
@@ -261,11 +271,19 @@ export class BaseAgent extends EventEmitter {
 
   async _connectMcpServers() {
     for (const serverConfig of this.definition.mcpServers) {
+      let client;
       try {
-        const client = await this._createToolClient(serverConfig);
-        await client.connect?.();
+        client = await this._createToolClient(serverConfig);
+        // Track the client before connecting so we can always clean up on failure.
         this.mcpClients.set(serverConfig.name, client);
+        await client.connect?.();
       } catch (error) {
+        try {
+          await client?.disconnect?.();
+        } catch {
+          // ignore
+        }
+        this.mcpClients.delete(serverConfig.name);
         throw new Error(`Failed to connect to MCP server ${serverConfig.name}: ${error.message}`);
       }
     }

@@ -1,0 +1,21 @@
+{
+  "id": "S12",
+  "name": "Functions + Blob Storage",
+  "description": "Serverless file processing with Azure Functions",
+  "userRequest": "Build a serverless file processing API with Azure Functions and blob storage in swedencentral",
+  "constraints": {
+    "region": "swedencentral",
+    "budget": 100,
+    "environment": "development"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Web/sites",
+      "Microsoft.Storage/storageAccounts"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 20,
+      "max": 100
+    }
+  }
+}

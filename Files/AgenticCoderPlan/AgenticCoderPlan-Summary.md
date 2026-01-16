@@ -1,17 +1,25 @@
 # 📋 AgenticCoder Comprehensive Plan - Summary & Navigation
 
 **Created**: January 13, 2026  
+**Updated**: January 2026 (Azure-only focus)  
 **Status**: Complete - 8 Documents, 148+ Pages, 50,000+ Words  
-**Purpose**: Build an extensible agentic infrastructure automation platform by merging ProjectPlan Template Framework with Azure Agentic InfraOps
+**Purpose**: Build an extensible agentic Azure infrastructure automation platform
+
+---
+
+> ## ⚠️ Important: Azure-Only Platform
+> 
+> AgenticCoder is focused exclusively on **Microsoft Azure**. Multi-cloud support (AWS, GCP) is not planned.
+> References to AWS/GCP in this document are historical and should be ignored.
 
 ---
 
 ## 🎯 Mission
 
-Transform **two powerful frameworks** into a **cohesive, extensible, multi-cloud agentic infrastructure platform** that:
+Transform **two powerful frameworks** into a **cohesive, extensible Azure infrastructure platform** that:
 - Enables project planning through AI-assisted discovery
 - Automates Azure infrastructure with real-time cost estimation
-- Extends easily to support AWS, GCP, Kubernetes, and specialized domains
+- Supports 94 Azure providers and 365+ resource types
 - Maintains open-source values and community-driven development
 
 ---

@@ -91,7 +91,8 @@ describe('azure-pricing MCP (stdio) integration', () => {
   });
 
   it('optionally calls price_search live via tools/call', async (t) => {
-    if (process.env.AGENTICCODER_RUN_LIVE_PRICING_TESTS !== '1') {
+    const enable = (process.env.AGENTICCODER_RUN_LIVE_PRICING_TESTS || '').toLowerCase();
+    if (!(enable === '1' || enable === 'true')) {
       t.skip('Set AGENTICCODER_RUN_LIVE_PRICING_TESTS=1 to enable live Azure Retail Prices call');
       return;
     }

@@ -7,6 +7,21 @@
 
 ---
 
+> ## ✅ Document Status: CURRENT
+> 
+> This Dev Container guide remains **valid and current**. 
+> 
+> **Note**: Development can also be done without Docker using:
+> ```bash
+> cd d:\repositories\AgenticCoder
+> npm install
+> node --test agents/test/S01ScenarioRunner.test.js
+> ```
+> 
+> The Docker setup provides isolation but is not required for local development.
+
+---
+
 ## 📋 Table of Contents
 
 1. [Executive Summary](#executive-summary)

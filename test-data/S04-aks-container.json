@@ -1,0 +1,21 @@
+{
+  "id": "S04",
+  "name": "AKS Container Platform",
+  "description": "Container scenario: Azure Kubernetes Service + Container Registry",
+  "userRequest": "Deploy an Azure Kubernetes Service cluster with 3 nodes (Standard_D2s_v3) and an Azure Container Registry (Basic tier). Region: East US. Enable RBAC and managed identity. Budget around $300/month.",
+  "constraints": {
+    "region": "eastus",
+    "budget": 300,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.ContainerService/managedClusters",
+      "Microsoft.ContainerRegistry/registries"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 150,
+      "max": 300
+    }
+  }
+}

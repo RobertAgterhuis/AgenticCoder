@@ -437,4 +437,131 @@ describe('WorkflowEngine', () => {
 
     await registry.clear();
   });
+
+  it('should continue workflow when a non-critical step fails with continue strategy', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+
+    const executionOrder = [];
+
+    const agent1 = new MockAgent('continue-agent1', async () => {
+      executionOrder.push('agent1');
+      return { value: 10 };
+    });
+
+    const failingAgent = new MockAgent('continue-fail', async () => {
+      executionOrder.push('fail');
+      throw new Error('Non-critical failure');
+    });
+
+    const agent3 = new MockAgent('continue-agent3', async (input) => {
+      executionOrder.push('agent3');
+      return { value: input.value + 1 };
+    });
+
+    await agent1.initialize();
+    await failingAgent.initialize();
+    await agent3.initialize();
+
+    registry.register(agent1);
+    registry.register(failingAgent);
+    registry.register(agent3);
+
+    const workflow = {
+      id: 'continue-workflow',
+      name: 'Continue Workflow',
+      version: '1.0.0',
+      steps: [
+        { id: 'step1', agentId: 'continue-agent1', inputs: {} },
+        { id: 'optional', agentId: 'continue-fail', inputs: {}, onError: 'continue' },
+        {
+          id: 'step3',
+          agentId: 'continue-agent3',
+          dependsOn: ['step1'],
+          inputs: { value: '$steps.step1.output.value' }
+        }
+      ],
+      outputs: {
+        final: '$steps.step3.output.value'
+      }
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+    const result = await workflowEngine.execute('continue-workflow', {});
+
+    assert.strictEqual(result.status, 'completed');
+    assert.strictEqual(result.outputs.final, 11);
+    assert.strictEqual(executionOrder[0], 'agent1');
+    assert.strictEqual(executionOrder[executionOrder.length - 1], 'agent3');
+    assert.ok(executionOrder.includes('fail'));
+
+    const execution = workflowEngine.getExecution(result.executionId);
+    const optionalStep = execution.stepResults.find(r => r.stepId === 'optional');
+    assert.strictEqual(optionalStep.status, 'failed');
+
+    await registry.clear();
+  });
+
+  it('should record skipped step results and fail dependencies with skipped message', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+
+    const agent1 = new MockAgent('skip-agent1', async () => ({ shouldRun: false }));
+    const agent2 = new MockAgent('skip-agent2', async () => ({ ran: true }));
+
+    await agent1.initialize();
+    await agent2.initialize();
+
+    registry.register(agent1);
+    registry.register(agent2);
+
+    const workflow = {
+      id: 'skip-tracking',
+      name: 'Skip Tracking',
+      version: '1.0.0',
+      steps: [
+        { id: 'check', agentId: 'skip-agent1', inputs: {} },
+        {
+          id: 'conditional',
+          agentId: 'skip-agent2',
+          dependsOn: ['check'],
+          condition: '$steps.check.output.shouldRun === true',
+          inputs: {}
+        },
+        {
+          id: 'downstream',
+          agentId: 'skip-agent2',
+          dependsOn: ['conditional'],
+          inputs: {}
+        }
+      ]
+    };
+
+    workflowEngine.registerWorkflow(workflow);
+
+    await assert.rejects(
+      workflowEngine.execute('skip-tracking', {}),
+      /skipped/i
+    );
+
+    const executionIds = Array.from(workflowEngine.executions.keys());
+    assert.strictEqual(executionIds.length, 1);
+    const execution = workflowEngine.getExecution(executionIds[0]);
+
+    const conditionalStep = execution.stepResults.find(r => r.stepId === 'conditional');
+    assert.strictEqual(conditionalStep.status, 'skipped');
+    assert.strictEqual(conditionalStep.reason, 'condition');
+
+    await registry.clear();
+  });
+
+  it('should throw when querying a non-existent execution id', async () => {
+    registry = new AgentRegistry();
+    workflowEngine = new WorkflowEngine(registry);
+
+    assert.throws(
+      () => workflowEngine.getExecution('does-not-exist'),
+      /not found/i
+    );
+  });
 });

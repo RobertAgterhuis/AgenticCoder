@@ -1,0 +1,28 @@
+{
+  "id": "S17",
+  "name": "Web App SQL Solution Template",
+  "description": "Test solution template matching: web app with sql database should match web-app-sql template",
+  "userRequest": "Create a web app with sql database for our customer portal",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 300,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Web/serverfarms",
+      "Microsoft.Web/sites",
+      "Microsoft.Sql/servers",
+      "Microsoft.Sql/servers/databases",
+      "Microsoft.Insights/components"
+    ],
+    "features": {
+      "solutionTemplate": "web-app-sql",
+      "templateMatch": true
+    },
+    "monthlyCostTargetUsd": {
+      "min": 100,
+      "max": 300
+    }
+  }
+}

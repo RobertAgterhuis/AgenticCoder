@@ -1,0 +1,24 @@
+{
+  "id": "S05",
+  "name": "Virtual Network with VM",
+  "description": "IaaS scenario: Virtual Network + Network Security Group + Virtual Machine",
+  "userRequest": "Deploy a Windows Server 2022 VM (Standard_D2s_v3) in a Virtual Network with proper subnets and Network Security Group. Region: UK South. Allow RDP only from specific IP range. Include a public IP. Budget $200/month.",
+  "constraints": {
+    "region": "uksouth",
+    "budget": 200,
+    "environment": "development"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Network/virtualNetworks",
+      "Microsoft.Network/networkSecurityGroups",
+      "Microsoft.Network/publicIPAddresses",
+      "Microsoft.Network/networkInterfaces",
+      "Microsoft.Compute/virtualMachines"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 100,
+      "max": 200
+    }
+  }
+}

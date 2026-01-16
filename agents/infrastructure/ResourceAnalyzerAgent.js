@@ -1,10 +1,20 @@
 import { BaseAgent } from '../core/BaseAgent.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { analyzeTask as analyzeTaskWithRegistry, findMatchingAnalyzers } from './resource-analyzers/index.js';
 
 /**
  * ResourceAnalyzerAgent - Analyzes Azure resources required for a task
  * Determines resource types, configurations, and dependencies
+ * 
+ * Uses modular analyzers from ./resource-analyzers/ for extensibility:
+ * - WebAnalyzer: App Service, Functions, Static Web Apps
+ * - ComputeAnalyzer: VM, AKS, Container Registry
+ * - DatabaseAnalyzer: SQL, CosmosDB, MySQL, PostgreSQL
+ * - StorageAnalyzer: Storage Accounts, Blob, Data Lake
+ * - NetworkingAnalyzer: VNet, NSG, Load Balancer, App Gateway
+ * - SecurityAnalyzer: Key Vault, Managed Identity
+ * - MonitoringAnalyzer: App Insights, Log Analytics
  */
 export class ResourceAnalyzerAgent extends BaseAgent {
   constructor() {
@@ -55,11 +65,15 @@ export class ResourceAnalyzerAgent extends BaseAgent {
                 id: { type: 'string' },
                 type: { type: 'string' },
                 name: { type: 'string' },
-                sku: { type: 'string' },
+                apiVersion: { type: 'string' },
+                sku: { oneOf: [{ type: 'string' }, { type: 'object' }] },
+                kind: { type: 'string' },
                 location: { type: 'string' },
                 properties: { type: 'object' },
                 dependencies: { type: 'array' },
-                tags: { type: 'object' }
+                dependsOn: { type: 'array' },
+                tags: { type: 'object' },
+                zones: { type: 'array' }
               }
             }
           },
@@ -184,86 +198,65 @@ export class ResourceAnalyzerAgent extends BaseAgent {
   }
 
   async _analyzeTask(task, constraints) {
-    const resources = [];
-    const taskType = task.type || 'generic';
     const location = constraints.region || 'eastus';
+    const lowerDescription = (task.description || '').toLowerCase();
 
-    // Map task types to Azure resources
-    switch (taskType) {
-      case 'deployment':
-        if (task.description.toLowerCase().includes('function')) {
-          resources.push(
-            this._createResource('function-app', 'Microsoft.Web/sites', 'function-app', {
-              sku: 'Y1', // Consumption plan
-              location,
-              properties: {
-                kind: 'functionapp',
-                serverFarmId: 'consumption-plan'
-              }
-            }),
-            this._createResource('storage-account', 'Microsoft.Storage/storageAccounts', 'storage', {
-              sku: 'Standard_LRS',
-              location,
-              properties: {
-                kind: 'StorageV2'
-              }
-            })
-          );
-        } else if (task.description.toLowerCase().includes('vm')) {
-          resources.push(
-            this._createResource('virtual-machine', 'Microsoft.Compute/virtualMachines', 'vm', {
-              sku: 'Standard_B2s',
-              location,
-              dependencies: ['vnet', 'nic']
-            }),
-            this._createResource('vnet', 'Microsoft.Network/virtualNetworks', 'vnet', {
-              location,
-              properties: {
-                addressSpace: '10.0.0.0/16'
-              }
-            }),
-            this._createResource('nic', 'Microsoft.Network/networkInterfaces', 'nic', {
-              location,
-              dependencies: ['vnet']
-            })
-          );
-        } else if (task.description.toLowerCase().includes('storage')) {
-          resources.push(
-            this._createResource('storage-account', 'Microsoft.Storage/storageAccounts', 'storage', {
-              sku: 'Standard_LRS',
-              location,
-              properties: {
-                kind: 'StorageV2'
-              }
-            })
-          );
-        }
-        break;
-
-      case 'analysis':
-        // Analysis tasks typically don't create resources
-        break;
-
-      default:
-        // Generic deployment - minimal resources
-        resources.push(
-          this._createResource('resource-group', 'Microsoft.Resources/resourceGroups', 'rg', {
-            location
-          })
-        );
+    // Use modular analyzers from registry
+    const matchingAnalyzers = findMatchingAnalyzers(lowerDescription);
+    
+    if (matchingAnalyzers.length > 0) {
+      // Delegate to registry - returns deduplicated resources from all matching analyzers
+      const resources = analyzeTaskWithRegistry(task, constraints);
+      
+      // Add requirements-based resources if not already present
+      this._addRequirementResources(resources, task, constraints, location);
+      
+      return resources;
     }
 
-    // Add common requirements
-    if (task.requirements?.includes('Monitoring')) {
+    // Fallback for generic/unmatched tasks
+    const resources = [];
+    const taskType = task.type || 'generic';
+
+    if (taskType === 'analysis') {
+      // Analysis tasks typically don't create resources
+      return resources;
+    }
+
+    // Generic deployment - minimal resources
+    resources.push(
+      this._createResource('resource-group', 'Microsoft.Resources/resourceGroups', 'rg', {
+        location
+      }, constraints)
+    );
+
+    this._addRequirementResources(resources, task, constraints, location);
+    return resources;
+  }
+
+  /**
+   * Add resources based on task requirements (Monitoring, Security)
+   * @private
+   */
+  _addRequirementResources(resources, task, constraints, location) {
+    const lowerDescription = (task.description || '').toLowerCase();
+    
+    // Only add Log Analytics if monitoring is requested and App Insights isn't already present.
+    const hasAppInsights = resources.some(r => r.type === 'Microsoft.Insights/components');
+    const wantsAppInsights = lowerDescription.includes('application insights') || lowerDescription.includes('app insights');
+
+    if (task.requirements?.includes('Monitoring') && !hasAppInsights && !wantsAppInsights) {
       resources.push(
         this._createResource('log-analytics', 'Microsoft.OperationalInsights/workspaces', 'logs', {
           sku: 'PerGB2018',
           location
-        })
+        }, constraints)
       );
     }
 
-    if (task.requirements?.includes('Security')) {
+    // Add Key Vault if Security requirement and not already present
+    const hasKeyVault = resources.some(r => r.type === 'Microsoft.KeyVault/vaults');
+    if (task.requirements?.includes('Security') && !hasKeyVault) {
       resources.push(
         this._createResource('key-vault', 'Microsoft.KeyVault/vaults', 'kv', {
           sku: 'standard',
@@ -272,27 +265,47 @@ export class ResourceAnalyzerAgent extends BaseAgent {
             enabledForDeployment: true,
             enabledForTemplateDeployment: true
           }
-        })
+        }, constraints)
       );
     }
-
-    return resources;
   }
 
-  _createResource(id, type, namePrefix, config) {
+  _createResource(id, type, namePrefix, config, constraints = {}) {
+    const environment = constraints.environment || 'development';
     return {
       id: `${id}-${Date.now()}`,
       type,
-      name: `${namePrefix}-${Math.random().toString(36).substring(7)}`,
+      name: config?.name || `${namePrefix}-${Math.random().toString(36).substring(7)}`,
       sku: config.sku,
       location: config.location,
+      kind: config.kind,
       properties: config.properties || {},
       dependencies: config.dependencies || [],
       tags: {
         createdBy: 'AgenticCoder',
-        environment: 'development'
+        environment
       }
     };
+  }
+
+  _makeName(prefix) {
+    return `${prefix}-${Math.random().toString(36).substring(7)}`;
+  }
+
+  _makeStorageAccountName(prefix = 'st') {
+    // Storage account names must be 3-24 chars, lowercase letters+numbers only.
+    const suffix = Math.random().toString(36).replace(/[^a-z0-9]/g, '').substring(0, 18);
+    let name = `${prefix}${suffix}`.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (name.length < 3) name = (name + '000').substring(0, 3);
+    if (name.length > 24) name = name.substring(0, 24);
+    return name;
+  }
+
+  _sanitizeName(name) {
+    const cleaned = String(name ?? '').replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+    if (!cleaned) return 'r';
+    if (/^[0-9]/.test(cleaned)) return `r${cleaned}`;
+    return cleaned;
   }
 
   _buildResourceGraph(resources) {

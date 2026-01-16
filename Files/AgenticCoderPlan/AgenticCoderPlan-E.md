@@ -7,6 +7,25 @@
 
 ---
 
+> ## ✅ Document Status: CURRENT (Azure-Only)
+> 
+> This MCP architecture document is **accurate and current**. The three Azure MCP servers are implemented:
+> 
+> | Server | Location | Status |
+> |--------|----------|--------|
+> | mcp-azure-docs | `servers/mcp-azure-docs/` | ✅ Operational |
+> | mcp-azure-pricing | `servers/mcp-azure-pricing/` | ✅ Operational |
+> | mcp-azure-resource-graph | `servers/mcp-azure-resource-graph/` | ✅ Operational |
+> 
+> **Note**: AgenticCoder is Azure-only. References to AWS/GCP MCP servers in this document are historical.
+> 
+> **Tooling Layer**: `agents/core/tooling/` provides:
+> - `McpStdioToolClient.js` - stdio transport
+> - `HttpToolClient.js` - HTTP transport
+> - `ToolClientFactory.js` - Creates appropriate client
+
+---
+
 ## 📋 Table of Contents
 
 1. [Executive Summary](#executive-summary)
@@ -27,7 +46,7 @@ Model Context Protocol (MCP) is an open-source protocol that enables AI assistan
 **Why MCP in AgenticCoder?**
 - **Real-Time Data**: Access current pricing, governance data, documentation
 - **Agent Autonomy**: Agents can make decisions based on accurate external information
-- **Extensibility**: New cloud providers (AWS, GCP) = new MCP servers
+- **Extensibility**: New Azure services = new MCP tools
 - **Decoupling**: Tools are independent, can be versioned/deployed separately
 - **Vendor Neutral**: Not locked into a single AI platform
 
@@ -38,13 +57,10 @@ Model Context Protocol (MCP) is an open-source protocol that enables AI assistan
 4. 📋 **web-search-mcp** - General web search (OPTIONAL)
 5. 📋 **bicep-validator-mcp** - Local Bicep validation (OPTIONAL)
 
-**v1.1+ Expansion**:
-- aws-pricing-mcp (v1.1)
-- aws-governance-mcp (v1.1)
-- gcp-pricing-mcp (v2.0)
-- gcp-resource-mcp (v2.0)
-- kubernetes-resource-mcp (v2.0)
-- dataops-catalog-mcp (v3.0)
+**Future Expansion** (Azure-focused):
+- azure-security-mcp (security recommendations)
+- azure-advisor-mcp (cost/performance optimization)
+- azure-monitor-mcp (metrics and logs)
 
 ---
 

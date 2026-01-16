@@ -129,6 +129,10 @@ cd agents && npm test
 
 Run tests per package (`servers/*`, `agents/`) for current totals.
 
+Optional live tests:
+
+- `AGENTICCODER_RUN_LIVE_PRICING_TESTS=1` enables a live Azure Retail Prices call from the agent MCP stdio integration test.
+
 ## 📦 Example Usage
 
 ### Execute Workflow

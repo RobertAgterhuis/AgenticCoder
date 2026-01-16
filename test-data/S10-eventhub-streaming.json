@@ -1,0 +1,17 @@
+{
+  "id": "S10",
+  "name": "Streaming Analytics Pipeline",
+  "description": "Event Hub with Stream Analytics for data processing",
+  "userRequest": "Deploy Event Hub for high-throughput data ingestion in East US. Include Stream Analytics for streaming data processing and analytics. Production environment with monitoring, under $500/month.",
+  "constraints": {
+    "region": "eastus",
+    "budget": 500,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.EventHub/namespaces",
+      "Microsoft.StreamAnalytics/streamingjobs"
+    ]
+  }
+}

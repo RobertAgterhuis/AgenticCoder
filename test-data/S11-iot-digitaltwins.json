@@ -1,0 +1,21 @@
+{
+  "id": "S11",
+  "name": "VNet + Key Vault Security",
+  "description": "Secure networking with virtual network and key vault",
+  "userRequest": "Create a secure networking solution with virtual network and key vault for secrets in westeurope",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 150,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Network/virtualNetworks",
+      "Microsoft.KeyVault/vaults"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 50,
+      "max": 150
+    }
+  }
+}

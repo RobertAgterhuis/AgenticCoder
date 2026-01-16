@@ -7,6 +7,34 @@
 
 ---
 
+> ## ⚠️ Implementation Reality (January 2026)
+> 
+> Schema handling has evolved with **dynamic schema validation**:
+> 
+> | Planned | Implemented |
+> |---------|-------------|
+> | Static JSON schemas | **Dynamic + static** |
+> | 26 agent schemas | Agent schemas in code |
+> | 71 total schemas | **365+ resource type schemas** |
+> 
+> ### Key Schema Changes
+> 
+> 1. **SKU Flexibility**: `sku` can be `string` OR `object`:
+>    ```json
+>    "sku": { "oneOf": [{ "type": "string" }, { "type": "object" }] }
+>    ```
+> 
+> 2. **Provider Schemas**: `schema-discovery/provider-schemas.json` contains 94 Azure providers
+> 
+> 3. **Agent Schemas**: Defined inline in each agent's `definition.inputs/outputs`
+> 
+> **Schema locations**:
+> - `agents/infrastructure/resource-analyzers/schema-discovery/`
+> - `schemas/` (static schemas)
+> - Agent constructors (inline schemas)
+
+---
+
 ## 📋 Table of Contents
 
 1. [Executive Summary](#executive-summary)

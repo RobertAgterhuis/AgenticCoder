@@ -1,0 +1,21 @@
+{
+  "id": "S14",
+  "name": "App Gateway + App Service",
+  "description": "Load balanced web application",
+  "userRequest": "Create a load balanced web application with application gateway and App Service in westeurope",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 250,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Network/applicationGateways",
+      "Microsoft.Web/sites"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 100,
+      "max": 250
+    }
+  }
+}

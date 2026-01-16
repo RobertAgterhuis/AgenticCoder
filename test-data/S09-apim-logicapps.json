@@ -1,0 +1,17 @@
+{
+  "id": "S09",
+  "name": "API-First Architecture",
+  "description": "API Management with Logic Apps for backend workflows",
+  "userRequest": "Deploy API Management as an API gateway in West Europe with Logic Apps for workflow automation and backend integration. Development environment, under $200/month.",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 200,
+    "environment": "development"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.ApiManagement/service",
+      "Microsoft.Logic/workflows"
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "S16",
+  "name": "VM Dependency Detection",
+  "description": "Test automatic dependency generation: VM should auto-generate NIC and VNet",
+  "userRequest": "Deploy a virtual machine in westeurope for development",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 100,
+    "environment": "dev"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Network/virtualNetworks",
+      "Microsoft.Network/networkInterfaces",
+      "Microsoft.Compute/virtualMachines"
+    ],
+    "features": {
+      "dependencyDetection": true,
+      "expectedDependencyChain": [
+        "Microsoft.Network/virtualNetworks",
+        "Microsoft.Network/networkInterfaces",
+        "Microsoft.Compute/virtualMachines"
+      ]
+    },
+    "monthlyCostTargetUsd": {
+      "min": 30,
+      "max": 100
+    }
+  }
+}

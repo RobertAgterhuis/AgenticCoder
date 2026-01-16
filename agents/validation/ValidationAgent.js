@@ -355,6 +355,15 @@ export class ValidationAgent extends BaseAgent {
     return results;
   }
 
+  /**
+   * Helper to safely get SKU name from string or object
+   */
+  _getSkuName(sku) {
+    if (!sku) return null;
+    if (typeof sku === 'string') return sku;
+    return sku.name || sku.tier || null;
+  }
+
   _validateSizing(resource) {
     const results = [];
 
@@ -362,7 +371,8 @@ export class ValidationAgent extends BaseAgent {
     const tags = resource.tags || {};
     if (tags.environment === 'development' || tags.environment === 'test') {
       const premiumSkus = ['Premium', 'Standard_D', 'Standard_E'];
-      if (resource.sku && premiumSkus.some(sku => resource.sku.includes(sku))) {
+      const skuName = this._getSkuName(resource.sku);
+      if (skuName && premiumSkus.some(sku => skuName.includes(sku))) {
         results.push({
           resourceId: resource.id,
           ruleName: 'DEV_TEST_SIZING',
@@ -377,7 +387,8 @@ export class ValidationAgent extends BaseAgent {
 
     // Check for deprecated SKUs
     const deprecatedSkus = ['Basic_A0', 'Basic_A1', 'Standard_A0', 'Standard_A1'];
-    if (resource.sku && deprecatedSkus.includes(resource.sku)) {
+    const deprecatedSkuName = this._getSkuName(resource.sku);
+    if (deprecatedSkuName && deprecatedSkus.includes(deprecatedSkuName)) {
       results.push({
         resourceId: resource.id,
         ruleName: 'DEPRECATED_SKU',
@@ -429,7 +440,8 @@ export class ValidationAgent extends BaseAgent {
     const results = [];
 
     // Check for geo-redundancy
-    if (resource.sku && resource.sku.includes('LRS')) {
+    const storageSkuName = this._getSkuName(resource.sku);
+    if (storageSkuName && storageSkuName.includes('LRS')) {
       const tags = resource.tags || {};
       if (tags.environment === 'production') {
         results.push({

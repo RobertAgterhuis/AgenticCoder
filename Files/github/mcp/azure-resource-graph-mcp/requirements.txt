@@ -1,2 +1,0 @@
-azure-identity>=1.16.0
-azure-mgmt-resourcegraph>=8.0.0

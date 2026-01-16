@@ -1,0 +1,23 @@
+{
+  "id": "S01",
+  "name": "Simple App Service",
+  "description": "Baseline scenario: App Service + Storage + App Insights",
+  "userRequest": "Deploy a simple internal ASP.NET Core (.NET 8) web app on Azure App Service in East US 2. Requirements: ~50 concurrent users, HTTPS only, 99.5% availability, under $200/month. Include a Storage Account and Application Insights for monitoring.",
+  "constraints": {
+    "region": "eastus2",
+    "budget": 200,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Web/serverfarms",
+      "Microsoft.Web/sites",
+      "Microsoft.Storage/storageAccounts",
+      "Microsoft.Insights/components"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 80,
+      "max": 120
+    }
+  }
+}

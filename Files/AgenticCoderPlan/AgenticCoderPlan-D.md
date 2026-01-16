@@ -7,11 +7,38 @@
 
 ---
 
+> ## ⚠️ Document Status: HISTORICAL (Azure-Only Focus)
+> 
+> **Important**: AgenticCoder is now **Azure-only**. Multi-cloud support (AWS, GCP) is **not planned**.
+> 
+> This document contains the original roadmap vision which included multi-cloud expansion.
+> These sections are now **obsolete**:
+> - v1.1: AWS Support ❌
+> - v2.0: GCP + Kubernetes ❌
+> - Multi-cloud patterns ❌
+> 
+> ### Current Roadmap (Azure-Only)
+> 
+> | Phase | Focus | Status |
+> |-------|-------|--------|
+> | v2.0 | Core Infrastructure | ✅ Complete |
+> | v2.1 | Enhanced Azure Validation | 🔜 Planned |
+> | v2.2 | Advanced Features | 🔜 Planned |
+> 
+> **Valid sections in this document**:
+> - Kubernetes support (Azure AKS focused)
+> - DataOps/MLOps agents (Azure services)
+> - Security agents (Azure security)
+> - Community contribution patterns
+> - Maintenance strategy
+
+---
+
 ## Executive Summary
 
-This document outlines the **extended roadmap** for v1.1 through v3.0+, including:
-- Multi-cloud support (AWS, GCP)
-- New domains (Kubernetes, DataOps, Security)
+This document outlines the **extended roadmap** for future development, including:
+- Enhanced Azure support
+- New domains (Kubernetes/AKS, DataOps, Security)
 - Community contribution patterns
 - Maintenance & sustainability strategy
 - Long-term vision

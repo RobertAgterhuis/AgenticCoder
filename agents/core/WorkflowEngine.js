@@ -67,6 +67,21 @@ export class WorkflowEngine extends EventEmitter {
         // Check if step should be skipped based on condition
         if (step.condition && !this._evaluateCondition(step.condition, execution.stepResults)) {
           console.log(`Skipping step ${stepId} due to condition: ${step.condition}`);
+          execution.stepResults.set(stepId, {
+            stepId,
+            agentId: step.agentId,
+            status: 'skipped',
+            reason: 'condition',
+            condition: step.condition,
+            timestamp: new Date().toISOString()
+          });
+
+          this.emit('step:skipped', {
+            executionId: execution.executionId,
+            stepId,
+            agentId: step.agentId,
+            condition: step.condition
+          });
           continue;
         }
 
@@ -257,6 +272,9 @@ export class WorkflowEngine extends EventEmitter {
       }
       if (depResult.status === 'failed') {
         throw new Error(`Dependency ${depId} failed`);
+      }
+      if (depResult.status === 'skipped') {
+        throw new Error(`Dependency ${depId} was skipped`);
       }
     }
   }

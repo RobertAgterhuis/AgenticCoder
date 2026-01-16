@@ -1,0 +1,22 @@
+{
+  "id": "S02",
+  "name": "Storage and SQL Database",
+  "description": "Data-focused scenario: Storage Account + Azure SQL Database",
+  "userRequest": "Deploy an Azure SQL Database (Standard S1 tier) with a Storage Account for backups in West Europe. Needs geo-redundant storage, TLS 1.2 minimum, and automatic backups enabled. Budget around $150/month.",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 150,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Storage/storageAccounts",
+      "Microsoft.Sql/servers",
+      "Microsoft.Sql/servers/databases"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 80,
+      "max": 150
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "id": "S03",
+  "name": "CosmosDB with Functions",
+  "description": "Serverless scenario: Azure Functions + CosmosDB + Key Vault",
+  "userRequest": "Deploy a serverless backend using Azure Functions (Consumption plan) with CosmosDB for data storage and Key Vault for secrets. Region: North Europe. Needs 1000 RU/s for CosmosDB, automatic scaling for Functions. Budget $100/month.",
+  "constraints": {
+    "region": "northeurope",
+    "budget": 100,
+    "environment": "development"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.DocumentDB/databaseAccounts",
+      "Microsoft.Web/serverfarms",
+      "Microsoft.Web/sites",
+      "Microsoft.Storage/storageAccounts",
+      "Microsoft.KeyVault/vaults"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 40,
+      "max": 100
+    }
+  }
+}

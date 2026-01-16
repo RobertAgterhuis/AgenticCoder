@@ -7,6 +7,27 @@
 
 ---
 
+> ## ⚠️ Implementation Reality (January 2026)
+> 
+> This document contains the **original architecture vision**. Key differences in implementation:
+> 
+> | Planned Component | Current Implementation |
+> |-------------------|----------------------|
+> | 13 agents + 9 skills | **19 agents** (skills merged into agents) |
+> | Individual resource analyzers | **DynamicResourceAnalyzer** (single unified engine) |
+> | Phase 0-7 workflow | **5-step scenario pipeline** (Extract → Analyze → Cost → Plan → Validate) |
+> | Webhook/Docker/API transports | **MCP stdio + HTTP** transports |
+> 
+> **Current agents in `agents/core/agents/`**:
+> - CoordinatorAgent, PlanAgent, ArchitectAgent, CodeArchitectAgent
+> - QAAgent, ReporterAgent, AzurePrincipalArchitectAgent
+> - BicepPlanAgent, TerraformPlanAgent, DiagramAgent, ADRAgent
+> - BicepImplementAgent, TerraformImplementAgent, DockerSpecialistAgent
+> 
+> **For current architecture, see**: [ARCHITECTURE_SUMMARY.md](./ARCHITECTURE_SUMMARY.md)
+
+---
+
 ## Executive Summary
 
 This document specifies the **detailed architecture, design patterns, and implementation approach** for v1.0 of the merged Agentic Coder platform. It serves as the technical blueprint for integrating ProjectPlan Template and Azure Agentic InfraOps into a cohesive, extensible system.

@@ -1,0 +1,17 @@
+{
+  "id": "S07",
+  "name": "Event-Driven Microservices",
+  "description": "Service Bus and Event Grid for event-driven architecture",
+  "userRequest": "Deploy a Service Bus namespace with queues and topics for message-based communication between microservices in West Europe. Add Event Grid for pub/sub event routing. Production environment, under $300/month.",
+  "constraints": {
+    "region": "westeurope",
+    "budget": 300,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.ServiceBus/namespaces",
+      "Microsoft.EventGrid/topics"
+    ]
+  }
+}

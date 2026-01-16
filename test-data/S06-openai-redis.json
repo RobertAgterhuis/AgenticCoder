@@ -1,0 +1,17 @@
+{
+  "id": "S06",
+  "name": "Azure OpenAI + Redis Cache",
+  "description": "AI chatbot with Azure OpenAI and Redis for session caching",
+  "userRequest": "Deploy an Azure OpenAI service with GPT-4 model for a chatbot application in Sweden Central. Include Redis Cache for session state management. Requirements: development environment, security best practices, under $500/month.",
+  "constraints": {
+    "region": "swedencentral",
+    "budget": 500,
+    "environment": "development"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.CognitiveServices/accounts",
+      "Microsoft.Cache/redis"
+    ]
+  }
+}

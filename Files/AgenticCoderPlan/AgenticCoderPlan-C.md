@@ -7,6 +7,32 @@
 
 ---
 
+> ## ⚠️ Implementation Reality (January 2026)
+> 
+> This document contains the **original sprint plan**. Implementation followed a different path:
+> 
+> ### What Was Actually Built
+> 
+> | Sprint Plan | Reality |
+> |-------------|---------|
+> | Sprint 1-2: Folder structure | ✅ Done (but evolved) |
+> | Sprint 3-4: MCP servers | ✅ Done (`servers/mcp-*`) |
+> | Sprint 5-6: 13 agents | ✅ Done differently (19 agents) |
+> | Sprint 7-8: 9 skills | ⏭️ Merged into agents |
+> | Sprint 9-10: Testing | ✅ 17 test scenarios |
+> | Sprint 11: Documentation | ✅ Ongoing |
+> 
+> ### Key Architecture Decisions Made During Implementation
+> 
+> 1. **Consolidated Analyzers**: Instead of 22 individual analyzers, we built **DynamicResourceAnalyzer**
+> 2. **Modular Config**: Configuration extracted to `config/` folder (5 files)
+> 3. **Schema-Driven**: 94 providers, 365+ resource types from `provider-schemas.json`
+> 4. **Skills → Agents**: Skills merged directly into agent implementations
+> 
+> **For current folder structure, see**: [ARCHITECTURE_SUMMARY.md](./ARCHITECTURE_SUMMARY.md)
+
+---
+
 ## Executive Summary
 
 This document provides the **detailed implementation plan** for v1.0 (Merge Release), including:

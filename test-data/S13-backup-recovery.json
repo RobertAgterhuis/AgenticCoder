@@ -1,0 +1,20 @@
+{
+  "id": "S13",
+  "name": "CosmosDB Global",
+  "description": "Globally distributed database with CosmosDB",
+  "userRequest": "Deploy a globally distributed database with CosmosDB for high availability in northeurope",
+  "constraints": {
+    "region": "northeurope",
+    "budget": 300,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.DocumentDB/databaseAccounts"
+    ],
+    "monthlyCostTargetUsd": {
+      "min": 100,
+      "max": 300
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "id": "S08",
+  "name": "Data Warehouse Pipeline",
+  "description": "Synapse Analytics with Data Factory for ETL",
+  "userRequest": "Deploy a Synapse Analytics workspace for data warehouse workloads in North Europe. Include Azure Data Factory for ETL data pipelines. Production environment with security requirements, budget up to $1000/month.",
+  "constraints": {
+    "region": "northeurope",
+    "budget": 1000,
+    "environment": "production"
+  },
+  "expectations": {
+    "resourceTypes": [
+      "Microsoft.Synapse/workspaces",
+      "Microsoft.DataFactory/factories"
+    ]
+  }
+}

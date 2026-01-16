@@ -21,6 +21,12 @@ export class ToolClientFactory {
       normalized.args = normalized.stdioArgs || normalized.args;
       normalized.cwd = normalized.cwd || normalized.stdioCwd;
       normalized.env = normalized.env || normalized.stdioEnv;
+      if (normalized.shell === undefined && normalized.stdioShell !== undefined) {
+        normalized.shell = normalized.stdioShell;
+      }
+      if (normalized.framing === undefined && normalized.stdioFraming !== undefined) {
+        normalized.framing = normalized.stdioFraming;
+      }
     }
 
     const looksLikeStdio = Boolean(normalized.command);
