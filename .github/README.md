@@ -3,8 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-green.svg)](https://nodejs.org/)
 [![Azure](https://img.shields.io/badge/Azure-Enabled-0078D4.svg)](https://azure.microsoft.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6.svg)](https://www.typescriptlang.org/)
 
-**AgenticCoder** is an intelligent multi-agent orchestration system that generates complete, production-ready codebases from project specifications. It uses **26 specialized AI agents** working through **16 orchestrated phases** to deliver fully functional applications with CI/CD pipelines, infrastructure-as-code, and comprehensive documentation.
+**AgenticCoder** is an intelligent multi-agent orchestration system that generates complete, production-ready codebases from project specifications. Built with **TypeScript** and **JavaScript**, it uses **26 specialized AI agents** working through **16 orchestrated phases** to deliver fully functional applications with CI/CD pipelines, infrastructure-as-code, and comprehensive documentation.
 
 <p align="center">
   <img src="./images/StackDroidSmall.jpg" alt="AgenticCoder Phase Flow" width="600">
@@ -104,8 +105,14 @@ npm test
           └───────────────┬───────────────┘
                           │
           ┌───────────────▼───────────────┐
-          │        MCP SERVERS            │
-          │   Pricing | Docs | Resources  │
+          │   TYPESCRIPT MCP LAYER        │
+          │   MCPGateway │ MCPBridge      │
+          │   19+ Adapters │ Health Mon.  │
+          └───────────────┬───────────────┘
+                          │
+          ┌───────────────▼───────────────┐
+          │     PYTHON MCP SERVERS        │
+          │   Pricing │ Docs │ Resources  │
           └───────────────┬───────────────┘
                           │
           ┌───────────────▼───────────────┐
