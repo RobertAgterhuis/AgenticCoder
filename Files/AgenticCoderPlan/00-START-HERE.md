@@ -19,6 +19,8 @@
 | **Test Scenarios** | 17 (S01-S17) |
 | **MCP Servers** | 3 operational |
 
+**📋 Detailed Progress**: See [IMPLEMENTATION-TRACKER.md](./IMPLEMENTATION-TRACKER.md) for component-by-component status.
+
 ---
 
 ## 🏗️ What's Actually Built (January 2026)
@@ -173,15 +175,41 @@ These documents contain the **original design vision**. Use them as reference, b
 
 ## 🎯 What's Next (Roadmap)
 
-### Phase 2: Enhanced Integration
-- [ ] Azure MCP schema-strict validation (environment variable flag)
-- [ ] Multi-region deployment support
-- [ ] Cost optimization recommendations
+> **Full Dependency Chain**: ValidationFramework → ExecutionBridge → FeedbackLoop → SelfLearning
 
-### Phase 3: Advanced Features
-- [ ] Self-learning from deployments
-- [ ] Feedback loop integration
-- [ ] Custom template builder
+### Phase 2A: ValidationFramework Voltooien (Currently 2/6) ⚠️ START HERE
+Moet compleet zijn VOORDAT ExecutionBridge kan werken.
+- [ ] Syntax Validator - Complete syntax validation
+- [ ] Dependency Resolver - Resource dependency checks
+- [ ] Test Runner - Automated test execution
+- [ ] Gate Manager - **UNBLOCKS ExecutionBridge**
+
+### Phase 2B: ExecutionBridge Voltooien (Currently 1/6)
+Geblokkeerd door ValidationFramework/06_gate-manager.
+- [ ] Transport Selector - Unified transport layer
+- [ ] Execution Context - Context propagation
+- [ ] Output Collector - Collect execution outputs
+- [ ] Lifecycle Manager - Track execution lifecycle
+- [ ] Result Handler - **UNBLOCKS FeedbackLoop**
+
+### Phase 2C: FeedbackLoop Implementeren (Currently 0/6)
+Geblokkeerd door ExecutionBridge/06_result-handler.
+- [ ] Status Updater - Real-time progress tracking
+- [ ] Metrics Collector - **UNBLOCKS OE/05_monitoring**
+- [ ] Result Aggregator - Aggregate results
+- [ ] Plan Updater - Write back to plan files
+
+### Phase 3: SelfLearning (Requires FeedbackLoop Data)
+Kan pas starten wanneer FeedbackLoop data genereert.
+- [ ] Error pattern recognition
+- [ ] Fix generation
+- [ ] Continuous improvement
+
+### Parallel Work (No Dependencies)
+- [ ] TEE/02_dependency-resolver - Better dependency graph
+- [ ] Azure MCP schema-strict validation
+- [ ] Multi-region deployment support
+- [ ] Update Plan-G with S06-S17 scenarios
 
 ---
 
