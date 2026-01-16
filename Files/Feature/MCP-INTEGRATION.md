@@ -74,6 +74,7 @@ In plaats van zelf allerlei code te onderhouden, kunnen we kosteloos gebruik mak
 | MCP Server | Functionaliteit | Licentie | Link |
 |------------|-----------------|----------|------|
 | **GitHub MCP (Official)** | Repository management, PRs, Actions | MIT | [Ingebouwd in VS Code] |
+| **Azure DevOps MCP (Microsoft)** | Work Items, Boards, Repos, Pipelines, Sprints, Project Planning | MIT | [GitHub](https://github.com/microsoft/azure-devops-mcp) |
 | **Azure MCP (Microsoft)** | Azure Storage, Cosmos DB, CLI, Services | Open Source | [GitHub](https://github.com/microsoft/mcp/tree/main/servers/Azure.Mcp.Server) |
 | **Heroku MCP** | Heroku platform access | Apache 2.0 | [GitHub](https://github.com/heroku/heroku-mcp-server) |
 | **Cloudflare MCP** | Workers, KV, R2, D1 deployment | Open Source | [GitHub](https://github.com/cloudflare/mcp-server-cloudflare) |
@@ -88,14 +89,54 @@ In plaats van zelf allerlei code te onderhouden, kunnen we kosteloos gebruik mak
 | Geplande Component | MCP Alternatief | Code Reductie |
 |--------------------|-----------------|---------------|
 | GitHub Integration | GitHub MCP (ingebouwd) | 95% - Volledig via MCP |
+| Azure DevOps Integration | Azure DevOps MCP | 95% - Work Items, Boards, Pipelines |
 | Azure Deployment | Azure MCP | 90% - Alleen custom logic |
 | Container Management | Docker + Kubernetes MCPs | 85% |
-| CI/CD Orchestratie | GitHub Actions MCP | 70% |
+| CI/CD Orchestratie | GitHub Actions / Azure Pipelines MCP | 70% |
+| Project Planning | Azure DevOps MCP | 90% - Sprints, Backlogs, Fases |
 
 ### Aanbevolen Implementatie
-1. **GitHub MCP** (al beschikbaar in VS Code)
-2. **Azure MCP** voor Azure deployments
-3. **Docker MCP** voor container management
+1. **GitHub MCP** (al beschikbaar in VS Code) - voor GitHub workflows
+2. **Azure DevOps MCP** voor enterprise Azure DevOps organisaties
+3. **Azure MCP** voor Azure resource deployments
+4. **Docker MCP** voor container management
+
+### Azure DevOps MCP - Enterprise Value
+
+De **Azure DevOps MCP** biedt enorme meerwaarde voor organisaties die Azure DevOps gebruiken:
+
+#### Capabilities
+- ✅ **Work Items**: Create, update, query work items (User Stories, Tasks, Bugs)
+- ✅ **Boards**: Manage boards, columns, swimlanes
+- ✅ **Sprints**: Sprint planning, capacity management
+- ✅ **Backlogs**: Backlog prioritization, refinement
+- ✅ **Repos**: Git repository operations
+- ✅ **Pipelines**: Trigger builds, releases, check status
+- ✅ **Projects**: Project configuration, settings
+
+#### Use Case: AgenticCoder Project Planning
+Met Azure DevOps MCP kan AgenticCoder:
+1. **Automatisch projectplan publiceren** → Features → Epics → User Stories → Tasks
+2. **Status synchroniseren** → Code completion → Work Item status update
+3. **Sprint planning** → Automatische sprint creatie gebaseerd op fases
+4. **Progress tracking** → Real-time dashboard updates
+5. **Release management** → Koppeling met Azure Pipelines
+
+```json
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": ["-y", "@microsoft/azure-devops-mcp"],
+      "env": {
+        "AZURE_DEVOPS_ORG": "${AZURE_DEVOPS_ORG}",
+        "AZURE_DEVOPS_PAT": "${AZURE_DEVOPS_PAT}",
+        "AZURE_DEVOPS_PROJECT": "${AZURE_DEVOPS_PROJECT}"
+      }
+    }
+  }
+}
+```
 
 ---
 
@@ -231,6 +272,7 @@ De meeste error handling moet custom blijven, maar **Sequential Thinking MCP** k
 
 ### Phase 3: Deployment MCPs (Week 3)
 - [ ] Azure MCP (already available)
+- [ ] Azure DevOps MCP (voor enterprise orgs)
 - [ ] Docker MCP
 - [ ] GitHub MCP (built-in)
 
@@ -289,7 +331,8 @@ Door gebruik te maken van bestaande MCP servers kunnen we:
 
 ### Key Takeaways
 - **Security**: GitGuardian + BoostSecurity + SafeDep dekken 80% van de security behoeften
-- **Deployment**: Azure MCP + GitHub MCP + Docker MCP dekken 85% van deployment
+- **Deployment**: Azure MCP + GitHub MCP + Azure DevOps MCP + Docker MCP dekken 90% van deployment
+- **Project Planning**: Azure DevOps MCP maakt volledige projectplan synchronisatie mogelijk
 - **Persistence**: Memory MCP + SQLite MCP + Redis MCP dekken 65% van state management
 - **Testing**: Playwright MCP is enterprise-grade en gratis (Apache 2.0)
 
