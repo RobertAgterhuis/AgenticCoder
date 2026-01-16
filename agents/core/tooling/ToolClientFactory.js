@@ -2,6 +2,24 @@
  * ToolClientFactory
  * Creates tool clients based on config with safe defaults.
  *
+ * @deprecated This module is deprecated. Use the new TypeScript MCP infrastructure instead:
+ * 
+ * ```javascript
+ * // New approach using MCPBridge
+ * const { MCPBridge } = require('./src/mcp/bridge');
+ * const bridge = new MCPBridge({ workspaceFolder: process.cwd() });
+ * await bridge.initialize();
+ * const result = await bridge.callTool('azure-pricing-mcp', 'price_search', { sku: 'Standard_B1s' });
+ * ```
+ * 
+ * The new infrastructure provides:
+ * - TransportFactory with multiple transport types
+ * - Automatic transport selection based on server configuration
+ * - Circuit breaker pattern for fault tolerance
+ * - Retry policies with exponential backoff
+ * 
+ * This class will be removed in a future version.
+ *
  * Default: HTTP via `endpoint` (current behavior).
  * Optional: MCP stdio via `command`/`args`.
  */
@@ -10,6 +28,7 @@ import { McpStdioToolClient } from './McpStdioToolClient.js';
 
 export class ToolClientFactory {
   static create(config = {}) {
+    console.warn('[DEPRECATED] ToolClientFactory is deprecated. Use MCPBridge from src/mcp/bridge instead.');
     const globalTransport = process.env.AGENTICCODER_TOOL_TRANSPORT;
     const requestedTransport = (globalTransport || config.transport || '').toLowerCase();
 

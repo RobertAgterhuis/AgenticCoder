@@ -1,4 +1,8 @@
 {
+  "$schema": "https://json.schemastore.org/mcp-server-config.json",
+  "version": "2.0.0",
+  "description": "AgenticCoder MCP Server Configuration - Aligned with TypeScript MCP Infrastructure",
+  
   "mcpServers": {
     "azure-pricing-mcp": {
       "type": "stdio",
@@ -9,7 +13,14 @@
         "PYTHONPATH": "${workspaceFolder}/.github/mcp/azure-pricing-mcp"
       },
       "timeout": 30000,
-      "description": "Real-time Azure pricing data for cost estimation"
+      "description": "Real-time Azure pricing data for cost estimation",
+      "category": "data",
+      "tags": ["azure", "pricing", "cost"],
+      "healthCheck": {
+        "enabled": true,
+        "intervalMs": 60000,
+        "tool": "ping"
+      }
     },
     "azure-resource-graph-mcp": {
       "type": "stdio",
@@ -21,7 +32,14 @@
         "AZURE_SUBSCRIPTION_ID": "${env:AZURE_SUBSCRIPTION_ID}"
       },
       "timeout": 30000,
-      "description": "Azure Resource Graph queries for governance and compliance"
+      "description": "Azure Resource Graph queries for governance and compliance",
+      "category": "data",
+      "tags": ["azure", "resource-graph", "governance"],
+      "healthCheck": {
+        "enabled": true,
+        "intervalMs": 60000,
+        "tool": "ping"
+      }
     },
     "microsoft-docs-mcp": {
       "type": "stdio",
@@ -32,7 +50,40 @@
         "PYTHONPATH": "${workspaceFolder}/.github/mcp/microsoft-docs-mcp"
       },
       "timeout": 30000,
-      "description": "Microsoft documentation search for best practices"
+      "description": "Microsoft documentation search for best practices",
+      "category": "documentation",
+      "tags": ["microsoft", "documentation", "best-practices"],
+      "healthCheck": {
+        "enabled": true,
+        "intervalMs": 60000,
+        "tool": "ping"
+      }
     }
+  },
+
+  "defaults": {
+    "timeout": 30000,
+    "retryPolicy": {
+      "maxRetries": 3,
+      "initialDelayMs": 1000,
+      "maxDelayMs": 30000,
+      "backoffMultiplier": 2
+    },
+    "circuitBreaker": {
+      "failureThreshold": 5,
+      "resetTimeoutMs": 30000,
+      "halfOpenRequests": 3
+    }
+  },
+
+  "notes": {
+    "migration": "This config is now aligned with src/mcp TypeScript infrastructure",
+    "usage": "Use MCPBridge from src/mcp/bridge.ts for JavaScript agent integration",
+    "deprecated": [
+      "servers/mcp-azure-* (Express HTTP - removed)",
+      "agents/core/McpClient.js",
+      "agents/core/tooling/McpStdioToolClient.js",
+      "agents/core/tooling/ToolClientFactory.js"
+    ]
   }
 }

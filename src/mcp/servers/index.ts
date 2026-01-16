@@ -25,3 +25,6 @@ export * from './testing';
 // Documentation servers
 export * from './documentation';
 
+// Azure MCP servers (local Python servers)
+export * from './azure';
+

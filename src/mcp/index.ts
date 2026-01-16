@@ -155,6 +155,22 @@ export {
   createGitMCPAdapter,
 } from './servers/documentation';
 
+// Server Adapters - Azure (Local Python MCP Servers)
+export {
+  AzurePricingMCPAdapter,
+  createAzurePricingMCPAdapter,
+  AzureResourceGraphMCPAdapter,
+  createAzureResourceGraphMCPAdapter,
+  MicrosoftDocsMCPAdapter,
+  createMicrosoftDocsMCPAdapter,
+} from './servers/azure';
+
+// Bridge for JavaScript agents
+export {
+  MCPBridge,
+  createMCPBridge,
+} from './bridge';
+
 // Base adapter for custom implementations
 export { BaseServerAdapter } from './servers/BaseServerAdapter';
 

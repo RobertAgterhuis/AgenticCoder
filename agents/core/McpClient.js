@@ -1,9 +1,29 @@
 /**
  * McpClient - Real HTTP client for MCP servers
  * Replaces mock implementation in BaseAgent
+ * 
+ * @deprecated This module is deprecated. Use the new TypeScript MCP infrastructure instead:
+ * 
+ * ```javascript
+ * // New approach using MCPBridge
+ * const { MCPBridge } = require('./src/mcp/bridge');
+ * const bridge = new MCPBridge({ workspaceFolder: process.cwd() });
+ * await bridge.initialize();
+ * const result = await bridge.callTool('azure-pricing-mcp', 'price_search', { sku: 'Standard_B1s' });
+ * ```
+ * 
+ * The new infrastructure provides:
+ * - Circuit breaker pattern for fault tolerance
+ * - Retry policies with exponential backoff
+ * - Connection pooling
+ * - Health monitoring
+ * - 19+ server adapters
+ * 
+ * This class will be removed in a future version.
  */
 export class McpClient {
   constructor(config) {
+    console.warn('[DEPRECATED] McpClient is deprecated. Use MCPBridge from src/mcp/bridge instead.');
     this.name = config.name;
     this.baseUrl = config.endpoint;
     this.timeout = config.timeout || 30000;

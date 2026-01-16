@@ -2,8 +2,24 @@
  * McpStdioToolClient
  * Minimal MCP JSON-RPC client over stdio (Content-Length framing).
  *
- * This is introduced as an optional transport for safe migration.
- * Default remains HTTP.
+ * @deprecated This module is deprecated. Use the new TypeScript MCP infrastructure instead:
+ * 
+ * ```javascript
+ * // New approach using MCPBridge
+ * const { MCPBridge } = require('./src/mcp/bridge');
+ * const bridge = new MCPBridge({ workspaceFolder: process.cwd() });
+ * await bridge.initialize();
+ * const result = await bridge.callTool('azure-pricing-mcp', 'price_search', { sku: 'Standard_B1s' });
+ * ```
+ * 
+ * The new infrastructure provides:
+ * - StdioTransport with proper MCP protocol support
+ * - Circuit breaker pattern for fault tolerance
+ * - Retry policies with exponential backoff
+ * - Connection pooling
+ * - Health monitoring
+ * 
+ * This class will be removed in a future version.
  */
 import { spawn } from 'child_process';
 import { ToolClient } from './ToolClient.js';

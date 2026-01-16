@@ -126,11 +126,11 @@ export abstract class BaseServerAdapter extends EventEmitter {
   /**
    * Call a tool
    */
-  protected async callTool(
+  protected async callTool<T = unknown>(
     toolName: string,
     args: Record<string, unknown>,
     timeout?: number
-  ): Promise<ToolCallResponse> {
+  ): Promise<ToolCallResponse<T>> {
     if (!this.hasTool(toolName)) {
       throw new ToolNotFoundError(this.getServerId(), toolName, this.tools.map(t => t.name));
     }
@@ -140,7 +140,7 @@ export abstract class BaseServerAdapter extends EventEmitter {
       toolName,
       arguments: args,
       timeout: timeout || this.config.timeout,
-    });
+    }) as Promise<ToolCallResponse<T>>;
   }
 
   /**
