@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Skill Registry",
+  "description": "Registry of all skills with agent mappings by category",
+  "version": "2.0.0",
+  "lastUpdated": "2025-01-15",
+  "skills": {
+    "database": {
+      "azure-sql-patterns": {
+        "agents": ["@azure-sql-specialist"],
+        "description": "Azure SQL Database design, performance tuning, and cloud-specific features",
+        "file": "azure-sql-patterns.skill.md",
+        "new": true
+      },
+      "tsql-programming": {
+        "agents": ["@azure-sql-specialist", "@sql-server-specialist"],
+        "description": "T-SQL stored procedures, functions, and advanced programming",
+        "file": "tsql-programming.skill.md",
+        "new": true
+      },
+      "sql-performance-tuning": {
+        "agents": ["@azure-sql-specialist", "@sql-server-specialist", "@database-specialist"],
+        "description": "Query optimization, indexing strategies, and performance analysis",
+        "file": "sql-performance-tuning.skill.md",
+        "new": true
+      },
+      "database-migration": {
+        "agents": ["@database-specialist", "@azure-sql-specialist"],
+        "description": "Database migration strategies and tooling",
+        "file": "database-migration.skill.md",
+        "new": true
+      },
+      "sql-schema-design": {
+        "agents": ["@database-specialist"],
+        "description": "Relational database schema design and normalization",
+        "file": "sql-schema-design.skill.md",
+        "new": true
+      },
+      "cosmos-db-patterns": {
+        "agents": ["@cosmos-db-specialist"],
+        "description": "Cosmos DB data modeling, partition strategies, and query optimization",
+        "file": "cosmos-db-patterns.skill.md",
+        "new": true
+      }
+    },
+    "frontend": {
+      "react-patterns": {
+        "agents": ["@react-specialist", "@frontend-specialist"],
+        "description": "React hooks, component patterns, and state management",
+        "file": "react-patterns.skill.md"
+      },
+      "vue-patterns": {
+        "agents": ["@vue-specialist"],
+        "description": "Vue 3 Composition API, Pinia, and component patterns",
+        "file": "vue-patterns.skill.md",
+        "new": true
+      },
+      "nextjs-patterns": {
+        "agents": ["@nextjs-specialist"],
+        "description": "Next.js App Router, SSR, ISR, and data fetching",
+        "file": "nextjs-patterns.skill.md",
+        "new": true
+      },
+      "angular-patterns": {
+        "agents": ["@angular-specialist"],
+        "description": "Angular signals, standalone components, and RxJS patterns",
+        "file": "angular-patterns.skill.md",
+        "new": true
+      },
+      "vite-tooling": {
+        "agents": ["@vue-specialist", "@react-specialist", "@frontend-specialist"],
+        "description": "Vite configuration, plugins, and optimization",
+        "file": "vite-tooling.skill.md",
+        "new": true
+      },
+      "state-management": {
+        "agents": ["@frontend-specialist", "@react-specialist", "@vue-specialist"],
+        "description": "State management patterns across frameworks",
+        "file": "state-management.skill.md"
+      }
+    },
+    "architecture": {
+      "microservices-patterns": {
+        "agents": ["@microservices-architect"],
+        "description": "Domain-Driven Design, service decomposition, and communication patterns",
+        "file": "microservices-patterns.skill.md",
+        "new": true
+      },
+      "event-driven-patterns": {
+        "agents": ["@event-driven-architect"],
+        "description": "Event Sourcing, CQRS, Saga patterns, and messaging",
+        "file": "event-driven-patterns.skill.md",
+        "new": true
+      },
+      "serverless-patterns": {
+        "agents": ["@serverless-specialist"],
+        "description": "Serverless architecture, function composition, and triggers",
+        "file": "serverless-patterns.skill.md",
+        "new": true
+      },
+      "cqrs-event-sourcing": {
+        "agents": ["@microservices-architect", "@event-driven-architect"],
+        "description": "CQRS implementation and Event Sourcing patterns",
+        "file": "cqrs-event-sourcing.skill.md",
+        "new": true
+      },
+      "saga-patterns": {
+        "agents": ["@microservices-architect", "@event-driven-architect"],
+        "description": "Distributed transaction management with Saga patterns",
+        "file": "saga-patterns.skill.md",
+        "new": true
+      },
+      "architecture-design": {
+        "agents": ["@architect", "@code-architect"],
+        "description": "High-level architecture design and decision making",
+        "file": "architecture-design.skill.md"
+      }
+    },
+    "infrastructure": {
+      "api-gateway-patterns": {
+        "agents": ["@api-gateway-specialist"],
+        "description": "Azure API Management policies, products, and security",
+        "file": "api-gateway-patterns.skill.md",
+        "new": true
+      },
+      "azure-functions-patterns": {
+        "agents": ["@serverless-specialist"],
+        "description": "Azure Functions triggers, bindings, and Durable Functions",
+        "file": "azure-functions-patterns.skill.md",
+        "new": true
+      },
+      "container-apps-patterns": {
+        "agents": ["@container-specialist"],
+        "description": "Container Apps configuration, scaling, and Dapr integration",
+        "file": "container-apps-patterns.skill.md",
+        "new": true
+      },
+      "service-bus-patterns": {
+        "agents": ["@event-driven-architect", "@microservices-architect"],
+        "description": "Azure Service Bus queues, topics, and message processing",
+        "file": "service-bus-patterns.skill.md",
+        "new": true
+      },
+      "infrastructure-automation": {
+        "agents": ["@bicep-specialist", "@azure-architect"],
+        "description": "Infrastructure as Code best practices",
+        "file": "infrastructure-automation.skill.md"
+      },
+      "azure-networking-patterns": {
+        "agents": ["@networking-specialist", "@azure-architect"],
+        "description": "Hub-spoke topology, NSGs, Private Endpoints, and VPN",
+        "file": "azure-networking-patterns.skill.md",
+        "new": true
+      },
+      "azure-storage-patterns": {
+        "agents": ["@storage-specialist"],
+        "description": "Blob, Table, Queue, Files services and access control",
+        "file": "azure-storage-patterns.skill.md",
+        "new": true
+      },
+      "azure-monitoring-patterns": {
+        "agents": ["@monitoring-specialist"],
+        "description": "Application Insights, Log Analytics, KQL, and alerting",
+        "file": "azure-monitoring-patterns.skill.md",
+        "new": true
+      }
+    },
+    "security": {
+      "entra-id-patterns": {
+        "agents": ["@entra-id-specialist"],
+        "description": "OAuth 2.0, OIDC, MSAL, and Managed Identity patterns",
+        "file": "entra-id-patterns.skill.md",
+        "new": true
+      },
+      "keyvault-patterns": {
+        "agents": ["@keyvault-specialist", "@azure-architect"],
+        "description": "Secret management, key rotation, and certificate handling",
+        "file": "keyvault-patterns.skill.md",
+        "new": true
+      }
+    },
+    "backend": {
+      "express-patterns": {
+        "agents": ["@nodejs-specialist"],
+        "description": "Express.js middleware, routing, and error handling",
+        "file": "express-patterns.skill.md",
+        "new": true
+      },
+      "fastapi-patterns": {
+        "agents": ["@python-specialist"],
+        "description": "FastAPI async patterns, dependency injection, and Pydantic",
+        "file": "fastapi-patterns.skill.md",
+        "new": true
+      },
+      "nestjs-patterns": {
+        "agents": ["@nodejs-specialist"],
+        "description": "NestJS modules, decorators, and dependency injection",
+        "file": "nestjs-patterns.skill.md",
+        "new": true
+      },
+      "dotnet-webapi": {
+        "agents": ["@dotnet-specialist"],
+        "description": ".NET minimal APIs, controllers, and middleware",
+        "file": "dotnet-webapi.skill.md"
+      },
+      "error-handling": {
+        "agents": ["@backend-specialist"],
+        "description": "Consistent error handling patterns across backends",
+        "file": "error-handling.skill.md"
+      }
+    }
+  },
+  "statistics": {
+    "totalSkills": 33,
+    "newSkills": 26,
+    "categories": 6,
+    "byCategory": {
+      "database": 6,
+      "frontend": 6,
+      "architecture": 6,
+      "infrastructure": 8,
+      "security": 2,
+      "backend": 5
+    }
+  }
+}

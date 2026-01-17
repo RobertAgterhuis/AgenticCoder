@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Agent Registry",
+  "description": "Registry of all agents organized by category with relationships",
+  "version": "2.0.0",
+  "lastUpdated": "2025-01-15",
+  "agents": {
+    "orchestration": [
+      {
+        "name": "@coordinator",
+        "description": "Main orchestration agent that coordinates all other agents",
+        "phase": "all",
+        "handoffs": ["@architect", "@plan", "@backlog"]
+      }
+    ],
+    "planning": [
+      {
+        "name": "@plan",
+        "description": "Creates project plans and milestones",
+        "phase": "3",
+        "handoffs": ["@architect"]
+      },
+      {
+        "name": "@backlog",
+        "description": "Manages product backlog and user stories",
+        "phase": "3",
+        "handoffs": ["@architect"]
+      },
+      {
+        "name": "@architect",
+        "description": "High-level architecture decisions",
+        "phase": "2-5",
+        "handoffs": [
+          "@code-architect",
+          "@microservices-architect",
+          "@event-driven-architect",
+          "@serverless-specialist",
+          "@azure-architect"
+        ]
+      }
+    ],
+    "architecture": [
+      {
+        "name": "@code-architect",
+        "description": "Detailed code architecture and design patterns",
+        "phase": "4",
+        "handoffs": ["@frontend-specialist", "@backend-specialist", "@database-specialist"]
+      },
+      {
+        "name": "@microservices-architect",
+        "description": "Microservices architecture design with DDD, service decomposition",
+        "phase": "4",
+        "handoffs": ["@container-specialist", "@api-gateway-specialist", "@event-driven-architect"],
+        "new": true
+      },
+      {
+        "name": "@event-driven-architect",
+        "description": "Event-driven architecture with Event Sourcing, CQRS, Saga patterns",
+        "phase": "4",
+        "handoffs": ["@serverless-specialist", "@backend-specialist"],
+        "new": true
+      }
+    ],
+    "azure": [
+      {
+        "name": "@azure-architect",
+        "description": "Azure architecture and best practices",
+        "phase": "4-5",
+        "handoffs": ["@bicep-specialist", "@networking-specialist", "@monitoring-specialist"]
+      },
+      {
+        "name": "@bicep-specialist",
+        "description": "Infrastructure as Code with Bicep",
+        "phase": "5",
+        "handoffs": []
+      },
+      {
+        "name": "@serverless-specialist",
+        "description": "Azure Functions and serverless architecture",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist", "@monitoring-specialist"],
+        "new": true
+      },
+      {
+        "name": "@api-gateway-specialist",
+        "description": "Azure API Management configuration and policies",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist", "@entra-id-specialist"],
+        "new": true
+      },
+      {
+        "name": "@container-specialist",
+        "description": "Container Apps and AKS deployment",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist", "@networking-specialist"],
+        "new": true
+      },
+      {
+        "name": "@entra-id-specialist",
+        "description": "Identity and authentication with Entra ID",
+        "phase": "5",
+        "handoffs": ["@keyvault-specialist"],
+        "new": true
+      },
+      {
+        "name": "@keyvault-specialist",
+        "description": "Secrets, keys, and certificate management",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist"],
+        "new": true
+      },
+      {
+        "name": "@cosmos-db-specialist",
+        "description": "Cosmos DB NoSQL design and optimization",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist"],
+        "new": true
+      },
+      {
+        "name": "@storage-specialist",
+        "description": "Azure Storage services (Blob, Table, Queue, Files)",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist", "@networking-specialist"],
+        "new": true
+      },
+      {
+        "name": "@networking-specialist",
+        "description": "VNets, NSGs, Private Endpoints, hub-spoke",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist"],
+        "new": true
+      },
+      {
+        "name": "@monitoring-specialist",
+        "description": "Application Insights, Log Analytics, alerting",
+        "phase": "5",
+        "handoffs": ["@bicep-specialist"],
+        "new": true
+      }
+    ],
+    "frontend": [
+      {
+        "name": "@frontend-specialist",
+        "description": "Frontend architecture and component design",
+        "phase": "5",
+        "handoffs": ["@react-specialist", "@vue-specialist", "@nextjs-specialist", "@angular-specialist"]
+      },
+      {
+        "name": "@react-specialist",
+        "description": "React with TypeScript, hooks, testing",
+        "phase": "5",
+        "handoffs": []
+      },
+      {
+        "name": "@vue-specialist",
+        "description": "Vue 3 with Composition API, Pinia, Vite",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      },
+      {
+        "name": "@nextjs-specialist",
+        "description": "Next.js with App Router, SSR, ISR",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      },
+      {
+        "name": "@angular-specialist",
+        "description": "Angular with signals, standalone components",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      }
+    ],
+    "backend": [
+      {
+        "name": "@backend-specialist",
+        "description": "Backend architecture and API design",
+        "phase": "5",
+        "handoffs": ["@dotnet-specialist", "@nodejs-specialist", "@python-specialist"]
+      },
+      {
+        "name": "@dotnet-specialist",
+        "description": ".NET with C#, ASP.NET Core, minimal APIs",
+        "phase": "5",
+        "handoffs": []
+      },
+      {
+        "name": "@nodejs-specialist",
+        "description": "Node.js with Express, NestJS, TypeScript",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      },
+      {
+        "name": "@python-specialist",
+        "description": "Python with FastAPI, async, type hints",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      }
+    ],
+    "database": [
+      {
+        "name": "@database-specialist",
+        "description": "Database design and optimization",
+        "phase": "5",
+        "handoffs": ["@azure-sql-specialist", "@sql-server-specialist", "@cosmos-db-specialist"]
+      },
+      {
+        "name": "@azure-sql-specialist",
+        "description": "Azure SQL Database design and performance",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      },
+      {
+        "name": "@sql-server-specialist",
+        "description": "SQL Server and T-SQL programming",
+        "phase": "5",
+        "handoffs": [],
+        "new": true
+      }
+    ],
+    "quality": [
+      {
+        "name": "@qa",
+        "description": "Quality assurance and testing strategy",
+        "phase": "6",
+        "handoffs": []
+      },
+      {
+        "name": "@doc",
+        "description": "Documentation generation",
+        "phase": "6",
+        "handoffs": []
+      },
+      {
+        "name": "@reporter",
+        "description": "Reports and metrics generation",
+        "phase": "6",
+        "handoffs": []
+      }
+    ],
+    "devops": [
+      {
+        "name": "@devops-specialist",
+        "description": "CI/CD and deployment automation",
+        "phase": "6",
+        "handoffs": ["@azure-devops-specialist"]
+      },
+      {
+        "name": "@azure-devops-specialist",
+        "description": "Azure DevOps pipelines and releases",
+        "phase": "6",
+        "handoffs": []
+      }
+    ]
+  },
+  "statistics": {
+    "totalAgents": 35,
+    "newAgents": 18,
+    "categories": 8,
+    "byCategory": {
+      "orchestration": 1,
+      "planning": 3,
+      "architecture": 3,
+      "azure": 11,
+      "frontend": 5,
+      "backend": 4,
+      "database": 3,
+      "quality": 3,
+      "devops": 2
+    }
+  }
+}
