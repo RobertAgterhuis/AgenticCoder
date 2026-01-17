@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "python-specialist.output.schema.json",
+  "title": "Python Specialist Output Schema",
+  "description": "Output schema for @python-specialist agent responses",
+  "type": "object",
+  "properties": {
+    "solution": {
+      "type": "object",
+      "description": "The generated solution",
+      "properties": {
+        "architecture": {
+          "type": "object",
+          "properties": {
+            "framework": {
+              "type": "string",
+              "description": "Selected framework"
+            },
+            "pattern": {
+              "type": "string",
+              "enum": ["layered", "clean", "hexagonal", "ddd"],
+              "description": "Architecture pattern used"
+            },
+            "structure": {
+              "type": "object",
+              "description": "Project structure recommendation"
+            },
+            "asyncSupport": {
+              "type": "boolean",
+              "description": "Whether async/await is used"
+            }
+          }
+        },
+        "files": {
+          "type": "array",
+          "description": "Generated files",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "File path"
+              },
+              "content": {
+                "type": "string",
+                "description": "File content"
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "router",
+                  "service",
+                  "repository",
+                  "middleware",
+                  "model",
+                  "schema",
+                  "dependency",
+                  "config",
+                  "test",
+                  "migration"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "description": "File purpose description"
+              }
+            },
+            "required": ["path", "content", "type"]
+          }
+        },
+        "dependencies": {
+          "type": "object",
+          "properties": {
+            "production": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Production dependencies"
+            },
+            "development": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Development dependencies"
+            },
+            "optional": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "description": "Optional dependency groups"
+            }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "pyproject": { "type": "object" },
+            "ruff": { "type": "object" },
+            "mypy": { "type": "object" },
+            "pytest": { "type": "object" },
+            "docker": {
+              "type": "object",
+              "properties": {
+                "dockerfile": { "type": "string" },
+                "compose": { "type": "string" }
+              }
+            }
+          }
+        }
+      },
+      "required": ["architecture", "files"]
+    },
+    "patterns": {
+      "type": "array",
+      "description": "Design patterns applied",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Pattern name"
+          },
+          "rationale": {
+            "type": "string",
+            "description": "Why this pattern was chosen"
+          },
+          "implementation": {
+            "type": "string",
+            "description": "How the pattern is implemented"
+          }
+        },
+        "required": ["name", "rationale"]
+      }
+    },
+    "pydanticModels": {
+      "type": "array",
+      "description": "Pydantic model definitions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "purpose": { "type": "string" },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "validation": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "description": "Security considerations",
+      "properties": {
+        "measures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "authentication",
+                  "authorization",
+                  "input-validation",
+                  "rate-limiting",
+                  "cors",
+                  "sql-injection",
+                  "xss-prevention"
+                ]
+              },
+              "implementation": { "type": "string" }
+            }
+          }
+        },
+        "vulnerabilities": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Known vulnerabilities addressed"
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "description": "Testing strategy",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "enum": ["pytest", "unittest"]
+        },
+        "coverage": {
+          "type": "object",
+          "properties": {
+            "target": { "type": "integer" },
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["unit", "integration", "e2e"]
+              }
+            }
+          }
+        },
+        "testFiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "fixtures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "scope": {
+                "type": "string",
+                "enum": ["function", "class", "module", "session"]
+              },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Deployment recommendations",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": [
+            "azure-app-service",
+            "azure-container-apps",
+            "azure-functions",
+            "kubernetes"
+          ]
+        },
+        "configuration": {
+          "type": "object",
+          "description": "Platform-specific configuration"
+        },
+        "cicd": {
+          "type": "object",
+          "properties": {
+            "workflow": { "type": "string" },
+            "stages": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "description": "Agent handoff information",
+      "properties": {
+        "nextAgent": {
+          "type": "string",
+          "description": "Recommended next agent"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Reason for handoff"
+        },
+        "context": {
+          "type": "object",
+          "description": "Context to pass to next agent"
+        }
+      }
+    }
+  },
+  "required": ["solution"]
+}

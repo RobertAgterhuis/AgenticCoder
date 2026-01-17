@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "python-specialist.input.schema.json",
+  "title": "Python Specialist Input Schema",
+  "description": "Input schema for @python-specialist agent requests",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "description": "The request details for Python backend development",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "architecture",
+            "api-design",
+            "middleware",
+            "database-integration",
+            "authentication",
+            "performance",
+            "testing",
+            "migration",
+            "async-patterns"
+          ],
+          "description": "Type of Python development request"
+        },
+        "framework": {
+          "type": "string",
+          "enum": ["fastapi", "django", "flask", "starlette"],
+          "description": "Target Python framework"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the request"
+        },
+        "requirements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of specific requirements"
+        }
+      },
+      "required": ["type", "framework", "description"]
+    },
+    "context": {
+      "type": "object",
+      "description": "Context for the development request",
+      "properties": {
+        "projectName": {
+          "type": "string",
+          "description": "Name of the project"
+        },
+        "existingStructure": {
+          "type": "object",
+          "description": "Existing project structure information"
+        },
+        "pythonVersion": {
+          "type": "string",
+          "description": "Target Python version (e.g., '3.11', '3.12')"
+        },
+        "typeHintsEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether strict type hints are used"
+        },
+        "database": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["postgresql", "mysql", "mongodb", "sqlite", "mssql"]
+            },
+            "orm": {
+              "type": "string",
+              "enum": ["sqlalchemy", "tortoise-orm", "django-orm", "odmantic", "beanie"]
+            },
+            "asyncSupport": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          "description": "Database configuration"
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": ["jwt", "session", "oauth2", "azure-ad", "api-key"]
+            },
+            "providers": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "description": "Authentication requirements"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Development constraints",
+      "properties": {
+        "performanceTargets": {
+          "type": "object",
+          "properties": {
+            "maxResponseTime": {
+              "type": "integer",
+              "description": "Maximum response time in milliseconds"
+            },
+            "concurrentRequests": {
+              "type": "integer",
+              "description": "Target concurrent requests"
+            }
+          }
+        },
+        "securityRequirements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Security requirements"
+        },
+        "codeStandards": {
+          "type": "object",
+          "properties": {
+            "linter": {
+              "type": "string",
+              "enum": ["ruff", "flake8", "pylint"]
+            },
+            "formatter": {
+              "type": "string",
+              "enum": ["black", "ruff", "yapf"]
+            },
+            "typeChecker": {
+              "type": "string",
+              "enum": ["mypy", "pyright", "pyre"]
+            },
+            "testCoverage": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "description": "External integrations",
+      "properties": {
+        "azure": {
+          "type": "object",
+          "properties": {
+            "services": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "app-service",
+                  "container-apps",
+                  "functions",
+                  "service-bus",
+                  "storage",
+                  "cosmos-db",
+                  "key-vault",
+                  "openai"
+                ]
+              }
+            }
+          }
+        },
+        "messaging": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["service-bus", "rabbitmq", "kafka", "redis-pub-sub"]
+            }
+          }
+        },
+        "caching": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["redis", "memcached", "in-memory"]
+            }
+          }
+        },
+        "ai": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "enum": ["azure-openai", "openai", "anthropic", "local"]
+            },
+            "features": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["embeddings", "chat", "completion", "vision"]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["request"]
+}

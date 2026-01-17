@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nodejs-specialist.input.schema.json",
+  "title": "Node.js Specialist Input Schema",
+  "description": "Input schema for @nodejs-specialist agent requests",
+  "type": "object",
+  "properties": {
+    "request": {
+      "type": "object",
+      "description": "The request details for Node.js backend development",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "architecture",
+            "api-design",
+            "middleware",
+            "database-integration",
+            "authentication",
+            "performance",
+            "testing",
+            "migration"
+          ],
+          "description": "Type of Node.js development request"
+        },
+        "framework": {
+          "type": "string",
+          "enum": ["express", "nestjs", "fastify", "koa"],
+          "description": "Target Node.js framework"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the request"
+        },
+        "requirements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of specific requirements"
+        }
+      },
+      "required": ["type", "framework", "description"]
+    },
+    "context": {
+      "type": "object",
+      "description": "Context for the development request",
+      "properties": {
+        "projectName": {
+          "type": "string",
+          "description": "Name of the project"
+        },
+        "existingStructure": {
+          "type": "object",
+          "description": "Existing project structure information"
+        },
+        "nodeVersion": {
+          "type": "string",
+          "description": "Target Node.js version (e.g., '20.x', '18.x')"
+        },
+        "typescriptEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether TypeScript is used"
+        },
+        "database": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["postgresql", "mysql", "mongodb", "sqlite", "mssql"]
+            },
+            "orm": {
+              "type": "string",
+              "enum": ["prisma", "typeorm", "sequelize", "drizzle", "mongoose"]
+            }
+          },
+          "description": "Database configuration"
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "method": {
+              "type": "string",
+              "enum": ["jwt", "session", "oauth2", "azure-ad", "passport"]
+            },
+            "providers": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "description": "Authentication requirements"
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Development constraints",
+      "properties": {
+        "performanceTargets": {
+          "type": "object",
+          "properties": {
+            "maxResponseTime": {
+              "type": "integer",
+              "description": "Maximum response time in milliseconds"
+            },
+            "requestsPerSecond": {
+              "type": "integer",
+              "description": "Target requests per second"
+            }
+          }
+        },
+        "securityRequirements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Security requirements"
+        },
+        "codeStandards": {
+          "type": "object",
+          "properties": {
+            "eslintConfig": { "type": "string" },
+            "prettierEnabled": { "type": "boolean" },
+            "testCoverage": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "description": "External integrations",
+      "properties": {
+        "azure": {
+          "type": "object",
+          "properties": {
+            "services": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "app-service",
+                  "container-apps",
+                  "functions",
+                  "service-bus",
+                  "storage",
+                  "cosmos-db",
+                  "key-vault"
+                ]
+              }
+            }
+          }
+        },
+        "messaging": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["service-bus", "rabbitmq", "kafka", "redis-pub-sub"]
+            }
+          }
+        },
+        "caching": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["redis", "memcached", "in-memory"]
+            }
+          }
+        }
+      }
+    }
+  },
+  "required": ["request"]
+}
