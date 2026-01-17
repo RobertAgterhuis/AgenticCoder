@@ -1,0 +1,118 @@
+/**
+ * {{pascalCase name}} DTO
+ * {{description}}
+ */
+
+import { ApiProperty, ApiPropertyOptional, PartialType, OmitType, PickType } from '@nestjs/swagger';
+import {
+  IsString,
+  IsNumber,
+  IsBoolean,
+  IsEmail,
+  IsUrl,
+  IsUUID,
+  IsDate,
+  IsArray,
+  IsObject,
+  IsOptional,
+  IsNotEmpty,
+  MinLength,
+  MaxLength,
+  Min,
+  Max,
+  Matches,
+  ValidateNested,
+  Type,
+} from 'class-validator';
+import { Transform } from 'class-transformer';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+/**
+ * Create {{pascalCase name}} DTO
+ */
+export class Create{{pascalCase name}}Dto {
+  {{#each fields}}
+  {{#if required}}
+  @ApiProperty({ description: '{{description}}'{{#if example}}, example: {{example}}{{/if}} })
+  {{else}}
+  @ApiPropertyOptional({ description: '{{description}}'{{#if example}}, example: {{example}}{{/if}} })
+  @IsOptional()
+  {{/if}}
+  {{#each validators}}
+  @{{this}}
+  {{/each}}
+  {{#if transform}}
+  @Transform({{ transform }})
+  {{/if}}
+  {{#if nested}}
+  @ValidateNested()
+  @Type(() => {{nestedType}})
+  {{/if}}
+  {{name}}{{#unless required}}?{{/unless}}: {{type}};
+
+  {{/each}}
+}
+
+/**
+ * Update {{pascalCase name}} DTO
+ * All fields are optional for partial updates
+ */
+export class Update{{pascalCase name}}Dto extends PartialType(Create{{pascalCase name}}Dto) {}
+
+{{#if responseDto}}
+/**
+ * {{pascalCase name}} Response DTO
+ */
+export class {{pascalCase name}}ResponseDto {
+  @ApiProperty({ description: 'Unique identifier' })
+  id: string;
+
+  {{#each responseFields}}
+  @ApiProperty({ description: '{{description}}' })
+  {{name}}: {{type}};
+
+  {{/each}}
+
+  @ApiProperty({ description: 'Creation timestamp' })
+  createdAt: Date;
+
+  @ApiProperty({ description: 'Last update timestamp' })
+  updatedAt: Date;
+}
+{{/if}}
+
+{{#if queryDto}}
+/**
+ * {{pascalCase name}} Query DTO
+ */
+export class {{pascalCase name}}QueryDto {
+  @ApiPropertyOptional({ description: 'Page number', default: 1 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  page?: number = 1;
+
+  @ApiPropertyOptional({ description: 'Items per page', default: 10 })
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  @Max(100)
+  limit?: number = 10;
+
+  {{#each queryFields}}
+  @ApiPropertyOptional({ description: '{{description}}' })
+  @IsOptional()
+  {{#each validators}}
+  @{{this}}
+  {{/each}}
+  {{name}}?: {{type}};
+
+  {{/each}}
+}
+{{/if}}

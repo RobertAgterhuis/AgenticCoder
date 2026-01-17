@@ -1,0 +1,106 @@
+<template>
+  <div class="{{kebabCase name}}-page">
+    <header class="page-header">
+      <h1>{{title}}</h1>
+      {{#if breadcrumbs}}
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li><router-link to="/">Home</router-link></li>
+          <li class="active">{{title}}</li>
+        </ol>
+      </nav>
+      {{/if}}
+    </header>
+
+    <main class="page-content">
+      {{#if loading}}
+      <div v-if="loading" class="loading">
+        <span>Loading...</span>
+      </div>
+      {{/if}}
+
+      {{#if error}}
+      <div v-if="error" class="error">
+        <p>{{ error.message }}</p>
+        <button @click="retry">Retry</button>
+      </div>
+      {{/if}}
+
+      <div v-else>
+        {{content}}
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+/**
+ * {{description}}
+ */
+
+const route = useRoute();
+const router = useRouter();
+
+{{#if dataFetching}}
+const loading = ref(true);
+const error = ref<Error | null>(null);
+const data = ref<{{dataType}} | null>(null);
+
+async function fetchData() {
+  try {
+    loading.value = true;
+    error.value = null;
+    // Fetch data logic
+    {{fetchLogic}}
+  } catch (e) {
+    error.value = e instanceof Error ? e : new Error('Failed to load');
+  } finally {
+    loading.value = false;
+  }
+}
+
+function retry() {
+  fetchData();
+}
+
+onMounted(() => {
+  fetchData();
+});
+{{/if}}
+
+{{#if methods}}
+{{#each methods}}
+function {{name}}({{params}}) {
+  {{body}}
+}
+{{/each}}
+{{/if}}
+</script>
+
+<style scoped>
+.{{kebabCase name}}-page {
+  padding: 1rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error {
+  color: #dc3545;
+}
+</style>

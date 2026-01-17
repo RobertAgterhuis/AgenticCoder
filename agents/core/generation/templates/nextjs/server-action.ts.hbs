@@ -1,0 +1,67 @@
+/**
+ * {{pascalCase name}} Server Actions
+ * {{description}}
+ * 
+ * Server-side mutations for {{name}}
+ */
+
+'use server';
+
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if types}}
+{{#each types}}
+interface {{name}} {
+{{#each fields}}
+  {{name}}: {{type}};
+{{/each}}
+}
+
+{{/each}}
+{{/if}}
+
+{{#each actions}}
+/**
+ * {{description}}
+ {{#each params}}
+ * @param {{name}} - {{description}}
+ {{/each}}
+ */
+export async function {{name}}({{#if formData}}formData: FormData{{else}}{{#each params}}{{name}}: {{type}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}}) {
+  {{#if validation}}
+  // Validation
+  {{#each validation}}
+  const {{name}} = {{#if formData}}formData.get('{{fieldName}}'){{else}}{{source}}{{/if}};
+  if ({{condition}}) {
+    return { error: '{{message}}' };
+  }
+  {{/each}}
+  {{/if}}
+
+  try {
+    {{body}}
+
+    {{#if revalidatePath}}
+    revalidatePath('{{revalidatePath}}');
+    {{/if}}
+    {{#if revalidateTag}}
+    revalidateTag('{{revalidateTag}}');
+    {{/if}}
+    {{#if redirect}}
+    redirect('{{redirect}}');
+    {{/if}}
+
+    return { success: true{{#if returnData}}, data: {{returnData}}{{/if}} };
+  } catch (error) {
+    console.error('{{name}} failed:', error);
+    return { error: 'Operation failed' };
+  }
+}
+
+{{/each}}

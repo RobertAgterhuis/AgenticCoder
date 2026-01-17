@@ -1,0 +1,133 @@
+/**
+ * {{pascalCase name}} API Route
+ * {{description}}
+ * 
+ * @route {{method}} /api/{{route}}
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if types}}
+{{#each types}}
+interface {{name}} {
+{{#each fields}}
+  {{name}}: {{type}};
+{{/each}}
+}
+
+{{/each}}
+{{/if}}
+
+{{#if GET}}
+/**
+ * GET {{route}}
+ * {{GET.description}}
+ */
+export async function GET(
+  request: NextRequest,
+  {{#if GET.params}}{ params }: { params: { {{#each GET.params}}{{name}}: {{type}}{{#unless @last}}; {{/unless}}{{/each}} } }{{/if}}
+) {
+  try {
+    {{#if GET.auth}}
+    // Auth check
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    {{/if}}
+
+    {{GET.body}}
+
+    return NextResponse.json({{GET.response}});
+  } catch (error) {
+    console.error('GET {{route}} error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+{{/if}}
+
+{{#if POST}}
+/**
+ * POST {{route}}
+ * {{POST.description}}
+ */
+export async function POST(
+  request: NextRequest,
+  {{#if POST.params}}{ params }: { params: { {{#each POST.params}}{{name}}: {{type}}{{#unless @last}}; {{/unless}}{{/each}} } }{{/if}}
+) {
+  try {
+    const body = await request.json();
+
+    {{#if POST.validation}}
+    // Validation
+    {{POST.validation}}
+    {{/if}}
+
+    {{POST.body}}
+
+    return NextResponse.json({{POST.response}}, { status: 201 });
+  } catch (error) {
+    console.error('POST {{route}} error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+{{/if}}
+
+{{#if PUT}}
+/**
+ * PUT {{route}}
+ * {{PUT.description}}
+ */
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { {{#each PUT.params}}{{name}}: {{type}}{{#unless @last}}; {{/unless}}{{/each}} } }
+) {
+  try {
+    const body = await request.json();
+
+    {{PUT.body}}
+
+    return NextResponse.json({{PUT.response}});
+  } catch (error) {
+    console.error('PUT {{route}} error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+{{/if}}
+
+{{#if DELETE}}
+/**
+ * DELETE {{route}}
+ * {{DELETE.description}}
+ */
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { {{#each DELETE.params}}{{name}}: {{type}}{{#unless @last}}; {{/unless}}{{/each}} } }
+) {
+  try {
+    {{DELETE.body}}
+
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error('DELETE {{route}} error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+{{/if}}

@@ -1,0 +1,102 @@
+/**
+ * {{pascalCase name}} Interceptor
+ * {{description}}
+ */
+
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  Logger,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { tap, map, catchError, timeout } from 'rxjs/operators';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if responseInterface}}
+export interface {{responseInterface}} {
+  data: T;
+  {{#each responseFields}}
+  {{name}}: {{type}};
+  {{/each}}
+}
+{{/if}}
+
+@Injectable()
+export class {{pascalCase name}}Interceptor{{#if generic}}<T>{{/if}} implements NestInterceptor{{#if generic}}<T, {{responseType}}>{{/if}} {
+  {{#if logger}}
+  private readonly logger = new Logger({{pascalCase name}}Interceptor.name);
+  {{/if}}
+
+  constructor(
+    {{#each injectables}}
+    private readonly {{camelCase name}}: {{pascalCase name}},
+    {{/each}}
+  ) {}
+
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler{{#if generic}}<T>{{/if}},
+  ): Observable<{{#if generic}}{{responseType}}{{else}}any{{/if}}> {
+    const request = context.switchToHttp().getRequest();
+    const response = context.switchToHttp().getResponse();
+
+    {{#if beforeLogic}}
+    // Before handler execution
+    {{beforeLogic}}
+    {{/if}}
+
+    {{#if timing}}
+    const startTime = Date.now();
+    {{/if}}
+
+    return next.handle().pipe(
+      {{#if timeout}}
+      timeout({{timeout}}),
+      {{/if}}
+
+      {{#if transform}}
+      map((data) => {
+        {{transformLogic}}
+      }),
+      {{/if}}
+
+      {{#if logging}}
+      tap({
+        next: (data) => {
+          {{#if timing}}
+          const duration = Date.now() - startTime;
+          this.logger.log(
+            `${request.method} ${request.url} - ${response.statusCode} - ${duration}ms`
+          );
+          {{else}}
+          this.logger.log(`${request.method} ${request.url} completed`);
+          {{/if}}
+        },
+        error: (error) => {
+          {{#if timing}}
+          const duration = Date.now() - startTime;
+          this.logger.error(
+            `${request.method} ${request.url} - ${error.status || 500} - ${duration}ms`,
+            error.stack
+          );
+          {{else}}
+          this.logger.error(`${request.method} ${request.url} failed`, error.stack);
+          {{/if}}
+        },
+      }),
+      {{/if}}
+
+      {{#if errorHandler}}
+      catchError((error) => {
+        {{errorHandlerLogic}}
+      }),
+      {{/if}}
+    );
+  }
+}

@@ -1,0 +1,73 @@
+/**
+ * {{pascalCase name}} Layout
+ * {{description}}
+ */
+
+import type { Metadata } from 'next';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+export const metadata: Metadata = {
+  title: {
+    template: '%s | {{appName}}',
+    default: '{{appName}}',
+  },
+  description: '{{description}}',
+};
+
+export default function {{pascalCase name}}Layout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    {{#if isRoot}}
+    <html lang="{{lang}}">
+      <body>
+        {{#if providers}}
+        {{#each providers}}
+        <{{this}}>
+        {{/each}}
+        {{/if}}
+        
+        {{#if header}}
+        <header className="site-header">
+          {{header}}
+        </header>
+        {{/if}}
+
+        <main className="site-main">
+          {children}
+        </main>
+
+        {{#if footer}}
+        <footer className="site-footer">
+          {{footer}}
+        </footer>
+        {{/if}}
+
+        {{#if providers}}
+        {{#each providers}}
+        </{{this}}>
+        {{/each}}
+        {{/if}}
+      </body>
+    </html>
+    {{else}}
+    <div className="{{kebabCase name}}-layout">
+      {{#if sidebar}}
+      <aside className="sidebar">
+        {{sidebar}}
+      </aside>
+      {{/if}}
+      
+      <div className="content">
+        {children}
+      </div>
+    </div>
+    {{/if}}
+  );
+}

@@ -1,0 +1,68 @@
+/**
+ * {{pascalCase name}} Page
+ * {{description}}
+ * 
+ * @route {{route}}
+ */
+
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if metadata}}
+export const metadata = {
+  title: '{{title}}',
+  description: '{{description}}',
+  {{#if keywords}}
+  keywords: [{{#each keywords}}'{{this}}'{{#unless @last}}, {{/unless}}{{/each}}],
+  {{/if}}
+};
+{{/if}}
+
+{{#if dataFetching}}
+async function getData({{#if params}}params: { {{#each params}}{{name}}: {{type}}{{#unless @last}}; {{/unless}}{{/each}} }{{/if}}) {
+  {{#if revalidate}}
+  const res = await fetch('{{apiUrl}}', { next: { revalidate: {{revalidate}} } });
+  {{else}}
+  const res = await fetch('{{apiUrl}}', { cache: '{{cache}}' });
+  {{/if}}
+  
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
+  
+  return res.json();
+}
+{{/if}}
+
+export default async function {{pascalCase name}}Page({{#if hasParams}}{ params, searchParams }: {
+  params: { {{#each routeParams}}{{name}}: {{type}}{{#unless @last}}; {{/unless}}{{/each}} };
+  searchParams: { [key: string]: string | string[] | undefined };
+}{{/if}}) {
+  {{#if dataFetching}}
+  const data = await getData({{#if hasParams}}params{{/if}});
+  {{/if}}
+
+  return (
+    <main className="{{kebabCase name}}-page">
+      {{#if breadcrumbs}}
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li aria-current="page">{{title}}</li>
+        </ol>
+      </nav>
+      {{/if}}
+
+      <header>
+        <h1>{{title}}</h1>
+      </header>
+
+      <section>
+        {{content}}
+      </section>
+    </main>
+  );
+}

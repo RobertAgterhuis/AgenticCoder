@@ -1,25 +1,27 @@
 /**
  * React Templates - Index
+ * Handlebars templates for React 18.x with TypeScript
  */
 
-const component = require('./component.template');
-const page = require('./page.template');
-const hook = require('./hook.template');
-const service = require('./service.template');
-const context = require('./context.template');
+const fs = require('fs');
+const path = require('path');
+
+const templates = {
+  component: fs.readFileSync(path.join(__dirname, 'component.tsx.hbs'), 'utf-8'),
+  page: fs.readFileSync(path.join(__dirname, 'page.tsx.hbs'), 'utf-8'),
+  hook: fs.readFileSync(path.join(__dirname, 'hook.ts.hbs'), 'utf-8'),
+  service: fs.readFileSync(path.join(__dirname, 'service.ts.hbs'), 'utf-8'),
+  context: fs.readFileSync(path.join(__dirname, 'context.tsx.hbs'), 'utf-8'),
+};
 
 module.exports = {
-  component,
-  page,
-  hook,
-  service,
-  context,
+  templates,
+  category: 'react',
+  framework: 'react',
+  version: '18.x',
+  language: 'typescript',
   
-  // Template metadata
   metadata: {
-    framework: 'react',
-    version: '18.x',
-    language: 'typescript',
     templates: [
       { name: 'component', description: 'Functional component with props, state, effects' },
       { name: 'page', description: 'Page component with routing integration' },

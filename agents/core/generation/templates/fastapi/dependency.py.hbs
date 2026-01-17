@@ -1,0 +1,119 @@
+"""
+{{pascalCase name}} Dependencies
+{{description}}
+
+FastAPI dependencies for {{name}}
+"""
+
+from typing import Annotated, Optional, Generator
+from fastapi import Depends, HTTPException, status, Header, Query
+from sqlalchemy.ext.asyncio import AsyncSession
+{{#if imports}}
+{{#each imports}}
+from {{this.from}} import {{this.items}}
+{{/each}}
+{{/if}}
+
+
+{{#if dbDependency}}
+async def get_db() -> Generator[AsyncSession, None, None]:
+    """
+    Database session dependency
+    """
+    async with async_session() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
+
+DbSession = Annotated[AsyncSession, Depends(get_db)]
+{{/if}}
+
+
+{{#if authDependency}}
+async def get_current_user(
+    authorization: Optional[str] = Header(None, alias="Authorization"),
+    db: AsyncSession = Depends(get_db),
+) -> "User":
+    """
+    Get current authenticated user from token
+    """
+    if not authorization:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    try:
+        scheme, token = authorization.split()
+        if scheme.lower() != "bearer":
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication scheme",
+            )
+        
+        {{authValidation}}
+        
+    except ValueError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authorization header",
+        )
+
+CurrentUser = Annotated["User", Depends(get_current_user)]
+{{/if}}
+
+
+{{#if paginationDependency}}
+class PaginationParams:
+    """
+    Common pagination parameters
+    """
+    
+    def __init__(
+        self,
+        page: int = Query(1, ge=1, description="Page number"),
+        size: int = Query({{defaultPageSize}}, ge=1, le={{maxPageSize}}, description="Items per page"),
+    ):
+        self.page = page
+        self.size = size
+        self.skip = (page - 1) * size
+
+Pagination = Annotated[PaginationParams, Depends()]
+{{/if}}
+
+
+{{#each customDependencies}}
+{{#if isClass}}
+class {{pascalCase name}}:
+    """
+    {{description}}
+    """
+    
+    def __init__(
+        self,
+        {{#each params}}
+        {{name}}: {{pythonType}}{{#if default}} = {{default}}{{/if}},
+        {{/each}}
+    ):
+        {{#each params}}
+        self.{{name}} = {{name}}
+        {{/each}}
+
+{{pascalCase name}}Dep = Annotated[{{pascalCase name}}, Depends()]
+{{else}}
+async def {{name}}(
+    {{#each params}}
+    {{name}}: {{pythonType}}{{#if default}} = {{default}}{{/if}},
+    {{/each}}
+) -> {{returnType}}:
+    """
+    {{description}}
+    """
+    {{body}}
+
+{{pascalCase name}}Dep = Annotated[{{returnType}}, Depends({{name}})]
+{{/if}}
+
+{{/each}}

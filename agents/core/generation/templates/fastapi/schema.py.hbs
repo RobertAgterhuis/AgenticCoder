@@ -1,0 +1,89 @@
+"""
+{{pascalCase name}} Schema
+{{description}}
+
+Pydantic schemas for {{name}} validation and serialization
+"""
+
+from datetime import datetime
+from typing import Optional, List
+from pydantic import BaseModel, Field, EmailStr, HttpUrl, validator, ConfigDict
+from uuid import UUID
+{{#if imports}}
+{{#each imports}}
+from {{this.from}} import {{this.items}}
+{{/each}}
+{{/if}}
+
+
+class {{pascalCase name}}Base(BaseModel):
+    """Base schema with common fields"""
+    
+    {{#each fields}}
+    {{name}}: {{#if optional}}Optional[{{pythonType}}]{{else}}{{pythonType}}{{/if}} = Field(
+        {{#if optional}}None{{else}}...{{/if}},
+        description="{{description}}",
+        {{#if example}}example={{example}},{{/if}}
+        {{#if minLength}}min_length={{minLength}},{{/if}}
+        {{#if maxLength}}max_length={{maxLength}},{{/if}}
+        {{#if ge}}ge={{ge}},{{/if}}
+        {{#if le}}le={{le}},{{/if}}
+    )
+    {{/each}}
+
+    {{#if validators}}
+    {{#each validators}}
+    @validator("{{field}}")
+    def {{name}}(cls, v):
+        {{body}}
+        return v
+    {{/each}}
+    {{/if}}
+
+
+class {{pascalCase name}}Create({{pascalCase name}}Base):
+    """Schema for creating a new {{name}}"""
+    {{#if createFields}}
+    {{#each createFields}}
+    {{name}}: {{pythonType}} = Field(..., description="{{description}}")
+    {{/each}}
+    {{/if}}
+    pass
+
+
+class {{pascalCase name}}Update(BaseModel):
+    """Schema for updating an existing {{name}}"""
+    
+    {{#each fields}}
+    {{name}}: Optional[{{pythonType}}] = Field(None, description="{{description}}")
+    {{/each}}
+
+
+class {{pascalCase name}}InDB({{pascalCase name}}Base):
+    """Schema for {{name}} stored in database"""
+    
+    model_config = ConfigDict(from_attributes=True)
+    
+    id: UUID
+    created_at: datetime
+    updated_at: datetime
+
+
+class {{pascalCase name}}Response({{pascalCase name}}InDB):
+    """Schema for {{name}} API response"""
+    {{#if responseFields}}
+    {{#each responseFields}}
+    {{name}}: {{pythonType}}
+    {{/each}}
+    {{/if}}
+    pass
+
+
+class {{pascalCase name}}List(BaseModel):
+    """Schema for paginated list of {{name}}s"""
+    
+    items: List[{{pascalCase name}}Response]
+    total: int
+    page: int
+    size: int
+    pages: int

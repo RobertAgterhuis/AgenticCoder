@@ -1,0 +1,66 @@
+/**
+ * {{pascalCase name}} Guard
+ * {{description}}
+ */
+
+import { inject } from '@angular/core';
+import { CanActivateFn, CanMatchFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if canActivate}}
+/**
+ * Route guard that {{description}}
+ */
+export const {{camelCase name}}Guard: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const router = inject(Router);
+  {{#if injectables}}
+  {{#each injectables}}
+  const {{camelCase name}} = inject({{pascalCase name}});
+  {{/each}}
+  {{/if}}
+
+  {{canActivate}}
+
+  {{#if redirect}}
+  // Redirect to {{redirect}} if guard fails
+  return router.createUrlTree(['{{redirect}}']);
+  {{/if}}
+};
+{{/if}}
+
+{{#if canMatch}}
+/**
+ * Route match guard that {{matchDescription}}
+ */
+export const {{camelCase name}}MatchGuard: CanMatchFn = (route, segments) => {
+  {{#if injectables}}
+  {{#each injectables}}
+  const {{camelCase name}} = inject({{pascalCase name}});
+  {{/each}}
+  {{/if}}
+
+  {{canMatch}}
+};
+{{/if}}
+
+{{#if canDeactivate}}
+/**
+ * Deactivation guard for unsaved changes
+ */
+export interface CanComponentDeactivate {
+  canDeactivate: () => boolean | Promise<boolean>;
+}
+
+export const {{camelCase name}}DeactivateGuard = (
+  component: CanComponentDeactivate
+): boolean | Promise<boolean> => {
+  return component.canDeactivate ? component.canDeactivate() : true;
+};
+{{/if}}

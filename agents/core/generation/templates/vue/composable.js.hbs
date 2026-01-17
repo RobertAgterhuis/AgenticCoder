@@ -1,0 +1,88 @@
+/**
+ * {{name}} Composable
+ * {{description}}
+ * 
+ * @module composables/{{camelCase name}}
+ */
+
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+/**
+ * {{description}}
+ * 
+ * @param {Object} options - Configuration options
+{{#each params}}
+ * @param {{{type}}} options.{{name}} - {{description}}
+{{/each}}
+ * @returns {Object} Composable state and methods
+ */
+export function {{camelCase name}}({{#if params}}options = {}{{/if}}) {
+  {{#if params}}
+  const {
+    {{#each params}}
+    {{name}} = {{default}},
+    {{/each}}
+  } = options;
+  {{/if}}
+
+  // State
+  {{#each state}}
+  const {{name}} = ref{{#if type}}<{{type}}>{{/if}}({{initial}});
+  {{/each}}
+
+  // Computed
+  {{#each computed}}
+  const {{name}} = computed(() => {
+    {{body}}
+  });
+  {{/each}}
+
+  // Methods
+  {{#each methods}}
+  async function {{name}}({{methodParams}}) {
+    {{body}}
+  }
+  {{/each}}
+
+  {{#if watchers}}
+  // Watchers
+  {{#each watchers}}
+  watch({{source}}, (newValue, oldValue) => {
+    {{body}}
+  }{{#if options}}, { {{options}} }{{/if}});
+  {{/each}}
+  {{/if}}
+
+  {{#if onMount}}
+  // Lifecycle
+  onMounted(() => {
+    {{onMount}}
+  });
+  {{/if}}
+
+  {{#if onUnmount}}
+  onUnmounted(() => {
+    {{onUnmount}}
+  });
+  {{/if}}
+
+  return {
+    // State
+    {{#each state}}
+    {{name}},
+    {{/each}}
+    // Computed
+    {{#each computed}}
+    {{name}},
+    {{/each}}
+    // Methods
+    {{#each methods}}
+    {{name}},
+    {{/each}}
+  };
+}

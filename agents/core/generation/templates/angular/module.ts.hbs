@@ -1,0 +1,84 @@
+/**
+ * {{pascalCase name}} Module
+ * {{description}}
+ * 
+ * Note: For Angular 17+ standalone components, modules are optional.
+ * This template is provided for legacy support or library authors.
+ */
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+{{#if routing}}
+import { RouterModule, Routes } from '@angular/router';
+{{/if}}
+{{#if forms}}
+import { ReactiveFormsModule{{#if templateForms}}, FormsModule{{/if}} } from '@angular/forms';
+{{/if}}
+{{#if http}}
+import { HttpClientModule } from '@angular/common/http';
+{{/if}}
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if routing}}
+const routes: Routes = [
+  {{#each routes}}
+  {
+    path: '{{path}}',
+    {{#if component}}component: {{component}},{{/if}}
+    {{#if loadComponent}}loadComponent: () => import('{{loadComponent}}').then(m => m.{{componentName}}),{{/if}}
+    {{#if children}}
+    children: [
+      {{#each children}}
+      { path: '{{path}}', component: {{component}} },
+      {{/each}}
+    ],
+    {{/if}}
+    {{#if guards}}
+    canActivate: [{{#each guards}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}],
+    {{/if}}
+  },
+  {{/each}}
+];
+{{/if}}
+
+@NgModule({
+  declarations: [
+    {{#each declarations}}
+    {{this}},
+    {{/each}}
+  ],
+  imports: [
+    CommonModule,
+    {{#if routing}}RouterModule.forChild(routes),{{/if}}
+    {{#if forms}}ReactiveFormsModule,{{/if}}
+    {{#if templateForms}}FormsModule,{{/if}}
+    {{#if http}}HttpClientModule,{{/if}}
+    {{#each moduleImports}}
+    {{this}},
+    {{/each}}
+  ],
+  exports: [
+    {{#each exports}}
+    {{this}},
+    {{/each}}
+    {{#if routing}}RouterModule,{{/if}}
+  ],
+  providers: [
+    {{#each providers}}
+    {{#if useClass}}
+    { provide: {{provide}}, useClass: {{useClass}} },
+    {{else if useValue}}
+    { provide: {{provide}}, useValue: {{useValue}} },
+    {{else if useFactory}}
+    { provide: {{provide}}, useFactory: {{useFactory}}, deps: [{{#each deps}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}] },
+    {{else}}
+    {{this}},
+    {{/if}}
+    {{/each}}
+  ],
+})
+export class {{pascalCase name}}Module {}

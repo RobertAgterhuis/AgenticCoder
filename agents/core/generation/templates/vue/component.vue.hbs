@@ -1,0 +1,90 @@
+<template>
+  <div class="{{kebabCase name}}">
+    {{#if slots}}
+    <slot name="header"></slot>
+    {{/if}}
+    
+    <h2>{{ title }}</h2>
+    
+    {{#each props}}
+    <p>{{ {{this.name}} }}</p>
+    {{/each}}
+    
+    {{#if slots}}
+    <slot></slot>
+    <slot name="footer"></slot>
+    {{/if}}
+  </div>
+</template>
+
+<script setup lang="ts">
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+/**
+ * {{description}}
+ */
+
+{{#if props}}
+interface Props {
+{{#each props}}
+  {{name}}{{#unless required}}?{{/unless}}: {{type}};
+{{/each}}
+}
+
+const props = withDefaults(defineProps<Props>(), {
+{{#each props}}
+{{#if default}}
+  {{name}}: {{default}},
+{{/if}}
+{{/each}}
+});
+{{/if}}
+
+{{#if emits}}
+const emit = defineEmits<{
+{{#each emits}}
+  {{name}}: [{{params}}];
+{{/each}}
+}>();
+{{/if}}
+
+{{#if state}}
+{{#each state}}
+const {{name}} = ref{{#if type}}<{{type}}>{{/if}}({{initial}});
+{{/each}}
+{{/if}}
+
+{{#if computed}}
+{{#each computed}}
+const {{name}} = computed(() => {
+  {{body}}
+});
+{{/each}}
+{{/if}}
+
+{{#if methods}}
+{{#each methods}}
+function {{name}}({{params}}){{#if returnType}}: {{returnType}}{{/if}} {
+  {{body}}
+}
+{{/each}}
+{{/if}}
+
+{{#if lifecycle}}
+{{#each lifecycle}}
+{{hook}}(() => {
+  {{body}}
+});
+{{/each}}
+{{/if}}
+</script>
+
+<style scoped>
+.{{kebabCase name}} {
+  /* Component styles */
+}
+</style>

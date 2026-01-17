@@ -1,0 +1,71 @@
+{
+  "id": "{{containerId}}",
+  "indexingPolicy": {
+    "indexingMode": "{{indexingMode}}",
+    "automatic": {{automatic}},
+    "includedPaths": [
+      {{#each includedPaths}}
+      {
+        "path": "{{path}}"{{#if indexes}},
+        "indexes": [
+          {{#each indexes}}
+          {
+            "kind": "{{kind}}",
+            "dataType": "{{dataType}}"{{#if precision}},
+            "precision": {{precision}}{{/if}}
+          }{{#unless @last}},{{/unless}}
+          {{/each}}
+        ]{{/if}}
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    "excludedPaths": [
+      {{#each excludedPaths}}
+      {
+        "path": "{{path}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]{{#if compositeIndexes}},
+    "compositeIndexes": [
+      {{#each compositeIndexes}}
+      [
+        {{#each this}}
+        {
+          "path": "{{path}}",
+          "order": "{{order}}"
+        }{{#unless @last}},{{/unless}}
+        {{/each}}
+      ]{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]{{/if}}{{#if spatialIndexes}},
+    "spatialIndexes": [
+      {{#each spatialIndexes}}
+      {
+        "path": "{{path}}",
+        "types": [{{#each types}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}]
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]{{/if}}
+  },
+  "partitionKey": {
+    "paths": [{{#each partitionKeyPaths}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}],
+    "kind": "{{partitionKeyKind}}",
+    "version": {{partitionKeyVersion}}
+  }{{#if uniqueKeyPolicy}},
+  "uniqueKeyPolicy": {
+    "uniqueKeys": [
+      {{#each uniqueKeys}}
+      {
+        "paths": [{{#each paths}}"{{this}}"{{#unless @last}},{{/unless}}{{/each}}]
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  }{{/if}}{{#if conflictResolutionPolicy}},
+  "conflictResolutionPolicy": {
+    "mode": "{{conflictMode}}",
+    {{#if conflictResolutionPath}}"conflictResolutionPath": "{{conflictResolutionPath}}"{{/if}}
+    {{#if conflictResolutionProcedure}}"conflictResolutionProcedure": "{{conflictResolutionProcedure}}"{{/if}}
+  }{{/if}}{{#if defaultTtl}},
+  "defaultTtl": {{defaultTtl}}{{/if}}{{#if analyticalStorageTtl}},
+  "analyticalStorageTtl": {{analyticalStorageTtl}}{{/if}}
+}

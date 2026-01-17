@@ -1,0 +1,73 @@
+/**
+ * {{pascalCase name}} Controller
+ * {{description}}
+ * 
+ * @controller {{route}}
+ */
+
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  UseInterceptors,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  ParseUUIDPipe,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+@ApiTags('{{tag}}')
+@Controller('{{route}}')
+{{#if auth}}
+@ApiBearerAuth()
+@UseGuards({{authGuard}})
+{{/if}}
+export class {{pascalCase name}}Controller {
+  constructor(
+    {{#each injectables}}
+    private readonly {{camelCase name}}: {{pascalCase name}},
+    {{/each}}
+  ) {}
+
+  {{#each endpoints}}
+  @{{method}}({{#if path}}'{{path}}'{{/if}})
+  {{#if status}}
+  @HttpCode(HttpStatus.{{status}})
+  {{/if}}
+  @ApiOperation({ summary: '{{summary}}' })
+  @ApiResponse({ status: {{responseStatus}}, description: '{{responseDescription}}' })
+  {{#if guards}}
+  @UseGuards({{#each guards}}{{this}}{{#unless @last}}, {{/unless}}{{/each}})
+  {{/if}}
+  {{#if interceptors}}
+  @UseInterceptors({{#each interceptors}}{{this}}{{#unless @last}}, {{/unless}}{{/each}})
+  {{/if}}
+  async {{name}}(
+    {{#each params}}
+    @{{decorator}}({{#if pipe}}'{{paramName}}', {{pipe}}{{else}}'{{paramName}}'{{/if}}) {{name}}: {{type}},
+    {{/each}}
+    {{#if body}}
+    @Body() {{body.name}}: {{body.type}},
+    {{/if}}
+    {{#if query}}
+    @Query() {{query.name}}: {{query.type}},
+    {{/if}}
+  ){{#if returnType}}: Promise<{{returnType}}>{{/if}} {
+    {{body}}
+  }
+
+  {{/each}}
+}

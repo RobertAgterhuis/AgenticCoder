@@ -1,0 +1,82 @@
+/**
+ * {{pascalCase name}} Component
+ * {{description}}
+ */
+
+import { Component{{#if inputs}}, Input{{/if}}{{#if outputs}}, Output, EventEmitter{{/if}}{{#if viewChild}}, ViewChild{{/if}}{{#if inject}}, inject{{/if}}{{#if onInit}}, OnInit{{/if}}{{#if onDestroy}}, OnDestroy{{/if}}{{#if onChanges}}, OnChanges, SimpleChanges{{/if}} } from '@angular/core';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+@Component({
+  selector: '{{prefix}}-{{kebabCase name}}',
+  standalone: true,
+  imports: [{{#each componentImports}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}],
+  templateUrl: './{{kebabCase name}}.component.html',
+  styleUrl: './{{kebabCase name}}.component.scss',
+})
+export class {{pascalCase name}}Component{{#if onInit}} implements OnInit{{/if}}{{#if onDestroy}}, OnDestroy{{/if}}{{#if onChanges}}, OnChanges{{/if}} {
+  {{#if injectables}}
+  // Injected services
+  {{#each injectables}}
+  private readonly {{camelCase name}} = inject({{pascalCase name}});
+  {{/each}}
+  {{/if}}
+
+  {{#if inputs}}
+  // Inputs
+  {{#each inputs}}
+  @Input({{#if required}}{ required: true }{{/if}}) {{name}}{{#unless required}}?{{/unless}}: {{type}}{{#if default}} = {{default}}{{/if}};
+  {{/each}}
+  {{/if}}
+
+  {{#if outputs}}
+  // Outputs
+  {{#each outputs}}
+  @Output() {{name}} = new EventEmitter<{{type}}>();
+  {{/each}}
+  {{/if}}
+
+  {{#if viewChild}}
+  // View queries
+  {{#each viewChild}}
+  @ViewChild('{{ref}}') {{name}}!: {{type}};
+  {{/each}}
+  {{/if}}
+
+  {{#if state}}
+  // Component state
+  {{#each state}}
+  {{name}}: {{type}} = {{initial}};
+  {{/each}}
+  {{/if}}
+
+  {{#if onInit}}
+  ngOnInit(): void {
+    {{onInit}}
+  }
+  {{/if}}
+
+  {{#if onChanges}}
+  ngOnChanges(changes: SimpleChanges): void {
+    {{onChanges}}
+  }
+  {{/if}}
+
+  {{#if onDestroy}}
+  ngOnDestroy(): void {
+    {{onDestroy}}
+  }
+  {{/if}}
+
+  {{#if methods}}
+  {{#each methods}}
+  {{#if private}}private {{/if}}{{name}}({{params}}){{#if returnType}}: {{returnType}}{{/if}} {
+    {{body}}
+  }
+
+  {{/each}}
+  {{/if}}
+}

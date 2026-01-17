@@ -1,0 +1,45 @@
+/**
+ * {{pascalCase name}} Service
+ * {{description}}
+ */
+
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+@Injectable()
+export class {{pascalCase name}}Service {
+  constructor(
+    {{#each injectables}}
+    private readonly {{camelCase name}}: {{pascalCase name}},
+    {{/each}}
+  ) {}
+
+  {{#each methods}}
+  /**
+   * {{description}}
+   {{#each params}}
+   * @param {{name}} - {{description}}
+   {{/each}}
+   * @returns {{returnDescription}}
+   */
+  async {{name}}({{#each params}}{{name}}: {{type}}{{#unless @last}}, {{/unless}}{{/each}}){{#if returnType}}: Promise<{{returnType}}>{{/if}} {
+    {{#if validation}}
+    // Validation
+    {{validation}}
+    {{/if}}
+
+    {{#if transaction}}
+    return this.prisma.$transaction(async (tx) => {
+      {{body}}
+    });
+    {{else}}
+    {{body}}
+    {{/if}}
+  }
+
+  {{/each}}
+}

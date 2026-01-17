@@ -1,0 +1,75 @@
+"""
+{{pascalCase name}} Model
+{{description}}
+
+SQLAlchemy model for {{name}}
+"""
+
+from datetime import datetime
+from typing import Optional, List
+from sqlalchemy import Column, String, Integer, Float, Boolean, DateTime, ForeignKey, Text, JSON
+from sqlalchemy.orm import relationship, Mapped, mapped_column
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+
+from app.db.base import Base
+{{#if imports}}
+{{#each imports}}
+from {{this.from}} import {{this.items}}
+{{/each}}
+{{/if}}
+
+
+class {{pascalCase name}}(Base):
+    """
+    {{description}}
+    """
+    
+    __tablename__ = "{{snakeCase name}}s"
+    
+    # Primary key
+    id: Mapped[str] = mapped_column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    
+    {{#each fields}}
+    # {{description}}
+    {{name}}: Mapped[{{#if optional}}Optional[{{pythonType}}]{{else}}{{pythonType}}{{/if}}] = mapped_column(
+        {{columnType}},
+        {{#if nullable}}nullable=True,{{else}}nullable=False,{{/if}}
+        {{#if unique}}unique=True,{{/if}}
+        {{#if index}}index=True,{{/if}}
+        {{#if default}}default={{default}},{{/if}}
+    )
+    
+    {{/each}}
+    
+    # Timestamps
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False,
+    )
+    
+    {{#if relationships}}
+    # Relationships
+    {{#each relationships}}
+    {{name}}: Mapped[{{#if many}}List["{{relatedModel}}"]{{else}}"{{relatedModel}}"{{/if}}] = relationship(
+        "{{relatedModel}}",
+        back_populates="{{backPopulates}}",
+        {{#if cascade}}cascade="{{cascade}}",{{/if}}
+        {{#if lazy}}lazy="{{lazy}}",{{/if}}
+    )
+    {{/each}}
+    {{/if}}
+    
+    def __repr__(self) -> str:
+        return f"<{{pascalCase name}}(id={self.id})>"

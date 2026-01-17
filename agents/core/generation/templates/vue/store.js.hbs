@@ -1,0 +1,67 @@
+/**
+ * {{pascalCase name}} Store
+ * {{description}}
+ * 
+ * @module stores/{{camelCase name}}
+ */
+
+import { defineStore } from 'pinia';
+import { ref, computed } from 'vue';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+export const use{{pascalCase name}}Store = defineStore('{{camelCase name}}', () => {
+  // State
+  {{#each state}}
+  const {{name}} = ref{{#if type}}<{{type}}>{{/if}}({{initial}});
+  {{/each}}
+
+  // Getters (Computed)
+  {{#each getters}}
+  const {{name}} = computed(() => {
+    {{body}}
+  });
+  {{/each}}
+
+  // Actions
+  {{#each actions}}
+  {{#if async}}async {{/if}}function {{name}}({{params}}) {
+    {{#if async}}
+    try {
+      {{body}}
+    } catch (error) {
+      console.error('{{name}} failed:', error);
+      throw error;
+    }
+    {{else}}
+    {{body}}
+    {{/if}}
+  }
+  {{/each}}
+
+  // Reset state
+  function $reset() {
+    {{#each state}}
+    {{name}}.value = {{initial}};
+    {{/each}}
+  }
+
+  return {
+    // State
+    {{#each state}}
+    {{name}},
+    {{/each}}
+    // Getters
+    {{#each getters}}
+    {{name}},
+    {{/each}}
+    // Actions
+    {{#each actions}}
+    {{name}},
+    {{/each}}
+    $reset,
+  };
+});

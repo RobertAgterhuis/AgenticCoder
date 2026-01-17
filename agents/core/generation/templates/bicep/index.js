@@ -1,68 +1,66 @@
 /**
  * Bicep Templates - Index
+ * Handlebars templates for Azure Bicep IaC
  */
 
-const coreModule = require('./core/module.template');
-const appService = require('./compute/app-service.template');
-const sqlDatabase = require('./data/sql-database.template');
-const storage = require('./data/storage.template');
-const keyvault = require('./security/keyvault.template');
-const appInsights = require('./monitoring/app-insights.template');
+const fs = require('fs');
+const path = require('path');
 
-module.exports = {
+const loadTemplate = (category, name) => {
+  const filePath = path.join(__dirname, category, `${name}.bicep.hbs`);
+  return fs.readFileSync(filePath, 'utf-8');
+};
+
+const templates = {
   core: {
-    module: coreModule
+    main: loadTemplate('core', 'main'),
+    module: loadTemplate('core', 'module'),
   },
   compute: {
-    appService
+    appService: loadTemplate('compute', 'app-service'),
+    functionApp: loadTemplate('compute', 'function-app'),
+    containerApp: loadTemplate('compute', 'container-app'),
   },
   data: {
-    sqlDatabase,
-    storage
+    sqlDatabase: loadTemplate('data', 'sql-database'),
+    cosmosDb: loadTemplate('data', 'cosmos-db'),
+    storage: loadTemplate('data', 'storage'),
+  },
+  identity: {
+    managedIdentity: loadTemplate('identity', 'managed-identity'),
+    entraId: loadTemplate('identity', 'entra-id'),
   },
   security: {
-    keyvault
+    keyvault: loadTemplate('security', 'keyvault'),
+    privateEndpoint: loadTemplate('security', 'private-endpoint'),
+  },
+  networking: {
+    vnet: loadTemplate('networking', 'vnet'),
+    nsg: loadTemplate('networking', 'nsg'),
+    appGateway: loadTemplate('networking', 'app-gateway'),
   },
   monitoring: {
-    appInsights
+    appInsights: loadTemplate('monitoring', 'app-insights'),
+    logAnalytics: loadTemplate('monitoring', 'log-analytics'),
   },
+};
+
+module.exports = {
+  templates,
+  category: 'bicep',
+  framework: 'bicep',
+  version: '0.24+',
+  language: 'bicep',
   
-  // Template metadata
   metadata: {
-    framework: 'bicep',
-    version: '0.24+',
-    language: 'bicep',
     categories: [
-      {
-        name: 'core',
-        description: 'Base module templates',
-        templates: ['module']
-      },
-      {
-        name: 'compute',
-        description: 'Compute resources',
-        templates: ['app-service', 'function-app', 'container-app']
-      },
-      {
-        name: 'data',
-        description: 'Data and storage resources',
-        templates: ['sql-database', 'cosmos-db', 'storage']
-      },
-      {
-        name: 'security',
-        description: 'Security resources',
-        templates: ['keyvault', 'managed-identity', 'private-endpoint']
-      },
-      {
-        name: 'networking',
-        description: 'Networking resources',
-        templates: ['vnet', 'nsg', 'app-gateway']
-      },
-      {
-        name: 'monitoring',
-        description: 'Monitoring resources',
-        templates: ['app-insights', 'log-analytics']
-      }
+      { name: 'core', description: 'Base module templates', templates: ['main', 'module'] },
+      { name: 'compute', description: 'Compute resources', templates: ['app-service', 'function-app', 'container-app'] },
+      { name: 'data', description: 'Data and storage resources', templates: ['sql-database', 'cosmos-db', 'storage'] },
+      { name: 'identity', description: 'Identity resources', templates: ['managed-identity', 'entra-id'] },
+      { name: 'security', description: 'Security resources', templates: ['keyvault', 'private-endpoint'] },
+      { name: 'networking', description: 'Networking resources', templates: ['vnet', 'nsg', 'app-gateway'] },
+      { name: 'monitoring', description: 'Monitoring resources', templates: ['app-insights', 'log-analytics'] }
     ]
   }
 };

@@ -1,0 +1,82 @@
+/**
+ * {{pascalCase name}} Middleware
+ * {{description}}
+ */
+
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if config}}
+export const config = {
+  matcher: [{{#each matcher}}'{{this}}'{{#unless @last}}, {{/unless}}{{/each}}],
+};
+{{/if}}
+
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  {{#if logging}}
+  // Logging
+  console.log(`[${new Date().toISOString()}] ${request.method} ${pathname}`);
+  {{/if}}
+
+  {{#if auth}}
+  // Authentication check
+  const token = request.cookies.get('{{auth.cookieName}}')?.value;
+  
+  if (!token && pathname.startsWith('{{auth.protectedPath}}')) {
+    const loginUrl = new URL('{{auth.loginPath}}', request.url);
+    loginUrl.searchParams.set('redirect', pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+  {{/if}}
+
+  {{#if rateLimit}}
+  // Rate limiting
+  const ip = request.ip ?? request.headers.get('x-forwarded-for') ?? 'unknown';
+  // Implement rate limit logic here
+  {{/if}}
+
+  {{#if cors}}
+  // CORS headers
+  const response = NextResponse.next();
+  response.headers.set('Access-Control-Allow-Origin', '{{cors.origin}}');
+  response.headers.set('Access-Control-Allow-Methods', '{{cors.methods}}');
+  response.headers.set('Access-Control-Allow-Headers', '{{cors.headers}}');
+  return response;
+  {{/if}}
+
+  {{#if rewrite}}
+  // URL Rewriting
+  {{#each rewrite}}
+  if (pathname.startsWith('{{from}}')) {
+    return NextResponse.rewrite(new URL('{{to}}', request.url));
+  }
+  {{/each}}
+  {{/if}}
+
+  {{#if redirect}}
+  // Redirects
+  {{#each redirect}}
+  if (pathname === '{{from}}') {
+    return NextResponse.redirect(new URL('{{to}}', request.url), {{status}});
+  }
+  {{/each}}
+  {{/if}}
+
+  {{#if headers}}
+  // Custom headers
+  const response = NextResponse.next();
+  {{#each headers}}
+  response.headers.set('{{name}}', '{{value}}');
+  {{/each}}
+  return response;
+  {{/if}}
+
+  return NextResponse.next();
+}

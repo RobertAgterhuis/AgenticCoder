@@ -1,0 +1,74 @@
+/**
+ * {{pascalCase name}}Service
+ * {{description}}
+ * 
+ * @module services/{{camelCase name}}Service
+ */
+
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
+
+/**
+ * HTTP client helper
+ */
+async function request(url, options = {}) {
+  const response = await fetch(`${API_BASE}${url}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    ...options,
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || `HTTP ${response.status}`);
+  }
+
+  return response.json();
+}
+
+/**
+ * {{pascalCase name}} Service
+ */
+export const {{camelCase name}}Service = {
+  {{#each endpoints}}
+  /**
+   * {{description}}
+   {{#each params}}
+   * @param {{{type}}} {{name}} - {{description}}
+   {{/each}}
+   * @returns {Promise<{{returnType}}>}
+   */
+  async {{name}}({{#each params}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}) {
+    {{#eq method 'GET'}}
+    return request('{{path}}');
+    {{/eq}}
+    {{#eq method 'POST'}}
+    return request('{{path}}', {
+      method: 'POST',
+      body: JSON.stringify({{bodyParam}}),
+    });
+    {{/eq}}
+    {{#eq method 'PUT'}}
+    return request(`{{path}}`, {
+      method: 'PUT',
+      body: JSON.stringify({{bodyParam}}),
+    });
+    {{/eq}}
+    {{#eq method 'PATCH'}}
+    return request(`{{path}}`, {
+      method: 'PATCH',
+      body: JSON.stringify({{bodyParam}}),
+    });
+    {{/eq}}
+    {{#eq method 'DELETE'}}
+    return request(`{{path}}`, {
+      method: 'DELETE',
+    });
+    {{/eq}}
+  },
+
+  {{/each}}
+};
+
+export default {{camelCase name}}Service;

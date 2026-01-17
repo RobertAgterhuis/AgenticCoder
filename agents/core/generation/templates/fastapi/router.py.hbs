@@ -1,0 +1,51 @@
+"""
+{{pascalCase name}} Router
+{{description}}
+
+API routes for {{name}} endpoints
+"""
+
+from fastapi import APIRouter, Depends, HTTPException, status, Query, Path
+from typing import List, Optional
+{{#if imports}}
+{{#each imports}}
+from {{this.from}} import {{this.items}}
+{{/each}}
+{{/if}}
+
+router = APIRouter(
+    prefix="/{{kebabCase name}}",
+    tags=["{{tag}}"],
+    {{#if dependencies}}
+    dependencies=[{{#each dependencies}}Depends({{this}}){{#unless @last}}, {{/unless}}{{/each}}],
+    {{/if}}
+)
+
+{{#each endpoints}}
+@router.{{lower method}}(
+    "{{path}}",
+    response_model={{responseModel}},
+    status_code=status.HTTP_{{statusCode}},
+    summary="{{summary}}",
+    description="{{description}}",
+)
+async def {{name}}(
+    {{#each pathParams}}
+    {{name}}: {{type}} = Path(..., description="{{description}}"),
+    {{/each}}
+    {{#each queryParams}}
+    {{name}}: {{#if optional}}Optional[{{type}}]{{else}}{{type}}{{/if}} = Query({{#if optional}}None{{else}}...{{/if}}, description="{{description}}"),
+    {{/each}}
+    {{#if bodyParam}}
+    {{bodyParam.name}}: {{bodyParam.type}},
+    {{/if}}
+    {{#each dependencies}}
+    {{name}}: {{type}} = Depends({{dependency}}),
+    {{/each}}
+):
+    """
+    {{docstring}}
+    """
+    {{body}}
+
+{{/each}}

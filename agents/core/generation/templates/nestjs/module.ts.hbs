@@ -1,0 +1,53 @@
+/**
+ * {{pascalCase name}} Module
+ * {{description}}
+ */
+
+import { Module } from '@nestjs/common';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+@Module({
+  imports: [
+    {{#each moduleImports}}
+    {{this}},
+    {{/each}}
+  ],
+  controllers: [
+    {{#each controllers}}
+    {{this}},
+    {{/each}}
+  ],
+  providers: [
+    {{#each providers}}
+    {{#if useClass}}
+    {
+      provide: {{provide}},
+      useClass: {{useClass}},
+    },
+    {{else if useValue}}
+    {
+      provide: {{provide}},
+      useValue: {{useValue}},
+    },
+    {{else if useFactory}}
+    {
+      provide: {{provide}},
+      useFactory: {{useFactory}},
+      inject: [{{#each inject}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}],
+    },
+    {{else}}
+    {{this}},
+    {{/if}}
+    {{/each}}
+  ],
+  exports: [
+    {{#each exports}}
+    {{this}},
+    {{/each}}
+  ],
+})
+export class {{pascalCase name}}Module {}

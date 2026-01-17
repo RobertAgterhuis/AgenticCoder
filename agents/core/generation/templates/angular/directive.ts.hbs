@@ -1,0 +1,63 @@
+/**
+ * {{pascalCase name}} Directive
+ * {{description}}
+ */
+
+import { Directive, ElementRef, Input, OnInit, OnDestroy, HostListener, Renderer2, inject } from '@angular/core';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+@Directive({
+  selector: '[{{prefix}}{{pascalCase name}}]',
+  standalone: true,
+})
+export class {{pascalCase name}}Directive implements OnInit{{#if onDestroy}}, OnDestroy{{/if}} {
+  private readonly el = inject(ElementRef);
+  private readonly renderer = inject(Renderer2);
+
+  {{#if inputs}}
+  {{#each inputs}}
+  @Input('{{#if alias}}{{alias}}{{else}}{{prefix}}{{../pascalCase ../name}}{{/if}}') {{name}}: {{type}}{{#if default}} = {{default}}{{/if}};
+  {{/each}}
+  {{/if}}
+
+  {{#if state}}
+  {{#each state}}
+  private {{name}}: {{type}} = {{initial}};
+  {{/each}}
+  {{/if}}
+
+  ngOnInit(): void {
+    {{#if init}}
+    {{init}}
+    {{/if}}
+  }
+
+  {{#if onDestroy}}
+  ngOnDestroy(): void {
+    {{onDestroy}}
+  }
+  {{/if}}
+
+  {{#if hostListeners}}
+  {{#each hostListeners}}
+  @HostListener('{{event}}'{{#if args}}, {{args}}{{/if}})
+  {{handler}}({{params}}) {
+    {{body}}
+  }
+
+  {{/each}}
+  {{/if}}
+
+  {{#if methods}}
+  {{#each methods}}
+  private {{name}}({{params}}){{#if returnType}}: {{returnType}}{{/if}} {
+    {{body}}
+  }
+
+  {{/each}}
+  {{/if}}
+}

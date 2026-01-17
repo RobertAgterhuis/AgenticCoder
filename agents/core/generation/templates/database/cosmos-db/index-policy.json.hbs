@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "description": "{{description}}",
+    "generatedBy": "AgenticCoder"
+  },
+  "indexingPolicy": {
+    "indexingMode": "{{indexingMode}}",
+    "automatic": true,
+    "includedPaths": [
+      {{#each includedPaths}}
+      {
+        "path": "{{path}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ],
+    "excludedPaths": [
+      {
+        "path": "/\"_etag\"/?"
+      }{{#each excludedPaths}},
+      {
+        "path": "{{path}}"
+      }{{/each}}
+    ]{{#if compositeIndexes}},
+    "compositeIndexes": [
+      {{#each compositeIndexes}}
+      [
+        {{#each paths}}
+        {
+          "path": "{{path}}",
+          "order": "{{order}}"
+        }{{#unless @last}},{{/unless}}
+        {{/each}}
+      ]{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]{{/if}}{{#if vectorIndexes}},
+    "vectorIndexes": [
+      {{#each vectorIndexes}}
+      {
+        "path": "{{path}}",
+        "type": "{{type}}"
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]{{/if}}
+  },
+  "partitionKey": {
+    "paths": [{{#each partitionKeyPaths}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}],
+    "kind": "{{partitionKeyKind}}"
+  }{{#if throughput}},
+  "throughput": {
+    "type": "{{throughputType}}",
+    {{#if autoscale}}
+    "maxThroughput": {{maxThroughput}}
+    {{else}}
+    "value": {{throughputValue}}
+    {{/if}}
+  }{{/if}}
+}

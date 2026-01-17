@@ -1,0 +1,83 @@
+/**
+ * {{pascalCase name}} Guard
+ * {{description}}
+ */
+
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  ForbiddenException,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if decorator}}
+/**
+ * Decorator for {{decoratorDescription}}
+ */
+export const {{pascalCase decoratorName}} = (...{{decoratorParam}}: {{decoratorType}}[]) =>
+  SetMetadata('{{metadataKey}}', {{decoratorParam}});
+{{/if}}
+
+@Injectable()
+export class {{pascalCase name}}Guard implements CanActivate {
+  constructor(
+    private readonly reflector: Reflector,
+    {{#each injectables}}
+    private readonly {{camelCase name}}: {{pascalCase name}},
+    {{/each}}
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+
+    {{#if checkMetadata}}
+    // Check for decorator metadata
+    const {{metadataVar}} = this.reflector.getAllAndOverride<{{metadataType}}>(
+      '{{metadataKey}}',
+      [context.getHandler(), context.getClass()]
+    );
+
+    // Skip guard if no metadata defined
+    if (!{{metadataVar}}) {
+      return true;
+    }
+    {{/if}}
+
+    {{#if extractToken}}
+    // Extract token from header
+    const authHeader = request.headers.authorization;
+    if (!authHeader) {
+      throw new UnauthorizedException('No authorization header');
+    }
+
+    const [type, token] = authHeader.split(' ');
+    if (type !== 'Bearer' || !token) {
+      throw new UnauthorizedException('Invalid authorization format');
+    }
+    {{/if}}
+
+    try {
+      {{guardLogic}}
+
+      {{#if attachToRequest}}
+      // Attach to request for later use
+      request.{{attachToRequest}} = {{attachValue}};
+      {{/if}}
+
+      return true;
+    } catch (error) {
+      {{#if throwForbidden}}
+      throw new ForbiddenException('{{forbiddenMessage}}');
+      {{else}}
+      throw new UnauthorizedException('{{unauthorizedMessage}}');
+      {{/if}}
+    }
+  }
+}

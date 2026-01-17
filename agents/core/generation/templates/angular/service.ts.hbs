@@ -1,0 +1,87 @@
+/**
+ * {{pascalCase name}} Service
+ * {{description}}
+ */
+
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, BehaviorSubject, catchError, map, tap } from 'rxjs';
+{{#if imports}}
+{{#each imports}}
+import { {{this.items}} } from '{{this.from}}';
+{{/each}}
+{{/if}}
+
+{{#if types}}
+{{#each types}}
+export interface {{name}} {
+{{#each fields}}
+  {{name}}: {{type}};
+{{/each}}
+}
+
+{{/each}}
+{{/if}}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class {{pascalCase name}}Service {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = '{{apiUrl}}';
+
+  {{#if state}}
+  // State management
+  {{#each state}}
+  private readonly _{{name}} = new BehaviorSubject<{{type}}>({{initial}});
+  readonly {{name}}$ = this._{{name}}.asObservable();
+  {{/each}}
+  {{/if}}
+
+  {{#each endpoints}}
+  /**
+   * {{description}}
+   {{#each params}}
+   * @param {{name}} - {{description}}
+   {{/each}}
+   * @returns Observable<{{returnType}}>
+   */
+  {{name}}({{#each params}}{{name}}: {{type}}{{#unless @last}}, {{/unless}}{{/each}}): Observable<{{returnType}}> {
+    {{#eq method 'GET'}}
+    {{#if queryParams}}
+    let params = new HttpParams();
+    {{#each queryParams}}
+    if ({{name}} !== undefined) {
+      params = params.set('{{name}}', String({{name}}));
+    }
+    {{/each}}
+    return this.http.get<{{returnType}}>(`${this.apiUrl}{{path}}`, { params });
+    {{else}}
+    return this.http.get<{{returnType}}>(`${this.apiUrl}{{path}}`);
+    {{/if}}
+    {{/eq}}
+    {{#eq method 'POST'}}
+    return this.http.post<{{returnType}}>(`${this.apiUrl}{{path}}`, {{bodyParam}});
+    {{/eq}}
+    {{#eq method 'PUT'}}
+    return this.http.put<{{returnType}}>(`${this.apiUrl}{{path}}`, {{bodyParam}});
+    {{/eq}}
+    {{#eq method 'PATCH'}}
+    return this.http.patch<{{returnType}}>(`${this.apiUrl}{{path}}`, {{bodyParam}});
+    {{/eq}}
+    {{#eq method 'DELETE'}}
+    return this.http.delete<{{returnType}}>(`${this.apiUrl}{{path}}`);
+    {{/eq}}
+  }
+
+  {{/each}}
+
+  {{#if methods}}
+  {{#each methods}}
+  {{name}}({{params}}){{#if returnType}}: {{returnType}}{{/if}} {
+    {{body}}
+  }
+
+  {{/each}}
+  {{/if}}
+}

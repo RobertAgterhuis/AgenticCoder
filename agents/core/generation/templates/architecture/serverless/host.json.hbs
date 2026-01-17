@@ -1,0 +1,162 @@
+{
+  "version": "2.0",
+  "logging": {
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      },
+      "enableLiveMetricsFilters": true
+    },
+    "logLevel": {
+      "default": "{{defaultLogLevel}}",
+      "Host.Results": "{{hostResultsLogLevel}}",
+      "Function": "{{functionLogLevel}}",
+      "Host.Aggregator": "{{hostAggregatorLogLevel}}"
+    }
+  },
+  {{#if http}}
+  "http": {
+    "routePrefix": "{{http.routePrefix}}",
+    "maxOutstandingRequests": {{http.maxOutstandingRequests}},
+    "maxConcurrentRequests": {{http.maxConcurrentRequests}},
+    "dynamicThrottlesEnabled": {{http.dynamicThrottlesEnabled}},
+    {{#if http.hsts}}
+    "hsts": {
+      "isEnabled": {{http.hsts.isEnabled}},
+      "maxAge": "{{http.hsts.maxAge}}"
+    },
+    {{/if}}
+    {{#if http.customHeaders}}
+    "customHeaders": {
+      {{#each http.customHeaders}}
+      "{{key}}": "{{value}}"{{#unless @last}},{{/unless}}
+      {{/each}}
+    }
+    {{/if}}
+  },
+  {{/if}}
+  {{#if durableTask}}
+  "extensions": {
+    "durableTask": {
+      "hubName": "{{durableTask.hubName}}",
+      {{#if durableTask.storageProvider}}
+      "storageProvider": {
+        "type": "{{durableTask.storageProvider.type}}",
+        {{#if durableTask.storageProvider.connectionStringName}}
+        "connectionStringName": "{{durableTask.storageProvider.connectionStringName}}",
+        {{/if}}
+        {{#if durableTask.storageProvider.partitionCount}}
+        "partitionCount": {{durableTask.storageProvider.partitionCount}}
+        {{/if}}
+      },
+      {{/if}}
+      "tracing": {
+        "traceInputsAndOutputs": {{durableTask.tracing.traceInputsAndOutputs}},
+        "traceReplayEvents": {{durableTask.tracing.traceReplayEvents}}
+      },
+      "maxConcurrentActivityFunctions": {{durableTask.maxConcurrentActivityFunctions}},
+      "maxConcurrentOrchestratorFunctions": {{durableTask.maxConcurrentOrchestratorFunctions}},
+      {{#if durableTask.extendedSessionsEnabled}}
+      "extendedSessionsEnabled": {{durableTask.extendedSessionsEnabled}},
+      "extendedSessionIdleTimeoutInSeconds": {{durableTask.extendedSessionIdleTimeoutInSeconds}},
+      {{/if}}
+      {{#if durableTask.entityMessageReorderWindowInMinutes}}
+      "entityMessageReorderWindowInMinutes": {{durableTask.entityMessageReorderWindowInMinutes}}
+      {{/if}}
+    }{{#if cosmosDb}},{{/if}}
+    {{#if cosmosDb}}
+    "cosmosDB": {
+      "connectionMode": "{{cosmosDb.connectionMode}}",
+      "protocol": "{{cosmosDb.protocol}}"
+    }{{#if eventHubs}},{{/if}}
+    {{/if}}
+    {{#if eventHubs}}
+    "eventHubs": {
+      "batchCheckpointFrequency": {{eventHubs.batchCheckpointFrequency}},
+      "eventProcessorOptions": {
+        "maxBatchSize": {{eventHubs.maxBatchSize}},
+        "prefetchCount": {{eventHubs.prefetchCount}}
+      },
+      "initialOffsetOptions": {
+        "type": "{{eventHubs.initialOffsetType}}",
+        "enqueuedTimeUtc": "{{eventHubs.enqueuedTimeUtc}}"
+      }
+    }{{#if serviceBus}},{{/if}}
+    {{/if}}
+    {{#if serviceBus}}
+    "serviceBus": {
+      "prefetchCount": {{serviceBus.prefetchCount}},
+      "messageHandlerOptions": {
+        "autoComplete": {{serviceBus.autoComplete}},
+        "maxConcurrentCalls": {{serviceBus.maxConcurrentCalls}},
+        "maxAutoRenewDuration": "{{serviceBus.maxAutoRenewDuration}}"
+      },
+      "sessionHandlerOptions": {
+        "autoComplete": {{serviceBus.sessionAutoComplete}},
+        "messageWaitTimeout": "{{serviceBus.messageWaitTimeout}}",
+        "maxConcurrentSessions": {{serviceBus.maxConcurrentSessions}}
+      }
+    }{{#if queues}},{{/if}}
+    {{/if}}
+    {{#if queues}}
+    "queues": {
+      "maxPollingInterval": "{{queues.maxPollingInterval}}",
+      "visibilityTimeout": "{{queues.visibilityTimeout}}",
+      "batchSize": {{queues.batchSize}},
+      "maxDequeueCount": {{queues.maxDequeueCount}},
+      "newBatchThreshold": {{queues.newBatchThreshold}},
+      "messageEncoding": "{{queues.messageEncoding}}"
+    }{{#if blobs}},{{/if}}
+    {{/if}}
+    {{#if blobs}}
+    "blobs": {
+      "maxDegreeOfParallelism": {{blobs.maxDegreeOfParallelism}}
+    }
+    {{/if}}
+  },
+  {{/if}}
+  {{#if functionTimeout}}
+  "functionTimeout": "{{functionTimeout}}",
+  {{/if}}
+  {{#if healthMonitor}}
+  "healthMonitor": {
+    "enabled": {{healthMonitor.enabled}},
+    "healthCheckInterval": "{{healthMonitor.healthCheckInterval}}",
+    "healthCheckWindow": "{{healthMonitor.healthCheckWindow}}",
+    "healthCheckThreshold": {{healthMonitor.healthCheckThreshold}},
+    "counterThreshold": {{healthMonitor.counterThreshold}}
+  },
+  {{/if}}
+  {{#if watchDirectories}}
+  "watchDirectories": [{{#each watchDirectories}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}],
+  {{/if}}
+  {{#if watchFiles}}
+  "watchFiles": [{{#each watchFiles}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}],
+  {{/if}}
+  {{#if singleton}}
+  "singleton": {
+    "lockPeriod": "{{singleton.lockPeriod}}",
+    "listenerLockPeriod": "{{singleton.listenerLockPeriod}}",
+    "listenerLockRecoveryPollingInterval": "{{singleton.listenerLockRecoveryPollingInterval}}",
+    "lockAcquisitionTimeout": "{{singleton.lockAcquisitionTimeout}}",
+    "lockAcquisitionPollingInterval": "{{singleton.lockAcquisitionPollingInterval}}"
+  },
+  {{/if}}
+  {{#if aggregator}}
+  "aggregator": {
+    "batchSize": {{aggregator.batchSize}},
+    "flushTimeout": "{{aggregator.flushTimeout}}"
+  },
+  {{/if}}
+  {{#if concurrency}}
+  "concurrency": {
+    "dynamicConcurrencyEnabled": {{concurrency.dynamicConcurrencyEnabled}},
+    "snapshotPersistenceEnabled": {{concurrency.snapshotPersistenceEnabled}}
+  },
+  {{/if}}
+  "extensionBundle": {
+    "id": "Microsoft.Azure.Functions.ExtensionBundle",
+    "version": "[4.*, 5.0.0)"
+  }
+}
