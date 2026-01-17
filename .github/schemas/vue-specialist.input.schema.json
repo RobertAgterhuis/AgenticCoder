@@ -1,0 +1,412 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "vue-specialist.input.schema.json",
+  "title": "Vue Specialist Input Schema",
+  "description": "Input schema for Vue.js 3 specialist agent",
+  "type": "object",
+  "required": ["project_context", "vue_version", "components"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "phase": {
+          "type": "integer",
+          "description": "Current execution phase (typically 10 for frontend)",
+          "minimum": 1,
+          "maximum": 22
+        },
+        "task_id": {
+          "type": "string",
+          "description": "Optional task identifier"
+        }
+      }
+    },
+    "vue_version": {
+      "type": "string",
+      "description": "Vue.js version (3.4+)",
+      "pattern": "^3\\.[4-9]$|^3\\.[1-9][0-9]$|^[4-9]\\.[0-9]+$",
+      "default": "3.4"
+    },
+    "typescript": {
+      "type": "boolean",
+      "description": "Enable TypeScript",
+      "default": true
+    },
+    "build_tool": {
+      "type": "string",
+      "description": "Build tool to use",
+      "enum": ["vite", "webpack"],
+      "default": "vite"
+    },
+    "styling": {
+      "type": "string",
+      "description": "CSS framework or approach",
+      "enum": ["tailwindcss", "scss", "css-modules", "unocss", "vanilla"],
+      "default": "tailwindcss"
+    },
+    "ui_library": {
+      "type": "string",
+      "description": "Optional UI component library",
+      "enum": ["none", "vuetify", "primevue", "naive-ui", "element-plus", "headless-ui"],
+      "default": "none"
+    },
+    "components": {
+      "type": "array",
+      "description": "Component specifications",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Component name (PascalCase)",
+            "pattern": "^[A-Z][a-zA-Z0-9]*$"
+          },
+          "type": {
+            "type": "string",
+            "description": "Component category",
+            "enum": ["page", "feature", "ui", "layout", "container"]
+          },
+          "path": {
+            "type": "string",
+            "description": "Custom component path"
+          },
+          "props": {
+            "type": "array",
+            "description": "Component props",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Prop name"
+                },
+                "type": {
+                  "type": "string",
+                  "description": "TypeScript type"
+                },
+                "required": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "default": {
+                  "description": "Default value"
+                },
+                "validator": {
+                  "type": "string",
+                  "description": "Optional validator function"
+                }
+              }
+            }
+          },
+          "emits": {
+            "type": "array",
+            "description": "Events emitted by component",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "description": "Simple event name"
+                },
+                {
+                  "type": "object",
+                  "required": ["name"],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Event name"
+                    },
+                    "payload": {
+                      "type": "string",
+                      "description": "TypeScript type for payload"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "slots": {
+            "type": "array",
+            "description": "Named slots",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Slot name"
+                },
+                "scoped": {
+                  "type": "boolean",
+                  "description": "Is scoped slot",
+                  "default": false
+                },
+                "props": {
+                  "type": "object",
+                  "description": "Scoped slot props",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          "composables": {
+            "type": "array",
+            "description": "Composables used by component",
+            "items": {
+              "type": "string"
+            }
+          },
+          "store": {
+            "type": "string",
+            "description": "Pinia store used by component"
+          },
+          "children": {
+            "type": "array",
+            "description": "Child component names",
+            "items": {
+              "type": "string"
+            }
+          },
+          "async": {
+            "type": "boolean",
+            "description": "Uses async setup",
+            "default": false
+          }
+        }
+      }
+    },
+    "stores": {
+      "type": "array",
+      "description": "Pinia store definitions",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Store name (camelCase, ends with Store)",
+            "pattern": "^[a-z][a-zA-Z0-9]*Store$"
+          },
+          "state": {
+            "type": "object",
+            "description": "State properties with TypeScript types",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "getters": {
+            "type": "array",
+            "description": "Computed getters",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "description": "Store actions",
+            "items": {
+              "type": "string"
+            }
+          },
+          "persist": {
+            "type": "boolean",
+            "description": "Enable persistence with pinia-plugin-persistedstate",
+            "default": false
+          }
+        }
+      }
+    },
+    "composables": {
+      "type": "array",
+      "description": "Custom composable definitions",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Composable name (useXxx pattern)",
+            "pattern": "^use[A-Z][a-zA-Z0-9]*$"
+          },
+          "params": {
+            "type": "array",
+            "description": "Parameters",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "required": { "type": "boolean", "default": true }
+              }
+            }
+          },
+          "returns": {
+            "type": "object",
+            "description": "Return value properties",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string",
+            "description": "Composable purpose"
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "description": "Vue Router route definitions",
+      "items": {
+        "type": "object",
+        "required": ["path", "name"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Route path"
+          },
+          "name": {
+            "type": "string",
+            "description": "Route name"
+          },
+          "component": {
+            "type": "string",
+            "description": "Component name"
+          },
+          "redirect": {
+            "type": "string",
+            "description": "Redirect path"
+          },
+          "props": {
+            "oneOf": [
+              { "type": "boolean" },
+              { "type": "object" }
+            ],
+            "description": "Pass route params as props"
+          },
+          "meta": {
+            "type": "object",
+            "description": "Route metadata",
+            "properties": {
+              "title": { "type": "string" },
+              "requiresAuth": { "type": "boolean" },
+              "guest": { "type": "boolean" },
+              "roles": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "layout": { "type": "string" }
+            }
+          },
+          "children": {
+            "type": "array",
+            "description": "Nested routes",
+            "items": {
+              "$ref": "#/properties/routes/items"
+            }
+          }
+        }
+      }
+    },
+    "api_integration": {
+      "type": "object",
+      "description": "API integration settings",
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "description": "API base URL"
+        },
+        "client": {
+          "type": "string",
+          "description": "HTTP client library",
+          "enum": ["axios", "fetch", "ky", "ofetch"],
+          "default": "fetch"
+        },
+        "endpoints": {
+          "type": "array",
+          "description": "API endpoints to integrate",
+          "items": {
+            "type": "object",
+            "required": ["name", "method", "path"],
+            "properties": {
+              "name": { "type": "string" },
+              "method": {
+                "type": "string",
+                "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+              },
+              "path": { "type": "string" },
+              "request_type": { "type": "string" },
+              "response_type": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "description": "Testing configuration",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "description": "Test framework",
+          "enum": ["vitest", "jest"],
+          "default": "vitest"
+        },
+        "e2e": {
+          "type": "string",
+          "description": "E2E testing tool",
+          "enum": ["cypress", "playwright", "none"],
+          "default": "none"
+        },
+        "coverage_threshold": {
+          "type": "number",
+          "description": "Minimum code coverage percentage",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 80
+        }
+      }
+    },
+    "i18n": {
+      "type": "object",
+      "description": "Internationalization settings",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "default_locale": {
+          "type": "string",
+          "default": "en"
+        },
+        "locales": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "pwa": {
+      "type": "object",
+      "description": "Progressive Web App configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "name": { "type": "string" },
+        "short_name": { "type": "string" },
+        "theme_color": { "type": "string" }
+      }
+    }
+  }
+}

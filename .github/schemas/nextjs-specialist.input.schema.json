@@ -1,0 +1,345 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nextjs-specialist.input.schema.json",
+  "title": "Next.js Specialist Input Schema",
+  "description": "Input schema for Next.js 14+ specialist agent",
+  "type": "object",
+  "required": ["project_context", "nextjs_version", "router_type"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "phase": {
+          "type": "integer",
+          "description": "Current execution phase",
+          "minimum": 1,
+          "maximum": 22
+        }
+      }
+    },
+    "nextjs_version": {
+      "type": "string",
+      "description": "Next.js version (14+)",
+      "pattern": "^1[4-9]\\.[0-9]+$|^[2-9][0-9]\\.[0-9]+$",
+      "default": "14.2"
+    },
+    "router_type": {
+      "type": "string",
+      "description": "Router type to use",
+      "enum": ["app", "pages"],
+      "default": "app"
+    },
+    "typescript": {
+      "type": "boolean",
+      "description": "Enable TypeScript",
+      "default": true
+    },
+    "styling": {
+      "type": "string",
+      "description": "CSS framework",
+      "enum": ["tailwindcss", "css-modules", "styled-components", "sass", "emotion"],
+      "default": "tailwindcss"
+    },
+    "ui_library": {
+      "type": "string",
+      "description": "UI component library",
+      "enum": ["none", "shadcn-ui", "radix-ui", "chakra-ui", "mantine"],
+      "default": "shadcn-ui"
+    },
+    "routes": {
+      "type": "array",
+      "description": "Page/route definitions",
+      "items": {
+        "type": "object",
+        "required": ["path", "type"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Route path (e.g., /products/[id])"
+          },
+          "type": {
+            "type": "string",
+            "description": "Rendering strategy",
+            "enum": ["static", "dynamic", "isr"]
+          },
+          "component": {
+            "type": "string",
+            "description": "Component name"
+          },
+          "layout": {
+            "type": "string",
+            "description": "Layout to use"
+          },
+          "params": {
+            "type": "array",
+            "description": "Dynamic route parameters",
+            "items": { "type": "string" }
+          },
+          "generate_static_params": {
+            "type": "boolean",
+            "description": "Generate static params at build time"
+          },
+          "data_fetching": {
+            "type": "string",
+            "description": "Data fetching method",
+            "enum": ["server", "client", "hybrid"]
+          },
+          "revalidate": {
+            "type": "integer",
+            "description": "ISR revalidation time in seconds"
+          },
+          "loading": {
+            "type": "boolean",
+            "description": "Include loading.tsx"
+          },
+          "error": {
+            "type": "boolean",
+            "description": "Include error.tsx"
+          }
+        }
+      }
+    },
+    "layouts": {
+      "type": "array",
+      "description": "Layout definitions",
+      "items": {
+        "type": "object",
+        "required": ["name", "path"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Layout name"
+          },
+          "path": {
+            "type": "string",
+            "description": "Layout scope path"
+          },
+          "shared_components": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "providers": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "route_groups": {
+      "type": "array",
+      "description": "Route groups for organization",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Group name (e.g., marketing, dashboard)"
+          },
+          "layout": {
+            "type": "string",
+            "description": "Shared layout"
+          },
+          "routes": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "api_routes": {
+      "type": "array",
+      "description": "API route handlers",
+      "items": {
+        "type": "object",
+        "required": ["path", "methods"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "API route path"
+          },
+          "methods": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+            }
+          },
+          "handler": {
+            "type": "string",
+            "description": "Handler name"
+          },
+          "auth_required": {
+            "type": "boolean",
+            "default": false
+          },
+          "rate_limited": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "server_actions": {
+      "type": "array",
+      "description": "Server Action definitions",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Action function name"
+          },
+          "form": {
+            "type": "boolean",
+            "description": "Used with form action"
+          },
+          "revalidate": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" } }
+            ],
+            "description": "Paths or tags to revalidate"
+          },
+          "redirect": {
+            "type": "string",
+            "description": "Redirect path after action"
+          },
+          "validation_schema": {
+            "type": "string",
+            "description": "Zod schema name"
+          }
+        }
+      }
+    },
+    "middleware": {
+      "type": "object",
+      "description": "Middleware configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "matcher": {
+          "type": "array",
+          "description": "Path patterns to match",
+          "items": { "type": "string" }
+        },
+        "features": {
+          "type": "array",
+          "description": "Middleware features to enable",
+          "items": {
+            "type": "string",
+            "enum": ["auth", "redirects", "headers", "rate-limiting", "logging"]
+          }
+        }
+      }
+    },
+    "data_layer": {
+      "type": "object",
+      "description": "Data layer configuration",
+      "properties": {
+        "orm": {
+          "type": "string",
+          "enum": ["prisma", "drizzle", "none"],
+          "default": "prisma"
+        },
+        "database": {
+          "type": "string",
+          "enum": ["postgresql", "mysql", "sqlite", "mongodb"]
+        },
+        "caching": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["unstable_cache", "react-cache", "none"]
+            },
+            "default_revalidate": {
+              "type": "integer",
+              "description": "Default revalidation time in seconds"
+            }
+          }
+        }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "description": "Authentication configuration",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["next-auth", "clerk", "auth0", "custom", "none"],
+          "default": "next-auth"
+        },
+        "strategies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["credentials", "google", "github", "microsoft", "apple", "magic-link"]
+          }
+        },
+        "protected_routes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "internationalization": {
+      "type": "object",
+      "description": "i18n configuration",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "default_locale": {
+          "type": "string",
+          "default": "en"
+        },
+        "locales": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "strategy": {
+          "type": "string",
+          "enum": ["subpath", "domain"],
+          "default": "subpath"
+        }
+      }
+    },
+    "deployment": {
+      "type": "object",
+      "description": "Deployment configuration",
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": ["vercel", "azure-static-web-apps", "azure-app-service", "docker", "node"],
+          "default": "vercel"
+        },
+        "output": {
+          "type": "string",
+          "enum": ["default", "standalone", "export"],
+          "default": "default"
+        }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "description": "SEO configuration",
+      "properties": {
+        "site_name": { "type": "string" },
+        "title_template": { "type": "string" },
+        "description": { "type": "string" },
+        "generate_sitemap": { "type": "boolean", "default": true },
+        "generate_robots": { "type": "boolean", "default": true }
+      }
+    }
+  }
+}

@@ -1,0 +1,337 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "nextjs-specialist.output.schema.json",
+  "title": "Next.js Specialist Output Schema",
+  "description": "Output schema for Next.js 14+ specialist agent",
+  "type": "object",
+  "required": ["artifact_type", "phase", "nextjs_version", "files"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "nextjs-application",
+      "description": "Output artifact type"
+    },
+    "phase": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+    },
+    "nextjs_version": {
+      "type": "string"
+    },
+    "router_type": {
+      "type": "string",
+      "enum": ["app", "pages"]
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "page",
+              "layout",
+              "loading",
+              "error",
+              "not-found",
+              "route-handler",
+              "server-action",
+              "server-component",
+              "client-component",
+              "middleware",
+              "config",
+              "type-definition",
+              "lib",
+              "util",
+              "api-client",
+              "test",
+              "style"
+            ]
+          },
+          "content": { "type": "string" },
+          "rendering": {
+            "type": "string",
+            "enum": ["server", "client", "hybrid"]
+          }
+        }
+      }
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "file_path": { "type": "string" },
+          "rendering": {
+            "type": "string",
+            "enum": ["static", "dynamic", "isr"]
+          },
+          "revalidate": { "type": "integer" },
+          "has_loading": { "type": "boolean" },
+          "has_error": { "type": "boolean" },
+          "metadata": { "type": "boolean" }
+        }
+      }
+    },
+    "layouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "scope": { "type": "string" }
+        }
+      }
+    },
+    "api_routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "file_path": { "type": "string" },
+          "methods": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "auth_required": { "type": "boolean" }
+        }
+      }
+    },
+    "server_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "file_path": { "type": "string" },
+          "form_action": { "type": "boolean" },
+          "revalidates": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "object",
+      "properties": {
+        "server": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "async": { "type": "boolean" }
+            }
+          }
+        },
+        "client": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" },
+              "hooks_used": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "middleware": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "file_path": { "type": "string" },
+        "matcher": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "features": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "data_fetching": {
+      "type": "object",
+      "properties": {
+        "cached_functions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "cache_tags": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "revalidate": { "type": "integer" }
+            }
+          }
+        },
+        "external_apis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "base_url": { "type": "string" },
+              "endpoints": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["interface", "type", "enum", "zod-schema"]
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "production": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "development": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "environment_variables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "required": { "type": "boolean" },
+          "public": { "type": "boolean" }
+        }
+      }
+    },
+    "next_config": {
+      "type": "object",
+      "description": "next.config.js settings",
+      "properties": {
+        "images": {
+          "type": "object",
+          "properties": {
+            "domains": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "formats": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "experimental": {
+          "type": "object"
+        },
+        "redirects": {
+          "type": "array"
+        },
+        "rewrites": {
+          "type": "array"
+        }
+      }
+    },
+    "seo": {
+      "type": "object",
+      "properties": {
+        "metadata_configured": { "type": "boolean" },
+        "sitemap_generated": { "type": "boolean" },
+        "robots_configured": { "type": "boolean" },
+        "opengraph_configured": { "type": "boolean" }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "app_router_used": { "type": "boolean" },
+        "server_components_default": { "type": "boolean" },
+        "client_components_explicit": { "type": "boolean" },
+        "loading_states_present": { "type": "boolean" },
+        "error_boundaries_present": { "type": "boolean" },
+        "typescript_strict": { "type": "boolean" },
+        "metadata_configured": { "type": "boolean" }
+      }
+    },
+    "handoff_data": {
+      "type": "object",
+      "properties": {
+        "build_commands": {
+          "type": "object",
+          "properties": {
+            "install": { "type": "string" },
+            "dev": { "type": "string" },
+            "build": { "type": "string" },
+            "start": { "type": "string" },
+            "lint": { "type": "string" }
+          }
+        },
+        "deployment_config": {
+          "type": "object",
+          "properties": {
+            "platform": { "type": "string" },
+            "output_directory": { "type": "string" },
+            "build_command": { "type": "string" },
+            "framework": { "type": "string" }
+          }
+        },
+        "database_requirements": {
+          "type": "object",
+          "properties": {
+            "orm": { "type": "string" },
+            "models": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "agent_version": { "type": "string" },
+        "total_files": { "type": "integer" },
+        "total_lines": { "type": "integer" },
+        "server_components_count": { "type": "integer" },
+        "client_components_count": { "type": "integer" }
+      }
+    }
+  }
+}

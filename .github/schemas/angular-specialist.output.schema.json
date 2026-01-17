@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "angular-specialist.output.schema.json",
+  "title": "Angular Specialist Output Schema",
+  "description": "Output schema for Angular 17+ specialist agent",
+  "type": "object",
+  "required": ["artifact_type", "phase", "angular_version", "files"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "angular-application"
+    },
+    "phase": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 22
+    },
+    "angular_version": {
+      "type": "string"
+    },
+    "standalone_enabled": {
+      "type": "boolean"
+    },
+    "signals_enabled": {
+      "type": "boolean"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "component",
+              "service",
+              "store",
+              "guard",
+              "interceptor",
+              "resolver",
+              "pipe",
+              "directive",
+              "model",
+              "route-config",
+              "app-config",
+              "environment",
+              "test",
+              "style"
+            ]
+          },
+          "content": { "type": "string" },
+          "standalone": { "type": "boolean" }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "selector": { "type": "string" },
+          "path": { "type": "string" },
+          "standalone": { "type": "boolean" },
+          "inputs_count": { "type": "integer" },
+          "outputs_count": { "type": "integer" },
+          "signals_used": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "services_injected": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "change_detection": { "type": "string" }
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "injectable_scope": { "type": "string" },
+          "methods": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "uses_http": { "type": "boolean" }
+        }
+      }
+    },
+    "stores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "state_properties": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "selectors": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "actions": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "component": { "type": "string" },
+          "lazy_loaded": { "type": "boolean" },
+          "guards": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "guards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "type": { "type": "string" },
+          "functional": { "type": "boolean" }
+        }
+      }
+    },
+    "interceptors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "functional": { "type": "boolean" },
+          "features": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "pipes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "pure": { "type": "boolean" },
+          "standalone": { "type": "boolean" }
+        }
+      }
+    },
+    "directives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "selector": { "type": "string" },
+          "path": { "type": "string" },
+          "type": { "type": "string" },
+          "standalone": { "type": "boolean" }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "properties": {
+        "production": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "development": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "angular_json": {
+      "type": "object",
+      "description": "Angular workspace configuration additions"
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "standalone_components": { "type": "boolean" },
+        "signals_used": { "type": "boolean" },
+        "modern_control_flow": { "type": "boolean" },
+        "on_push_strategy": { "type": "boolean" },
+        "lazy_routes": { "type": "boolean" },
+        "functional_guards": { "type": "boolean" },
+        "functional_interceptors": { "type": "boolean" },
+        "typescript_strict": { "type": "boolean" }
+      }
+    },
+    "handoff_data": {
+      "type": "object",
+      "properties": {
+        "build_commands": {
+          "type": "object",
+          "properties": {
+            "install": { "type": "string" },
+            "dev": { "type": "string" },
+            "build": { "type": "string" },
+            "test": { "type": "string" },
+            "lint": { "type": "string" }
+          }
+        },
+        "api_endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": { "type": "string" },
+              "path": { "type": "string" },
+              "service": { "type": "string" }
+            }
+          }
+        },
+        "environment_variables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "agent_version": { "type": "string" },
+        "total_files": { "type": "integer" },
+        "total_lines": { "type": "integer" },
+        "components_count": { "type": "integer" },
+        "services_count": { "type": "integer" },
+        "stores_count": { "type": "integer" }
+      }
+    }
+  }
+}

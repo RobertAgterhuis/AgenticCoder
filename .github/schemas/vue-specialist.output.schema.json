@@ -1,0 +1,354 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "vue-specialist.output.schema.json",
+  "title": "Vue Specialist Output Schema",
+  "description": "Output schema for Vue.js 3 specialist agent",
+  "type": "object",
+  "required": ["artifact_type", "phase", "vue_version", "files"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "vue-application",
+      "description": "Output artifact type"
+    },
+    "phase": {
+      "type": "integer",
+      "description": "Execution phase",
+      "minimum": 1,
+      "maximum": 22
+    },
+    "vue_version": {
+      "type": "string",
+      "description": "Vue.js version used"
+    },
+    "typescript_enabled": {
+      "type": "boolean",
+      "description": "TypeScript is enabled"
+    },
+    "files": {
+      "type": "array",
+      "description": "Generated files",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "File name"
+          },
+          "path": {
+            "type": "string",
+            "description": "Full file path from project root"
+          },
+          "type": {
+            "type": "string",
+            "description": "File type category",
+            "enum": [
+              "vue-component",
+              "composable",
+              "pinia-store",
+              "router-config",
+              "type-definition",
+              "api-client",
+              "vite-config",
+              "eslint-config",
+              "test-file",
+              "style",
+              "util",
+              "plugin",
+              "directive"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "description": "File content"
+          },
+          "dependencies": {
+            "type": "array",
+            "description": "Other files this file depends on",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "description": "Generated component details",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Component name"
+          },
+          "path": {
+            "type": "string",
+            "description": "Component file path"
+          },
+          "type": {
+            "type": "string",
+            "description": "Component category"
+          },
+          "props_count": {
+            "type": "integer",
+            "description": "Number of props"
+          },
+          "emits_count": {
+            "type": "integer",
+            "description": "Number of emitted events"
+          },
+          "composables_used": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "stores_used": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "stores": {
+      "type": "array",
+      "description": "Generated Pinia stores",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "state_properties": {
+            "type": "integer"
+          },
+          "getters": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "actions": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "composables": {
+      "type": "array",
+      "description": "Generated composables",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "returns": {
+            "type": "array",
+            "description": "Returned properties/methods",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "description": "Generated route definitions",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "name": { "type": "string" },
+          "component": { "type": "string" },
+          "requires_auth": { "type": "boolean" }
+        }
+      }
+    },
+    "types": {
+      "type": "array",
+      "description": "Generated TypeScript types",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["interface", "type", "enum"]
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "Required npm packages",
+      "properties": {
+        "production": {
+          "type": "object",
+          "description": "Production dependencies",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "development": {
+          "type": "object",
+          "description": "Development dependencies",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "vite_plugins": {
+      "type": "array",
+      "description": "Required Vite plugins",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scripts": {
+      "type": "object",
+      "description": "npm scripts to add to package.json",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "test_coverage": {
+      "type": "object",
+      "description": "Test coverage information",
+      "properties": {
+        "unit_tests": {
+          "type": "integer",
+          "description": "Number of unit tests generated"
+        },
+        "component_tests": {
+          "type": "integer",
+          "description": "Number of component tests generated"
+        },
+        "stores_covered": {
+          "type": "integer"
+        },
+        "composables_covered": {
+          "type": "integer"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "description": "Validation results",
+      "properties": {
+        "typescript_strict": {
+          "type": "boolean",
+          "description": "TypeScript strict mode enabled"
+        },
+        "composition_api": {
+          "type": "boolean",
+          "description": "All components use Composition API"
+        },
+        "script_setup": {
+          "type": "boolean",
+          "description": "All components use script setup"
+        },
+        "typed_props": {
+          "type": "boolean",
+          "description": "All props are typed"
+        },
+        "typed_emits": {
+          "type": "boolean",
+          "description": "All emits are typed"
+        },
+        "lazy_routes": {
+          "type": "boolean",
+          "description": "Routes use lazy loading"
+        },
+        "eslint_clean": {
+          "type": "boolean",
+          "description": "No ESLint errors"
+        }
+      }
+    },
+    "project_structure": {
+      "type": "object",
+      "description": "Project directory structure",
+      "properties": {
+        "src_components": { "type": "string" },
+        "src_composables": { "type": "string" },
+        "src_stores": { "type": "string" },
+        "src_views": { "type": "string" },
+        "src_types": { "type": "string" },
+        "src_api": { "type": "string" },
+        "src_router": { "type": "string" },
+        "src_assets": { "type": "string" }
+      }
+    },
+    "handoff_data": {
+      "type": "object",
+      "description": "Data for downstream agents",
+      "properties": {
+        "api_endpoints": {
+          "type": "array",
+          "description": "API endpoints needed by components",
+          "items": {
+            "type": "object",
+            "properties": {
+              "method": { "type": "string" },
+              "path": { "type": "string" },
+              "request_type": { "type": "string" },
+              "response_type": { "type": "string" }
+            }
+          }
+        },
+        "build_commands": {
+          "type": "object",
+          "description": "Build commands for CI/CD",
+          "properties": {
+            "install": { "type": "string" },
+            "build": { "type": "string" },
+            "test": { "type": "string" },
+            "lint": { "type": "string" }
+          }
+        },
+        "environment_variables": {
+          "type": "array",
+          "description": "Required environment variables",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Generation metadata",
+      "properties": {
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "agent_version": {
+          "type": "string"
+        },
+        "total_files": {
+          "type": "integer"
+        },
+        "total_lines": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

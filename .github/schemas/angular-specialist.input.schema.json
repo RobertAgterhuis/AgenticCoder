@@ -1,0 +1,326 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "angular-specialist.input.schema.json",
+  "title": "Angular Specialist Input Schema",
+  "description": "Input schema for Angular 17+ specialist agent",
+  "type": "object",
+  "required": ["project_context", "angular_version", "components"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "phase": {
+          "type": "integer",
+          "description": "Current execution phase",
+          "minimum": 1,
+          "maximum": 22
+        }
+      }
+    },
+    "angular_version": {
+      "type": "string",
+      "description": "Angular version (17+)",
+      "pattern": "^1[7-9]$|^[2-9][0-9]$",
+      "default": "17"
+    },
+    "standalone": {
+      "type": "boolean",
+      "description": "Use standalone components (recommended)",
+      "default": true
+    },
+    "signals": {
+      "type": "boolean",
+      "description": "Use Signals for reactivity",
+      "default": true
+    },
+    "zoneless": {
+      "type": "boolean",
+      "description": "Enable zoneless change detection (experimental)",
+      "default": false
+    },
+    "styling": {
+      "type": "string",
+      "description": "CSS preprocessor",
+      "enum": ["scss", "less", "css"],
+      "default": "scss"
+    },
+    "components": {
+      "type": "array",
+      "description": "Component specifications",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Component name (PascalCase)",
+            "pattern": "^[A-Z][a-zA-Z0-9]*$"
+          },
+          "type": {
+            "type": "string",
+            "description": "Component category",
+            "enum": ["page", "feature", "shared", "layout", "container"]
+          },
+          "selector": {
+            "type": "string",
+            "description": "Custom selector (default: app-kebab-case)"
+          },
+          "inputs": {
+            "type": "array",
+            "description": "Component inputs",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "required": { "type": "boolean", "default": false },
+                "alias": { "type": "string" },
+                "transform": { "type": "string" }
+              }
+            }
+          },
+          "outputs": {
+            "type": "array",
+            "description": "Component outputs (event emitters)",
+            "items": {
+              "oneOf": [
+                { "type": "string" },
+                {
+                  "type": "object",
+                  "required": ["name"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "payload": { "type": "string" }
+                  }
+                }
+              ]
+            }
+          },
+          "signals": {
+            "type": "array",
+            "description": "Signal properties",
+            "items": { "type": "string" }
+          },
+          "services": {
+            "type": "array",
+            "description": "Injected services",
+            "items": { "type": "string" }
+          },
+          "imports": {
+            "type": "array",
+            "description": "Imported standalone components/modules",
+            "items": { "type": "string" }
+          },
+          "change_detection": {
+            "type": "string",
+            "description": "Change detection strategy",
+            "enum": ["Default", "OnPush"],
+            "default": "OnPush"
+          },
+          "view_encapsulation": {
+            "type": "string",
+            "description": "View encapsulation mode",
+            "enum": ["Emulated", "None", "ShadowDom"],
+            "default": "Emulated"
+          }
+        }
+      }
+    },
+    "services": {
+      "type": "array",
+      "description": "Service specifications",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Service name (PascalCase, ends with Service)"
+          },
+          "injectable": {
+            "type": "string",
+            "description": "Injectable scope",
+            "enum": ["root", "platform", "any", "component"],
+            "default": "root"
+          },
+          "methods": {
+            "type": "array",
+            "description": "Service methods",
+            "items": { "type": "string" }
+          },
+          "http": {
+            "type": "boolean",
+            "description": "Uses HttpClient",
+            "default": false
+          },
+          "store": {
+            "type": "boolean",
+            "description": "Manages signal store state",
+            "default": false
+          }
+        }
+      }
+    },
+    "stores": {
+      "type": "array",
+      "description": "Signal store specifications",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Store name (ends with Store)"
+          },
+          "state": {
+            "type": "object",
+            "description": "State shape with TypeScript types",
+            "additionalProperties": { "type": "string" }
+          },
+          "selectors": {
+            "type": "array",
+            "description": "Computed selectors",
+            "items": { "type": "string" }
+          },
+          "actions": {
+            "type": "array",
+            "description": "State mutation methods",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "routes": {
+      "type": "array",
+      "description": "Route configurations",
+      "items": {
+        "type": "object",
+        "required": ["path"],
+        "properties": {
+          "path": { "type": "string" },
+          "component": { "type": "string" },
+          "title": { "type": "string" },
+          "lazy": { "type": "boolean", "default": true },
+          "guards": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "resolvers": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          },
+          "data": { "type": "object" },
+          "children": {
+            "type": "array",
+            "items": { "$ref": "#/properties/routes/items" }
+          }
+        }
+      }
+    },
+    "guards": {
+      "type": "array",
+      "description": "Route guard specifications",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["canActivate", "canActivateChild", "canDeactivate", "canMatch"]
+          },
+          "functional": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    "interceptors": {
+      "type": "array",
+      "description": "HTTP interceptor specifications",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "functional": { "type": "boolean", "default": true },
+          "features": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["auth", "error", "loading", "cache", "retry", "logging"]
+            }
+          }
+        }
+      }
+    },
+    "pipes": {
+      "type": "array",
+      "description": "Custom pipe specifications",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "pure": { "type": "boolean", "default": true },
+          "standalone": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    "directives": {
+      "type": "array",
+      "description": "Custom directive specifications",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["attribute", "structural"]
+          },
+          "standalone": { "type": "boolean", "default": true }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "description": "Testing configuration",
+      "properties": {
+        "framework": {
+          "type": "string",
+          "enum": ["jasmine", "jest"],
+          "default": "jasmine"
+        },
+        "e2e": {
+          "type": "string",
+          "enum": ["cypress", "playwright", "none"],
+          "default": "none"
+        },
+        "coverage_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 80
+        }
+      }
+    },
+    "i18n": {
+      "type": "object",
+      "description": "Internationalization settings",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "default_locale": { "type": "string", "default": "en" },
+        "locales": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
