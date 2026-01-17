@@ -28,8 +28,8 @@ Er ontbreken nog **kritieke componenten** om het systeem end-to-end bruikbaar te
 
 | # | Feature | Priority | Duration | Status |
 |---|---------|----------|----------|--------|
-| 1 | [AgentSkillExpansion](Feature/AgentSkillExpansion/00-OVERVIEW.md) | 🔴 Critical | 8-10 weken | 📋 Planned |
-| 2 | [CodeGenerationEngine](Feature/CodeGenerationEngine/00-OVERVIEW.md) | 🔴 Critical | 6-8 weken | 📋 Planned |
+| 1 | [AgentSkillExpansion](Feature/AgentSkillExpansion/00-OVERVIEW.md) | 🔴 Critical | 8-10 weken | ✅ **COMPLETE** |
+| 2 | [CodeGenerationEngine](Feature/CodeGenerationEngine/00-OVERVIEW.md) | 🔴 Critical | 6-8 weken | ✅ **COMPLETE** |
 | 3 | [UserInterfaceLayer](Feature/UserInterfaceLayer/00-OVERVIEW.md) | 🔴 Critical | 3-4 weken | 📋 Planned |
 | 4 | [ProjectStatePersistence](Feature/ProjectStatePersistence/00-OVERVIEW.md) | 🔴 Critical | 2-3 weken | ✅ **COMPLETE** |
 | 5 | [TestingValidationFramework](Feature/TestingValidationFramework/00-OVERVIEW.md) | 🔴 Critical | 3-4 weken | 📋 Planned |
@@ -38,7 +38,7 @@ Er ontbreken nog **kritieke componenten** om het systeem end-to-end bruikbaar te
 | 8 | [SecurityCompliance](Feature/SecurityCompliance/00-OVERVIEW.md) | 🟡 High | 3-4 weken | 📋 Planned |
 | 9 | [DeploymentReleasePipeline](Feature/DeploymentReleasePipeline/00-OVERVIEW.md) | 🟡 High | 2-3 weken | 📋 Planned |
 
-**Totale geschatte doorlooptijd:** 28-38 weken (parallel mogelijk, -4 weken door voltooide features)
+**Totale geschatte doorlooptijd:** 28-38 weken (parallel mogelijk, -18 weken door voltooide features)
 
 ---
 
