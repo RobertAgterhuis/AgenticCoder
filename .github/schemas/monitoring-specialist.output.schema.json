@@ -1,0 +1,416 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "monitoring-specialist.output.schema.json",
+  "title": "Monitoring Specialist Output Schema",
+  "description": "Output schema for Azure Monitor, Application Insights, and Log Analytics specialist responses",
+  "type": "object",
+  "required": ["solution", "implementation"],
+  "properties": {
+    "solution": {
+      "type": "object",
+      "required": ["description", "monitoringArchitecture"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "High-level solution description"
+        },
+        "monitoringArchitecture": {
+          "type": "object",
+          "properties": {
+            "components": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string" },
+                  "purpose": { "type": "string" }
+                }
+              }
+            },
+            "dataFlows": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "source": { "type": "string" },
+                  "destination": { "type": "string" },
+                  "dataType": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "diagram": {
+          "type": "string",
+          "description": "ASCII diagram of monitoring architecture"
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "bicepTemplate": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "sdkCode": {
+          "type": "object",
+          "properties": {
+            "initialization": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "telemetryService": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "middleware": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "customMetrics": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "applicationInsights": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "connectionString": { "type": "string" },
+            "samplingSettings": { "type": "object" },
+            "autoCollect": { "type": "object" }
+          }
+        },
+        "customTelemetry": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "code": { "type": "string" },
+              "usage": { "type": "string" }
+            }
+          }
+        },
+        "smartDetection": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "rules": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "logAnalytics": {
+      "type": "object",
+      "properties": {
+        "workspace": {
+          "type": "object",
+          "properties": {
+            "sku": { "type": "string" },
+            "retentionDays": { "type": "number" },
+            "dailyCapGb": { "type": "number" }
+          }
+        },
+        "dataSources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "configuration": { "type": "object" }
+            }
+          }
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "retentionDays": { "type": "number" },
+              "plan": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "kqlQueries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "query": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["performance", "errors", "availability", "security", "cost", "usage"]
+          },
+          "visualization": { "type": "string" }
+        }
+      },
+      "description": "KQL queries for common scenarios"
+    },
+    "alerting": {
+      "type": "object",
+      "properties": {
+        "alertRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "type": { "type": "string" },
+              "severity": { "type": "number" },
+              "condition": { "type": "object" },
+              "bicep": { "type": "string" }
+            }
+          }
+        },
+        "actionGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "receivers": { "type": "array" },
+              "bicep": { "type": "string" }
+            }
+          }
+        },
+        "alertProcessingRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "bicep": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "availabilityTests": {
+      "type": "object",
+      "properties": {
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "url": { "type": "string" },
+              "frequency": { "type": "number" },
+              "locations": { "type": "array", "items": { "type": "string" } },
+              "bicep": { "type": "string" }
+            }
+          }
+        },
+        "slaTracking": {
+          "type": "object",
+          "properties": {
+            "target": { "type": "number" },
+            "kqlQuery": { "type": "string" }
+          }
+        }
+      }
+    },
+    "dashboards": {
+      "type": "object",
+      "properties": {
+        "azureDashboard": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "tiles": { "type": "array" },
+            "json": { "type": "string" }
+          }
+        },
+        "workbooks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "serializedData": { "type": "string" },
+              "bicep": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "distributedTracing": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "samplingRate": { "type": "number" },
+            "correlationHeaders": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "code": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "endToEndQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "query": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "autoscale": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "metric": { "type": "string" },
+              "scaleOut": { "type": "object" },
+              "scaleIn": { "type": "object" }
+            }
+          }
+        },
+        "bicep": { "type": "string" }
+      }
+    },
+    "costOptimization": {
+      "type": "object",
+      "properties": {
+        "estimatedMonthlyCost": {
+          "type": "object",
+          "properties": {
+            "appInsightsIngestion": { "type": "number" },
+            "logAnalyticsIngestion": { "type": "number" },
+            "retention": { "type": "number" },
+            "alerts": { "type": "number" },
+            "totalCost": { "type": "number" }
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recommendation": { "type": "string" },
+              "potentialSavings": { "type": "string" },
+              "implementation": { "type": "string" }
+            }
+          }
+        },
+        "commitmentTiers": {
+          "type": "object",
+          "properties": {
+            "recommended": { "type": "boolean" },
+            "tier": { "type": "string" },
+            "savingsPercent": { "type": "number" }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "unitTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "mockingStrategy": {
+          "type": "string"
+        },
+        "telemetryValidation": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "practice": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "nextAgent": { "type": "string" },
+        "reason": { "type": "string" },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

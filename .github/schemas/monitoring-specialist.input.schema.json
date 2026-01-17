@@ -1,0 +1,324 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "monitoring-specialist.input.schema.json",
+  "title": "Monitoring Specialist Input Schema",
+  "description": "Input schema for Azure Monitor, Application Insights, and Log Analytics specialist requests",
+  "type": "object",
+  "required": ["requestType", "monitoringScope"],
+  "properties": {
+    "requestType": {
+      "type": "string",
+      "enum": [
+        "application-insights",
+        "log-analytics",
+        "custom-metrics",
+        "alerting",
+        "dashboards",
+        "distributed-tracing",
+        "availability-tests",
+        "workbooks",
+        "autoscale",
+        "infrastructure",
+        "review"
+      ],
+      "description": "Type of monitoring request"
+    },
+    "monitoringScope": {
+      "type": "string",
+      "enum": ["application", "infrastructure", "network", "security", "cost", "full-stack"],
+      "description": "Scope of monitoring"
+    },
+    "applicationInsightsConfig": {
+      "type": "object",
+      "properties": {
+        "applicationType": {
+          "type": "string",
+          "enum": ["web", "nodejs", "java", "python", "dotnet", "other"]
+        },
+        "autoCollect": {
+          "type": "object",
+          "properties": {
+            "requests": { "type": "boolean" },
+            "dependencies": { "type": "boolean" },
+            "exceptions": { "type": "boolean" },
+            "performance": { "type": "boolean" },
+            "console": { "type": "boolean" }
+          }
+        },
+        "customTelemetry": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["event", "metric", "trace", "dependency", "exception"]
+              },
+              "name": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "samplingPercentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "liveMetrics": {
+          "type": "boolean"
+        }
+      }
+    },
+    "logAnalyticsConfig": {
+      "type": "object",
+      "properties": {
+        "retentionDays": {
+          "type": "number",
+          "minimum": 30,
+          "maximum": 730
+        },
+        "dailyCapGb": {
+          "type": "number"
+        },
+        "dataSources": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "azure-resources",
+              "azure-activity",
+              "azure-security",
+              "vm-insights",
+              "container-insights",
+              "application-insights",
+              "custom-logs"
+            ]
+          }
+        },
+        "savedQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "alertingConfig": {
+      "type": "object",
+      "properties": {
+        "alertTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["metric", "log", "activity-log", "smart-detection", "availability"]
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "description": { "type": "string" },
+              "severity": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 4
+              },
+              "condition": { "type": "string" }
+            }
+          }
+        },
+        "actionGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "notifications": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["email", "sms", "webhook", "azure-function", "logic-app", "itsm"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "metricsConfig": {
+      "type": "object",
+      "properties": {
+        "customMetrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["counter", "gauge", "histogram", "summary"]
+              },
+              "unit": { "type": "string" },
+              "dimensions": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "aggregations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["count", "sum", "average", "min", "max", "percentile"]
+          }
+        },
+        "openTelemetry": {
+          "type": "boolean",
+          "description": "Use OpenTelemetry for metrics"
+        }
+      }
+    },
+    "distributedTracingConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "samplingRate": { "type": "number" },
+        "correlationHeaders": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "endToEndTracking": {
+          "type": "boolean"
+        },
+        "openTelemetry": {
+          "type": "boolean"
+        }
+      }
+    },
+    "availabilityConfig": {
+      "type": "object",
+      "properties": {
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["url-ping", "multi-step", "custom-track-availability"]
+              },
+              "url": { "type": "string" },
+              "frequency": {
+                "type": "number",
+                "description": "Frequency in seconds"
+              },
+              "locations": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "slaTarget": {
+          "type": "number",
+          "description": "SLA target percentage"
+        }
+      }
+    },
+    "dashboardConfig": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["azure-dashboard", "workbook", "grafana"]
+        },
+        "visualizations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["chart", "grid", "map", "stat", "timeline"]
+              },
+              "dataSource": { "type": "string" }
+            }
+          }
+        },
+        "refreshInterval": { "type": "number" },
+        "timeRange": { "type": "string" }
+      }
+    },
+    "autoscaleConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "targetResources": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "scaleOutThreshold": { "type": "number" },
+              "scaleInThreshold": { "type": "number" }
+            }
+          }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "minimum": { "type": "number" },
+            "maximum": { "type": "number" },
+            "default": { "type": "number" }
+          }
+        }
+      }
+    },
+    "sdkRequirements": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": ["typescript", "javascript", "csharp", "python", "java"]
+        },
+        "framework": {
+          "type": "string",
+          "enum": ["express", "nestjs", "fastapi", "aspnet", "spring"]
+        },
+        "telemetryTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["traces", "metrics", "logs", "dependencies", "exceptions", "requests"]
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "existingMonitoring": { "type": "string" },
+        "complianceRequirements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "budgetConstraint": { "type": "string" }
+      }
+    }
+  }
+}

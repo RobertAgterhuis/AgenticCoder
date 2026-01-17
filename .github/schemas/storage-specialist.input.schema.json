@@ -1,0 +1,282 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "storage-specialist.input.schema.json",
+  "title": "Storage Specialist Input Schema",
+  "description": "Input schema for Azure Storage (Blob, Table, Queue, Files) specialist requests",
+  "type": "object",
+  "required": ["requestType", "storageService"],
+  "properties": {
+    "requestType": {
+      "type": "string",
+      "enum": [
+        "blob-storage",
+        "table-storage",
+        "queue-storage",
+        "file-storage",
+        "data-lake",
+        "lifecycle-management",
+        "access-control",
+        "sdk-integration",
+        "infrastructure",
+        "cost-optimization",
+        "review"
+      ],
+      "description": "Type of storage request"
+    },
+    "storageService": {
+      "type": "string",
+      "enum": ["blob", "table", "queue", "files", "data-lake-gen2", "multi-service"],
+      "description": "Primary storage service"
+    },
+    "blobConfig": {
+      "type": "object",
+      "properties": {
+        "blobType": {
+          "type": "string",
+          "enum": ["block", "page", "append"],
+          "description": "Type of blob storage"
+        },
+        "accessTier": {
+          "type": "string",
+          "enum": ["Hot", "Cool", "Cold", "Archive"],
+          "description": "Default access tier"
+        },
+        "containers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "publicAccess": {
+                "type": "string",
+                "enum": ["None", "Blob", "Container"]
+              },
+              "purpose": { "type": "string" }
+            }
+          },
+          "description": "Container definitions"
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["upload", "download", "list", "delete", "copy", "set-tier"]
+          }
+        },
+        "largeFileSupport": {
+          "type": "boolean",
+          "description": "Need to handle large files (> 100MB)"
+        },
+        "streamingRequired": {
+          "type": "boolean",
+          "description": "Need streaming upload/download"
+        }
+      }
+    },
+    "tableConfig": {
+      "type": "object",
+      "properties": {
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "partitionKey": { "type": "string" },
+              "rowKeyPattern": { "type": "string" }
+            }
+          }
+        },
+        "accessPatterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "queryType": {
+                "type": "string",
+                "enum": ["point-query", "partition-scan", "table-scan"]
+              }
+            }
+          }
+        },
+        "batchOperations": {
+          "type": "boolean"
+        }
+      }
+    },
+    "queueConfig": {
+      "type": "object",
+      "properties": {
+        "queues": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "purpose": { "type": "string" },
+              "messageType": { "type": "string" }
+            }
+          }
+        },
+        "processingPattern": {
+          "type": "string",
+          "enum": ["single-consumer", "competing-consumers", "poison-queue"],
+          "description": "Message processing pattern"
+        },
+        "visibilityTimeout": {
+          "type": "number",
+          "description": "Default visibility timeout in seconds"
+        },
+        "messageTTL": {
+          "type": "number",
+          "description": "Message time-to-live in seconds"
+        }
+      }
+    },
+    "fileConfig": {
+      "type": "object",
+      "properties": {
+        "shares": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "quotaGB": { "type": "number" },
+              "protocol": {
+                "type": "string",
+                "enum": ["SMB", "NFS"]
+              }
+            }
+          }
+        },
+        "syncRequired": {
+          "type": "boolean",
+          "description": "Azure File Sync needed"
+        }
+      }
+    },
+    "dataLakeConfig": {
+      "type": "object",
+      "properties": {
+        "hierarchicalNamespace": {
+          "type": "boolean",
+          "default": true
+        },
+        "filesystems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        },
+        "aclRequired": {
+          "type": "boolean",
+          "description": "Fine-grained ACL needed"
+        }
+      }
+    },
+    "accessControl": {
+      "type": "object",
+      "properties": {
+        "authMethod": {
+          "type": "string",
+          "enum": ["managed-identity", "sas-token", "shared-key", "entra-id"],
+          "description": "Primary authentication method"
+        },
+        "sasRequirements": {
+          "type": "object",
+          "properties": {
+            "sasType": {
+              "type": "string",
+              "enum": ["service", "account", "user-delegation"]
+            },
+            "permissions": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "expiryPattern": { "type": "string" }
+          }
+        },
+        "privateEndpoint": {
+          "type": "boolean"
+        },
+        "firewallRules": {
+          "type": "boolean"
+        }
+      }
+    },
+    "lifecycleManagement": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "prefix": { "type": "string" },
+              "tierToCoolAfterDays": { "type": "number" },
+              "tierToArchiveAfterDays": { "type": "number" },
+              "deleteAfterDays": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "sdkRequirements": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": ["typescript", "javascript", "csharp", "python", "java", "go"]
+        },
+        "operations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "progressReporting": {
+          "type": "boolean"
+        },
+        "retryPolicy": {
+          "type": "boolean"
+        }
+      }
+    },
+    "redundancy": {
+      "type": "string",
+      "enum": ["LRS", "ZRS", "GRS", "GZRS", "RA-GRS", "RA-GZRS"],
+      "description": "Storage redundancy option"
+    },
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "softDelete": { "type": "boolean" },
+        "versioning": { "type": "boolean" },
+        "immutability": { "type": "boolean" },
+        "encryptionScope": { "type": "boolean" }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "existingAccounts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "budgetConstraint": { "type": "string" },
+        "performanceRequirements": {
+          "type": "object",
+          "properties": {
+            "iops": { "type": "number" },
+            "throughputMBps": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

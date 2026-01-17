@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cosmos-db-specialist.input.schema.json",
+  "title": "Cosmos DB Specialist Input Schema",
+  "description": "Input schema for Azure Cosmos DB NoSQL database design and implementation specialist requests",
+  "type": "object",
+  "required": ["requestType", "dataRequirements"],
+  "properties": {
+    "requestType": {
+      "type": "string",
+      "enum": [
+        "data-modeling",
+        "partition-strategy",
+        "query-optimization",
+        "consistency-level",
+        "change-feed",
+        "global-distribution",
+        "sdk-integration",
+        "infrastructure",
+        "cost-optimization",
+        "review"
+      ],
+      "description": "Type of Cosmos DB request"
+    },
+    "dataRequirements": {
+      "type": "object",
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "properties": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "required": { "type": "boolean" }
+                  }
+                }
+              },
+              "relationships": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "entity": { "type": "string" },
+                    "type": { "type": "string", "enum": ["1:1", "1:few", "1:many", "many:many"] },
+                    "embed": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          },
+          "description": "Data entities to model"
+        },
+        "accessPatterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": { "type": "string" },
+              "frequency": { "type": "string", "enum": ["high", "medium", "low"] },
+              "filters": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "crossPartition": { "type": "boolean" }
+            }
+          },
+          "description": "How data will be queried"
+        },
+        "dataVolume": {
+          "type": "object",
+          "properties": {
+            "documentsPerDay": { "type": "number" },
+            "averageDocumentSize": { "type": "string" },
+            "totalDataSize": { "type": "string" },
+            "growthRate": { "type": "string" }
+          }
+        }
+      },
+      "required": ["entities"]
+    },
+    "partitionConfig": {
+      "type": "object",
+      "properties": {
+        "proposedPartitionKey": {
+          "type": "string",
+          "description": "Proposed partition key path"
+        },
+        "hierarchicalKeys": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Hierarchical partition key paths"
+        },
+        "hotPartitionConcern": {
+          "type": "boolean",
+          "description": "Concern about hot partitions"
+        },
+        "crossPartitionQueries": {
+          "type": "boolean",
+          "description": "Need for cross-partition queries"
+        }
+      }
+    },
+    "consistencyRequirements": {
+      "type": "object",
+      "properties": {
+        "preferredLevel": {
+          "type": "string",
+          "enum": ["Strong", "BoundedStaleness", "Session", "ConsistentPrefix", "Eventual"]
+        },
+        "readYourOwnWrites": {
+          "type": "boolean",
+          "description": "Must read own writes immediately"
+        },
+        "globalReads": {
+          "type": "boolean",
+          "description": "Reading from multiple regions"
+        },
+        "latencyPriority": {
+          "type": "boolean",
+          "description": "Prioritize low latency over consistency"
+        }
+      }
+    },
+    "distributionConfig": {
+      "type": "object",
+      "properties": {
+        "regions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Azure regions for deployment"
+        },
+        "multiRegionWrites": {
+          "type": "boolean",
+          "description": "Enable multi-region writes"
+        },
+        "conflictResolution": {
+          "type": "string",
+          "enum": ["last-writer-wins", "custom-procedure"],
+          "description": "Conflict resolution policy"
+        },
+        "automaticFailover": {
+          "type": "boolean"
+        }
+      }
+    },
+    "throughputConfig": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["provisioned", "autoscale", "serverless"]
+        },
+        "maxRUs": {
+          "type": "number",
+          "description": "Maximum RU/s for autoscale"
+        },
+        "sharedThroughput": {
+          "type": "boolean",
+          "description": "Share throughput at database level"
+        }
+      }
+    },
+    "changeFeedConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "processor": {
+          "type": "string",
+          "enum": ["azure-functions", "change-feed-processor", "custom"]
+        },
+        "startFrom": {
+          "type": "string",
+          "enum": ["beginning", "now", "specific-time"]
+        },
+        "useCase": {
+          "type": "string",
+          "description": "What change feed will be used for"
+        }
+      }
+    },
+    "sdkRequirements": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": ["typescript", "javascript", "csharp", "python", "java", "go"]
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["create", "read", "update", "delete", "query", "batch", "bulk"]
+          }
+        },
+        "bulkOperations": {
+          "type": "boolean"
+        },
+        "transactionalBatch": {
+          "type": "boolean"
+        }
+      }
+    },
+    "indexingConfig": {
+      "type": "object",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["consistent", "lazy", "none"]
+        },
+        "includePaths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "excludePaths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "compositeIndexes": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": { "type": "string" },
+                "order": { "type": "string", "enum": ["ascending", "descending"] }
+              }
+            }
+          }
+        },
+        "spatialIndexes": {
+          "type": "boolean"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "existingSchema": { "type": "string" },
+        "migrationFromSQL": { "type": "boolean" },
+        "budgetConstraint": { "type": "string" },
+        "performanceTarget": {
+          "type": "object",
+          "properties": {
+            "readLatencyMs": { "type": "number" },
+            "writeLatencyMs": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}

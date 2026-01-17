@@ -1,0 +1,345 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "storage-specialist.output.schema.json",
+  "title": "Storage Specialist Output Schema",
+  "description": "Output schema for Azure Storage (Blob, Table, Queue, Files) specialist responses",
+  "type": "object",
+  "required": ["solution", "implementation"],
+  "properties": {
+    "solution": {
+      "type": "object",
+      "required": ["description", "storageConfiguration"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "High-level solution description"
+        },
+        "storageConfiguration": {
+          "type": "object",
+          "properties": {
+            "accountType": { "type": "string" },
+            "redundancy": { "type": "string" },
+            "accessTier": { "type": "string" },
+            "services": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "securityFeatures": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "bicepTemplate": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            },
+            "explanation": { "type": "string" }
+          }
+        },
+        "sdkCode": {
+          "type": "object",
+          "properties": {
+            "blobClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "tableClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "queueClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "fileClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            }
+          }
+        },
+        "serviceClass": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Complete service class implementation"
+        }
+      }
+    },
+    "sasTokens": {
+      "type": "object",
+      "properties": {
+        "generationCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "userDelegationSas": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "bestPractices": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "lifecyclePolicy": {
+      "type": "object",
+      "properties": {
+        "policyJson": { "type": "object" },
+        "bicep": { "type": "string" },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "actions": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "estimatedSavings": { "type": "string" }
+      }
+    },
+    "networking": {
+      "type": "object",
+      "properties": {
+        "privateEndpoint": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "subResources": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "dnsZones": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "firewallRules": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "serviceEndpoints": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        }
+      }
+    },
+    "dataProtection": {
+      "type": "object",
+      "properties": {
+        "softDelete": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "retentionDays": { "type": "number" },
+            "bicep": { "type": "string" }
+          }
+        },
+        "versioning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "bicep": { "type": "string" }
+          }
+        },
+        "changeFeed": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "retentionDays": { "type": "number" }
+          }
+        },
+        "pointInTimeRestore": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "retentionDays": { "type": "number" }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "diagnosticSettings": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "logs": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "metrics": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "metric": { "type": "string" },
+              "threshold": { "type": "string" },
+              "severity": { "type": "number" }
+            }
+          }
+        },
+        "kqlQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "query": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "costOptimization": {
+      "type": "object",
+      "properties": {
+        "estimatedMonthlyCost": {
+          "type": "object",
+          "properties": {
+            "storageGB": { "type": "number" },
+            "storageCost": { "type": "number" },
+            "operationsCost": { "type": "number" },
+            "networkCost": { "type": "number" },
+            "totalCost": { "type": "number" }
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recommendation": { "type": "string" },
+              "potentialSavings": { "type": "string" },
+              "implementation": { "type": "string" }
+            }
+          }
+        },
+        "reservedCapacity": {
+          "type": "object",
+          "properties": {
+            "recommended": { "type": "boolean" },
+            "capacityTB": { "type": "number" },
+            "savingsPercent": { "type": "number" }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "azuriteSetup": {
+          "type": "string",
+          "description": "Azurite emulator setup instructions"
+        },
+        "unitTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "integrationTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "practice": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "nextAgent": { "type": "string" },
+        "reason": { "type": "string" },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

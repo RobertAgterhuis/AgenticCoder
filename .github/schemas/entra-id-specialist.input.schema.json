@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "entra-id-specialist.input.schema.json",
+  "title": "Entra ID Specialist Input Schema",
+  "description": "Input schema for Azure Entra ID (Azure AD) identity and authentication specialist requests",
+  "type": "object",
+  "required": ["requestType", "authenticationScenario"],
+  "properties": {
+    "requestType": {
+      "type": "string",
+      "enum": [
+        "authentication-flow",
+        "authorization-setup",
+        "msal-integration",
+        "managed-identity",
+        "app-registration",
+        "token-validation",
+        "b2c-configuration",
+        "multi-tenant",
+        "conditional-access",
+        "review"
+      ],
+      "description": "Type of Entra ID request"
+    },
+    "authenticationScenario": {
+      "type": "object",
+      "properties": {
+        "flowType": {
+          "type": "string",
+          "enum": [
+            "authorization-code",
+            "authorization-code-pkce",
+            "client-credentials",
+            "on-behalf-of",
+            "device-code",
+            "implicit",
+            "ropc"
+          ],
+          "description": "OAuth 2.0/OIDC flow type"
+        },
+        "applicationType": {
+          "type": "string",
+          "enum": ["spa", "web-app", "daemon", "mobile", "desktop", "api"],
+          "description": "Type of application"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["react", "angular", "vue", "node", "dotnet", "python", "java"],
+          "description": "Development platform"
+        },
+        "tenancy": {
+          "type": "string",
+          "enum": ["single-tenant", "multi-tenant", "b2c"],
+          "description": "Tenancy model"
+        }
+      },
+      "required": ["flowType", "applicationType"]
+    },
+    "msalConfiguration": {
+      "type": "object",
+      "properties": {
+        "msalVersion": {
+          "type": "string",
+          "enum": ["msal-browser", "msal-node", "msal-react", "msal-angular"],
+          "description": "MSAL library to use"
+        },
+        "cacheLocation": {
+          "type": "string",
+          "enum": ["sessionStorage", "localStorage", "memoryStorage"],
+          "description": "Token cache location"
+        },
+        "scopes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "OAuth scopes required"
+        },
+        "silentRefresh": {
+          "type": "boolean",
+          "description": "Enable silent token refresh"
+        }
+      }
+    },
+    "managedIdentityConfig": {
+      "type": "object",
+      "properties": {
+        "identityType": {
+          "type": "string",
+          "enum": ["system-assigned", "user-assigned"],
+          "description": "Managed identity type"
+        },
+        "targetResources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Resources to access with managed identity"
+        },
+        "resourceType": {
+          "type": "string",
+          "enum": ["app-service", "function-app", "aks", "vm", "container-apps"],
+          "description": "Azure resource type using managed identity"
+        }
+      }
+    },
+    "appRegistration": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string",
+          "description": "Application display name"
+        },
+        "signInAudience": {
+          "type": "string",
+          "enum": [
+            "AzureADMyOrg",
+            "AzureADMultipleOrgs",
+            "AzureADandPersonalMicrosoftAccount",
+            "PersonalMicrosoftAccount"
+          ],
+          "description": "Who can sign in"
+        },
+        "redirectUris": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Redirect URIs for auth callbacks"
+        },
+        "apiPermissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "api": { "type": "string" },
+              "permission": { "type": "string" },
+              "type": { "type": "string", "enum": ["delegated", "application"] }
+            }
+          },
+          "description": "Required API permissions"
+        },
+        "exposeApi": {
+          "type": "boolean",
+          "description": "Whether to expose an API"
+        },
+        "appRoles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "displayName": { "type": "string" },
+              "value": { "type": "string" },
+              "allowedMemberTypes": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["User", "Application"] }
+              }
+            }
+          },
+          "description": "Application roles to define"
+        }
+      }
+    },
+    "tokenValidation": {
+      "type": "object",
+      "properties": {
+        "validateIssuer": { "type": "boolean" },
+        "validateAudience": { "type": "boolean" },
+        "validateLifetime": { "type": "boolean" },
+        "allowedIssuers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "allowedAudiences": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "clockSkewSeconds": { "type": "number" }
+      },
+      "description": "JWT token validation requirements"
+    },
+    "b2cConfiguration": {
+      "type": "object",
+      "properties": {
+        "userFlows": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["sign-up-sign-in", "profile-edit", "password-reset"]
+          },
+          "description": "B2C user flows to implement"
+        },
+        "customPolicies": {
+          "type": "boolean",
+          "description": "Use custom policies instead of user flows"
+        },
+        "identityProviders": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["local", "google", "facebook", "microsoft", "apple", "github"]
+          },
+          "description": "Identity providers to configure"
+        },
+        "customAttributes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Custom user attributes"
+        }
+      }
+    },
+    "securityRequirements": {
+      "type": "object",
+      "properties": {
+        "mfaRequired": { "type": "boolean" },
+        "conditionalAccess": { "type": "boolean" },
+        "deviceCompliance": { "type": "boolean" },
+        "sessionManagement": { "type": "boolean" },
+        "riskBasedAuth": { "type": "boolean" }
+      },
+      "description": "Security requirements"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "existingCode": { "type": "string" },
+        "azureEnvironment": {
+          "type": "string",
+          "enum": ["public", "government", "china"],
+          "default": "public"
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "description": "Additional context for the request"
+    }
+  }
+}

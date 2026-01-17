@@ -1,0 +1,402 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "networking-specialist.output.schema.json",
+  "title": "Networking Specialist Output Schema",
+  "description": "Output schema for Azure Networking (VNets, NSGs, Private Endpoints, Firewall) specialist responses",
+  "type": "object",
+  "required": ["solution", "implementation"],
+  "properties": {
+    "solution": {
+      "type": "object",
+      "required": ["description", "networkArchitecture"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "High-level solution description"
+        },
+        "networkArchitecture": {
+          "type": "object",
+          "properties": {
+            "topology": { "type": "string" },
+            "vnets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "purpose": { "type": "string" },
+                  "addressSpace": { "type": "string" }
+                }
+              }
+            },
+            "connectivityModel": { "type": "string" }
+          }
+        },
+        "securityLayers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "diagram": {
+          "type": "string",
+          "description": "ASCII diagram of network topology"
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "bicepModules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "parameters": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "description": { "type": "string" }
+                  }
+                }
+              },
+              "outputs": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "description": "Bicep modules for network components"
+        },
+        "mainBicep": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Main Bicep template orchestrating modules"
+        },
+        "deploymentOrder": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Order of resource deployment"
+        }
+      }
+    },
+    "vnetConfiguration": {
+      "type": "object",
+      "properties": {
+        "vnets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "addressSpace": { "type": "string" },
+              "subnets": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "addressPrefix": { "type": "string" },
+                    "nsg": { "type": "string" },
+                    "routeTable": { "type": "string" },
+                    "delegations": { "type": "array", "items": { "type": "string" } }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "peerings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "sourceVnet": { "type": "string" },
+              "targetVnet": { "type": "string" },
+              "allowForwardedTraffic": { "type": "boolean" },
+              "allowGatewayTransit": { "type": "boolean" }
+            }
+          }
+        },
+        "ipAddressPlan": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "vnet": { "type": "string" },
+              "subnet": { "type": "string" },
+              "range": { "type": "string" },
+              "usableHosts": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "nsgConfiguration": {
+      "type": "object",
+      "properties": {
+        "nsgs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "priority": { "type": "number" },
+                    "direction": { "type": "string" },
+                    "access": { "type": "string" },
+                    "protocol": { "type": "string" },
+                    "source": { "type": "string" },
+                    "destination": { "type": "string" },
+                    "ports": { "type": "string" },
+                    "description": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "applicationSecurityGroups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "associatedResources": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "flowLogsConfig": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "storageAccount": { "type": "string" },
+            "retentionDays": { "type": "number" }
+          }
+        }
+      }
+    },
+    "privateEndpoints": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "resourceType": { "type": "string" },
+              "subResource": { "type": "string" },
+              "privateIp": { "type": "string" },
+              "dnsZone": { "type": "string" }
+            }
+          }
+        },
+        "privateDnsZones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "linkedVnets": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "bicepModule": {
+          "type": "string"
+        }
+      }
+    },
+    "firewall": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "sku": { "type": "string" },
+            "privateIp": { "type": "string" },
+            "publicIp": { "type": "string" }
+          }
+        },
+        "policyRules": {
+          "type": "object",
+          "properties": {
+            "applicationRuleCollections": { "type": "array" },
+            "networkRuleCollections": { "type": "array" },
+            "dnatRuleCollections": { "type": "array" }
+          }
+        },
+        "bicepTemplate": { "type": "string" }
+      }
+    },
+    "routeTables": {
+      "type": "object",
+      "properties": {
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "routes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "addressPrefix": { "type": "string" },
+                    "nextHopType": { "type": "string" },
+                    "nextHopIpAddress": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "bicep": { "type": "string" }
+      }
+    },
+    "bastion": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "sku": { "type": "string" },
+            "features": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "bicep": { "type": "string" },
+        "usageGuide": { "type": "string" }
+      }
+    },
+    "dnsConfiguration": {
+      "type": "object",
+      "properties": {
+        "privateDnsZones": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "records": { "type": "array" },
+              "linkedVnets": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        },
+        "dnsResolver": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "inboundEndpoint": { "type": "string" },
+            "outboundEndpoint": { "type": "string" }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "diagnosticSettings": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "logs": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "networkWatcher": {
+          "type": "object",
+          "properties": {
+            "connectionMonitor": { "type": "boolean" },
+            "flowLogs": { "type": "boolean" },
+            "trafficAnalytics": { "type": "boolean" }
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "condition": { "type": "string" },
+              "severity": { "type": "number" }
+            }
+          }
+        },
+        "kqlQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "query": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "costEstimate": {
+      "type": "object",
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resource": { "type": "string" },
+              "monthlyCost": { "type": "number" },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "totalMonthlyCost": { "type": "number" },
+        "optimizationTips": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "practice": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "nextAgent": { "type": "string" },
+        "reason": { "type": "string" },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

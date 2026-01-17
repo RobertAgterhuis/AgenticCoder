@@ -1,0 +1,330 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "keyvault-specialist.output.schema.json",
+  "title": "Key Vault Specialist Output Schema",
+  "description": "Output schema for Azure Key Vault secrets, keys, and certificates management specialist responses",
+  "type": "object",
+  "required": ["solution", "implementation"],
+  "properties": {
+    "solution": {
+      "type": "object",
+      "required": ["description", "vaultConfiguration"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "High-level solution description"
+        },
+        "vaultConfiguration": {
+          "type": "object",
+          "properties": {
+            "skuName": {
+              "type": "string",
+              "enum": ["standard", "premium"]
+            },
+            "accessModel": { "type": "string" },
+            "networkModel": { "type": "string" }
+          }
+        },
+        "securityFeatures": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Security features enabled"
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "bicepTemplate": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            },
+            "explanation": { "type": "string" }
+          },
+          "description": "Bicep template for Key Vault"
+        },
+        "sdkCode": {
+          "type": "object",
+          "properties": {
+            "secretClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "keyClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "certificateClient": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            }
+          },
+          "description": "SDK implementation code"
+        },
+        "cachingPattern": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "cacheDuration": { "type": "string" },
+            "refreshStrategy": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Secret caching implementation"
+        }
+      }
+    },
+    "accessControl": {
+      "type": "object",
+      "properties": {
+        "accessPolicies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "objectId": { "type": "string" },
+              "permissions": { "type": "object" },
+              "purpose": { "type": "string" }
+            }
+          }
+        },
+        "rbacAssignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "principalId": { "type": "string" },
+              "roleDefinitionId": { "type": "string" },
+              "roleName": { "type": "string" },
+              "scope": { "type": "string" }
+            }
+          }
+        },
+        "bicepRoleAssignments": {
+          "type": "string",
+          "description": "Bicep code for role assignments"
+        }
+      }
+    },
+    "rotationStrategy": {
+      "type": "object",
+      "properties": {
+        "functionCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "trigger": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Azure Function for rotation"
+        },
+        "eventGridSetup": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "events": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "description": "Event Grid configuration"
+        },
+        "rotationSchedule": {
+          "type": "object",
+          "properties": {
+            "frequency": { "type": "string" },
+            "notificationDays": { "type": "number" }
+          }
+        }
+      }
+    },
+    "certificates": {
+      "type": "object",
+      "properties": {
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "issuerName": { "type": "string" },
+              "subject": { "type": "string" },
+              "keyProperties": { "type": "object" },
+              "lifetimeActions": { "type": "array" }
+            }
+          }
+        },
+        "autoRenewalConfig": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "renewBeforeDays": { "type": "number" },
+            "notification": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "networking": {
+      "type": "object",
+      "properties": {
+        "privateEndpoint": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "dnsZone": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "firewallRules": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "diagnosticSettings": {
+          "type": "object",
+          "properties": {
+            "bicep": { "type": "string" },
+            "logs": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "metrics": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "condition": { "type": "string" },
+              "severity": { "type": "number" },
+              "bicep": { "type": "string" }
+            }
+          }
+        },
+        "kqlQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "query": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "backupRestore": {
+      "type": "object",
+      "properties": {
+        "backupCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "storageLocation": { "type": "string" }
+          }
+        },
+        "restoreCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" }
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "unitTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "integrationTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "mockingStrategy": {
+          "type": "string"
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "practice": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "nextAgent": { "type": "string" },
+        "reason": { "type": "string" },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "entra-id-specialist.output.schema.json",
+  "title": "Entra ID Specialist Output Schema",
+  "description": "Output schema for Azure Entra ID (Azure AD) identity and authentication specialist responses",
+  "type": "object",
+  "required": ["solution", "authenticationImplementation"],
+  "properties": {
+    "solution": {
+      "type": "object",
+      "required": ["description", "flowType", "components"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "High-level solution description"
+        },
+        "flowType": {
+          "type": "string",
+          "description": "OAuth 2.0/OIDC flow implemented"
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "purpose": { "type": "string" },
+              "technology": { "type": "string" }
+            }
+          },
+          "description": "Solution components"
+        },
+        "securityConsiderations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Security considerations addressed"
+        }
+      }
+    },
+    "authenticationImplementation": {
+      "type": "object",
+      "properties": {
+        "msalConfiguration": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "MSAL configuration code"
+        },
+        "authProvider": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Authentication provider implementation"
+        },
+        "protectedRoutes": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Route protection implementation"
+        },
+        "tokenAcquisition": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Token acquisition patterns"
+        }
+      }
+    },
+    "appRegistration": {
+      "type": "object",
+      "properties": {
+        "manifest": {
+          "type": "object",
+          "description": "App registration manifest configuration"
+        },
+        "bicepTemplate": {
+          "type": "string",
+          "description": "Bicep template for app registration (if applicable)"
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "api": { "type": "string" },
+              "permission": { "type": "string" },
+              "type": { "type": "string" },
+              "adminConsentRequired": { "type": "boolean" }
+            }
+          },
+          "description": "Required permissions"
+        },
+        "exposedScopes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": { "type": "string" },
+              "adminConsentDisplayName": { "type": "string" },
+              "userConsentDisplayName": { "type": "string" }
+            }
+          },
+          "description": "Exposed API scopes"
+        }
+      }
+    },
+    "tokenValidation": {
+      "type": "object",
+      "properties": {
+        "middlewareCode": {
+          "type": "string",
+          "description": "JWT validation middleware code"
+        },
+        "validationParameters": {
+          "type": "object",
+          "description": "Token validation parameters"
+        },
+        "claimsMapping": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "claim": { "type": "string" },
+              "usage": { "type": "string" }
+            }
+          },
+          "description": "How JWT claims are used"
+        }
+      }
+    },
+    "managedIdentity": {
+      "type": "object",
+      "properties": {
+        "sdkUsage": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          },
+          "description": "Managed identity SDK usage"
+        },
+        "roleAssignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "resource": { "type": "string" },
+              "role": { "type": "string" },
+              "scope": { "type": "string" }
+            }
+          },
+          "description": "Required role assignments"
+        },
+        "bicepTemplate": {
+          "type": "string",
+          "description": "Bicep for managed identity setup"
+        }
+      }
+    },
+    "b2cImplementation": {
+      "type": "object",
+      "properties": {
+        "userFlowConfigs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { "type": "string" },
+              "configuration": { "type": "object" }
+            }
+          },
+          "description": "B2C user flow configurations"
+        },
+        "customPolicies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "xml": { "type": "string" }
+            }
+          },
+          "description": "Custom policy XML files"
+        },
+        "frontendIntegration": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        }
+      }
+    },
+    "conditionalAccess": {
+      "type": "object",
+      "properties": {
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "conditions": { "type": "object" },
+              "grantControls": { "type": "object" }
+            }
+          },
+          "description": "Conditional access policies"
+        },
+        "recommendations": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Conditional access recommendations"
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "unitTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "integrationTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "mockingStrategy": {
+          "type": "string",
+          "description": "How to mock authentication in tests"
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "practice": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      },
+      "description": "Security and implementation best practices"
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "nextAgent": { "type": "string" },
+        "reason": { "type": "string" },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "description": "Handoff to next agent if needed"
+    }
+  }
+}

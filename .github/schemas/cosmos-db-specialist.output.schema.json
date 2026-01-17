@@ -1,0 +1,372 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cosmos-db-specialist.output.schema.json",
+  "title": "Cosmos DB Specialist Output Schema",
+  "description": "Output schema for Azure Cosmos DB NoSQL database design and implementation specialist responses",
+  "type": "object",
+  "required": ["solution", "dataModel", "implementation"],
+  "properties": {
+    "solution": {
+      "type": "object",
+      "required": ["description", "partitionStrategy", "consistencyLevel"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "High-level solution description"
+        },
+        "partitionStrategy": {
+          "type": "object",
+          "properties": {
+            "partitionKey": { "type": "string" },
+            "reasoning": { "type": "string" },
+            "cardinality": { "type": "string" }
+          }
+        },
+        "consistencyLevel": {
+          "type": "object",
+          "properties": {
+            "level": { "type": "string" },
+            "reasoning": { "type": "string" }
+          }
+        },
+        "throughputModel": {
+          "type": "object",
+          "properties": {
+            "mode": { "type": "string" },
+            "estimatedRUs": { "type": "number" },
+            "reasoning": { "type": "string" }
+          }
+        }
+      }
+    },
+    "dataModel": {
+      "type": "object",
+      "properties": {
+        "containers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "partitionKey": { "type": "string" },
+              "documentTypes": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "purpose": { "type": "string" }
+            }
+          },
+          "description": "Container definitions"
+        },
+        "documentSchemas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "schema": { "type": "object" },
+              "typeScriptInterface": { "type": "string" },
+              "example": { "type": "object" }
+            }
+          },
+          "description": "Document schemas with TypeScript interfaces"
+        },
+        "embeddingDecisions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "relationship": { "type": "string" },
+              "decision": { "type": "string", "enum": ["embed", "reference"] },
+              "reasoning": { "type": "string" }
+            }
+          }
+        },
+        "multiEntityPattern": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "discriminatorProperty": { "type": "string" },
+            "typeMapping": { "type": "object" }
+          }
+        }
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "properties": {
+        "bicepTemplate": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string" },
+                  "description": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "sdkCode": {
+          "type": "object",
+          "properties": {
+            "clientSetup": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "repository": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "transactionalBatch": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            },
+            "bulkOperations": {
+              "type": "object",
+              "properties": {
+                "code": { "type": "string" },
+                "language": { "type": "string" },
+                "explanation": { "type": "string" }
+              }
+            }
+          }
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "sql": { "type": "string" },
+              "partitionKey": { "type": "string" },
+              "crossPartition": { "type": "boolean" },
+              "estimatedRUs": { "type": "number" }
+            }
+          },
+          "description": "Common queries with RU estimates"
+        }
+      }
+    },
+    "indexingPolicy": {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "object",
+          "description": "Complete indexing policy JSON"
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Why this policy was chosen"
+        },
+        "compositeIndexes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "paths": { "type": "array", "items": { "type": "string" } },
+              "querySupported": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "changeFeed": {
+      "type": "object",
+      "properties": {
+        "processorCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "explanation": { "type": "string" }
+          }
+        },
+        "azureFunctionCode": {
+          "type": "object",
+          "properties": {
+            "code": { "type": "string" },
+            "language": { "type": "string" },
+            "bindingConfig": { "type": "object" }
+          }
+        },
+        "leaseContainerConfig": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "partitionKey": { "type": "string" }
+          }
+        }
+      }
+    },
+    "globalDistribution": {
+      "type": "object",
+      "properties": {
+        "regions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "priority": { "type": "number" },
+              "isWriteRegion": { "type": "boolean" }
+            }
+          }
+        },
+        "conflictResolution": {
+          "type": "object",
+          "properties": {
+            "mode": { "type": "string" },
+            "procedure": { "type": "string" }
+          }
+        },
+        "connectionPolicy": {
+          "type": "object",
+          "properties": {
+            "preferredLocations": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "enableEndpointDiscovery": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "costOptimization": {
+      "type": "object",
+      "properties": {
+        "estimatedMonthlyCost": {
+          "type": "object",
+          "properties": {
+            "storageGB": { "type": "number" },
+            "storageCost": { "type": "number" },
+            "throughputRUs": { "type": "number" },
+            "throughputCost": { "type": "number" },
+            "totalCost": { "type": "number" },
+            "currency": { "type": "string", "default": "USD" }
+          }
+        },
+        "optimizations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "recommendation": { "type": "string" },
+              "potentialSavings": { "type": "string" },
+              "tradeoff": { "type": "string" }
+            }
+          }
+        },
+        "ttlRecommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "container": { "type": "string" },
+              "ttlSeconds": { "type": "number" },
+              "reasoning": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "description": { "type": "string" },
+              "alertThreshold": { "type": "string" }
+            }
+          }
+        },
+        "kqlQueries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "query": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "testing": {
+      "type": "object",
+      "properties": {
+        "emulatorSetup": {
+          "type": "string",
+          "description": "Cosmos DB Emulator setup instructions"
+        },
+        "unitTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "integrationTests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "bestPractices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "practice": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "nextAgent": { "type": "string" },
+        "reason": { "type": "string" },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

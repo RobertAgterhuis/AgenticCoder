@@ -1,0 +1,260 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "keyvault-specialist.input.schema.json",
+  "title": "Key Vault Specialist Input Schema",
+  "description": "Input schema for Azure Key Vault secrets, keys, and certificates management specialist requests",
+  "type": "object",
+  "required": ["requestType", "vaultPurpose"],
+  "properties": {
+    "requestType": {
+      "type": "string",
+      "enum": [
+        "secrets-management",
+        "key-management",
+        "certificate-management",
+        "access-policy",
+        "rbac-setup",
+        "sdk-integration",
+        "rotation-strategy",
+        "backup-restore",
+        "infrastructure",
+        "review"
+      ],
+      "description": "Type of Key Vault request"
+    },
+    "vaultPurpose": {
+      "type": "string",
+      "enum": [
+        "application-secrets",
+        "encryption-keys",
+        "tls-certificates",
+        "signing-keys",
+        "database-credentials",
+        "api-keys",
+        "connection-strings",
+        "multi-purpose"
+      ],
+      "description": "Primary purpose of the Key Vault"
+    },
+    "secretsConfig": {
+      "type": "object",
+      "properties": {
+        "secrets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "contentType": { "type": "string" },
+              "expirationDays": { "type": "number" },
+              "tags": { "type": "object" }
+            }
+          },
+          "description": "Secrets to manage"
+        },
+        "rotationRequired": {
+          "type": "boolean",
+          "description": "Whether automatic rotation is needed"
+        },
+        "rotationFrequencyDays": {
+          "type": "number",
+          "description": "Rotation frequency in days"
+        },
+        "versioning": {
+          "type": "boolean",
+          "description": "Enable secret versioning"
+        }
+      }
+    },
+    "keysConfig": {
+      "type": "object",
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "keyType": {
+                "type": "string",
+                "enum": ["RSA", "RSA-HSM", "EC", "EC-HSM", "oct", "oct-HSM"]
+              },
+              "keySize": { "type": "number" },
+              "operations": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["encrypt", "decrypt", "sign", "verify", "wrapKey", "unwrapKey"]
+                }
+              }
+            }
+          },
+          "description": "Keys to manage"
+        },
+        "hsmRequired": {
+          "type": "boolean",
+          "description": "Require HSM-backed keys"
+        }
+      }
+    },
+    "certificatesConfig": {
+      "type": "object",
+      "properties": {
+        "certificates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "subject": { "type": "string" },
+              "dnsNames": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "issuer": {
+                "type": "string",
+                "enum": ["Self", "DigiCert", "GlobalSign", "Unknown"]
+              },
+              "validityMonths": { "type": "number" },
+              "autoRenew": { "type": "boolean" }
+            }
+          },
+          "description": "Certificates to manage"
+        },
+        "integratedCA": {
+          "type": "boolean",
+          "description": "Use integrated CA provider"
+        }
+      }
+    },
+    "accessConfig": {
+      "type": "object",
+      "properties": {
+        "accessModel": {
+          "type": "string",
+          "enum": ["vault-access-policy", "azure-rbac"],
+          "description": "Access control model"
+        },
+        "principals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["user", "group", "service-principal", "managed-identity"]
+              },
+              "objectId": { "type": "string" },
+              "permissions": {
+                "type": "object",
+                "properties": {
+                  "secrets": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "keys": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  },
+                  "certificates": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "description": "Principals requiring access"
+        }
+      }
+    },
+    "networkConfig": {
+      "type": "object",
+      "properties": {
+        "publicNetworkAccess": {
+          "type": "boolean",
+          "description": "Allow public network access"
+        },
+        "privateEndpoint": {
+          "type": "boolean",
+          "description": "Use private endpoint"
+        },
+        "allowedIpRanges": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Allowed IP ranges"
+        },
+        "virtualNetworkRules": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Allowed subnet IDs"
+        }
+      }
+    },
+    "sdkRequirements": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "enum": ["typescript", "javascript", "csharp", "python", "java", "go"],
+          "description": "SDK language"
+        },
+        "authMethod": {
+          "type": "string",
+          "enum": ["managed-identity", "service-principal", "certificate", "interactive"],
+          "description": "Authentication method for SDK"
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["get", "set", "delete", "list", "backup", "restore", "purge"]
+          },
+          "description": "Operations to implement"
+        },
+        "caching": {
+          "type": "boolean",
+          "description": "Implement secret caching"
+        }
+      }
+    },
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "softDelete": {
+          "type": "boolean",
+          "default": true
+        },
+        "purgeProtection": {
+          "type": "boolean",
+          "default": true
+        },
+        "retentionDays": {
+          "type": "number",
+          "default": 90
+        },
+        "diagnosticLogging": {
+          "type": "boolean",
+          "description": "Enable diagnostic logging"
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "existingVaults": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "targetEnvironment": {
+          "type": "string",
+          "enum": ["development", "staging", "production"]
+        },
+        "constraints": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}
