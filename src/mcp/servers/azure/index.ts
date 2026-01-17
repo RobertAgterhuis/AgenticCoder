@@ -1,7 +1,7 @@
 /**
  * Azure MCP Server Adapters
  * 
- * Local Python MCP servers for Azure operations
+ * Native TypeScript implementations for Azure operations
  * @module mcp/servers/azure
  */
 

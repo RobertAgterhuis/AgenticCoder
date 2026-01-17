@@ -1,14 +1,21 @@
 /**
  * Azure Resource Graph MCP Server Adapter
  * 
- * Connects to the local Python MCP server for Azure Resource Graph queries
+ * Native TypeScript implementation for Azure Resource Graph queries
  * @module mcp/servers/azure/AzureResourceGraphMCPAdapter
  */
 
-import { BaseServerAdapter } from '../BaseServerAdapter';
+import { BaseServerAdapter, ServerAdapterConfig } from '../BaseServerAdapter';
 import { MCPClientManager } from '../../core/MCPClientManager';
 import { MCPServerDefinition, ToolCallResponse } from '../../types';
-import * as path from 'path';
+
+/**
+ * Azure Resource Graph REST API configuration
+ */
+const RESOURCE_GRAPH_API_VERSION = '2022-10-01';
+const DEFAULT_TIMEOUT = 30000;
+const DEFAULT_RETRIES = 3;
+const DEFAULT_BACKOFF = 500;
 
 /**
  * Resource Graph query result
@@ -36,22 +43,56 @@ export interface ResourceGraphResource {
 }
 
 /**
+ * Azure Resource Graph API response
+ */
+interface ResourceGraphApiResponse {
+  totalRecords: number;
+  count: number;
+  data: {
+    columns: Array<{ name: string; type: string }>;
+    rows: Array<Array<unknown>>;
+  };
+  facets?: Array<unknown>;
+  resultTruncated?: string;
+  $skipToken?: string;
+}
+
+/**
+ * Azure Resource Graph adapter configuration
+ */
+export interface AzureResourceGraphAdapterConfig extends ServerAdapterConfig {
+  subscriptionId?: string;
+  tenantId?: string;
+  maxRetries?: number;
+  timeoutMs?: number;
+  backoffMs?: number;
+}
+
+/**
  * Azure Resource Graph MCP Adapter
  * 
- * Provides access to Azure Resource Graph for governance and compliance queries
+ * Native TypeScript implementation for Azure Resource Graph API
+ * Uses Azure REST API directly with Azure CLI authentication
  */
 export class AzureResourceGraphMCPAdapter extends BaseServerAdapter {
-  private workspaceFolder: string;
   private subscriptionId: string | undefined;
+  private tenantId: string | undefined;
+  private maxRetries: number;
+  private timeoutMs: number;
+  private backoffMs: number;
+  private accessToken: string | null = null;
+  private tokenExpiry: number = 0;
 
   constructor(
     clientManager: MCPClientManager,
-    workspaceFolder?: string,
-    subscriptionId?: string
+    config?: Partial<AzureResourceGraphAdapterConfig>
   ) {
-    super(clientManager);
-    this.workspaceFolder = workspaceFolder || process.cwd();
-    this.subscriptionId = subscriptionId || process.env.AZURE_SUBSCRIPTION_ID;
+    super(clientManager, config);
+    this.subscriptionId = config?.subscriptionId || process.env.AZURE_SUBSCRIPTION_ID;
+    this.tenantId = config?.tenantId || process.env.AZURE_TENANT_ID;
+    this.maxRetries = config?.maxRetries ?? DEFAULT_RETRIES;
+    this.timeoutMs = config?.timeoutMs ?? DEFAULT_TIMEOUT;
+    this.backoffMs = config?.backoffMs ?? DEFAULT_BACKOFF;
   }
 
   /**
@@ -62,25 +103,20 @@ export class AzureResourceGraphMCPAdapter extends BaseServerAdapter {
   }
 
   /**
-   * Get server definition
+   * Get server definition (native implementation - no external process)
    */
   getDefinition(): MCPServerDefinition {
-    const mcpPath = path.join(this.workspaceFolder, '.github', 'mcp', 'azure-resource-graph-mcp');
-    
     return {
       id: 'azure-resource-graph-mcp',
       name: 'Azure Resource Graph MCP',
-      description: 'Azure Resource Graph queries for governance and compliance',
+      description: 'Azure Resource Graph queries for governance and compliance (native TypeScript)',
       category: 'data',
-      transport: 'stdio',
-      command: 'python',
-      args: ['-m', 'azure_resource_graph_mcp'],
-      env: {
-        PYTHONPATH: mcpPath,
-        AZURE_SUBSCRIPTION_ID: this.subscriptionId || '',
-      },
+      transport: 'native',
+      command: '',
+      args: [],
+      env: {},
       enabled: true,
-      tags: ['azure', 'resource-graph', 'governance', 'compliance'],
+      tags: ['azure', 'resource-graph', 'governance', 'compliance', 'native'],
       healthCheck: {
         enabled: true,
         intervalMs: 60000,
@@ -93,19 +129,193 @@ export class AzureResourceGraphMCPAdapter extends BaseServerAdapter {
   }
 
   /**
+   * Initialize the adapter
+   */
+  async initialize(): Promise<void> {
+    if (this.registered) {
+      this.logger.warn('Adapter already initialized');
+      return;
+    }
+
+    this.logger.info(`Initializing native adapter: ${this.getServerId()}`);
+
+    // Define available tools
+    this.tools = [
+      {
+        name: 'query',
+        description: 'Execute a Kusto (KQL) query against Azure Resource Graph',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            query: { type: 'string', description: 'Kusto query string' },
+          },
+          required: ['query'],
+        },
+      },
+      {
+        name: 'ping',
+        description: 'Health check for the Resource Graph service',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+        },
+      },
+    ];
+
+    this.registered = true;
+    this.emit('initialized');
+  }
+
+  /**
+   * Get Azure access token using Azure CLI
+   */
+  private async getAccessToken(): Promise<string> {
+    // Check if cached token is still valid
+    if (this.accessToken && Date.now() < this.tokenExpiry - 60000) {
+      return this.accessToken;
+    }
+
+    try {
+      // Use Azure CLI to get token
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+
+      const { stdout } = await execAsync('az account get-access-token --resource https://management.azure.com/ --output json');
+      const tokenData = JSON.parse(stdout);
+      
+      this.accessToken = tokenData.accessToken as string;
+      this.tokenExpiry = new Date(tokenData.expiresOn).getTime();
+      
+      return this.accessToken;
+    } catch (error) {
+      this.logger.error('Failed to get Azure access token. Make sure Azure CLI is installed and logged in.');
+      throw new Error('Azure authentication failed. Run "az login" first.');
+    }
+  }
+
+  /**
+   * Sleep utility for retry backoff
+   */
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
    * Execute a Resource Graph query
    */
   async query(
     kusto: string
   ): Promise<ToolCallResponse<ResourceGraphResult>> {
-    return this.callTool('query', { query: kusto });
+    try {
+      if (!kusto || typeof kusto !== 'string' || !kusto.trim()) {
+        return {
+          success: false,
+          error: { code: 'INVALID_INPUT', message: 'query must be a non-empty string', retryable: false },
+        };
+      }
+
+      const token = await this.getAccessToken();
+      const url = `https://management.azure.com/providers/Microsoft.ResourceGraph/resources?api-version=${RESOURCE_GRAPH_API_VERSION}`;
+
+      const body = {
+        query: kusto.trim(),
+        subscriptions: this.subscriptionId ? [this.subscriptionId] : undefined,
+      };
+
+      let lastError: Error | null = null;
+
+      for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), this.timeoutMs);
+
+          const response = await fetch(url, {
+            method: 'POST',
+            signal: controller.signal,
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify(body),
+          });
+
+          clearTimeout(timeoutId);
+
+          if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorBody}`);
+          }
+
+          const apiResponse = await response.json() as ResourceGraphApiResponse;
+          
+          // Convert columnar data to array of objects
+          const columns = apiResponse.data?.columns || [];
+          const rows = apiResponse.data?.rows || [];
+          const data = rows.map(row => {
+            const obj: Record<string, unknown> = {};
+            columns.forEach((col, idx) => {
+              obj[col.name] = row[idx];
+            });
+            return obj;
+          });
+
+          return {
+            success: true,
+            data: {
+              status: 'ok',
+              tool: 'query',
+              query: kusto,
+              count: data.length,
+              data,
+            },
+          };
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+          this.logger.warn(`Resource Graph query attempt ${attempt + 1} failed: ${lastError.message}`);
+          
+          if (attempt < this.maxRetries - 1) {
+            await this.sleep(this.backoffMs * Math.pow(2, attempt));
+          }
+        }
+      }
+
+      throw lastError || new Error('Failed to execute Resource Graph query');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.error(`query failed: ${message}`);
+      return {
+        success: false,
+        error: { code: 'API_ERROR', message, retryable: true },
+      };
+    }
   }
 
   /**
-   * Ping the server
+   * Ping the service
    */
   async ping(): Promise<ToolCallResponse<{ status: string; service: string }>> {
-    return this.callTool('ping', {});
+    try {
+      // Try to get a token to verify authentication
+      await this.getAccessToken();
+      return {
+        success: true,
+        data: {
+          status: 'ok',
+          service: 'azure-resource-graph-mcp',
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: { 
+          code: 'AUTH_ERROR', 
+          message: error instanceof Error ? error.message : 'Authentication failed',
+          retryable: false,
+        },
+      };
+    }
   }
 
   /**
@@ -220,6 +430,28 @@ export class AzureResourceGraphMCPAdapter extends BaseServerAdapter {
 
     return [];
   }
+
+  /**
+   * Override callTool for native implementation
+   */
+  async callTool<T = unknown>(
+    toolName: string,
+    args: Record<string, unknown>
+  ): Promise<ToolCallResponse<T>> {
+    switch (toolName) {
+      case 'query':
+        return this.query(args.query as string) as Promise<ToolCallResponse<T>>;
+      
+      case 'ping':
+        return this.ping() as Promise<ToolCallResponse<T>>;
+      
+      default:
+        return {
+          success: false,
+          error: { code: 'UNKNOWN_TOOL', message: `Unknown tool: ${toolName}`, retryable: false },
+        };
+    }
+  }
 }
 
 /**
@@ -227,8 +459,7 @@ export class AzureResourceGraphMCPAdapter extends BaseServerAdapter {
  */
 export function createAzureResourceGraphMCPAdapter(
   clientManager: MCPClientManager,
-  workspaceFolder?: string,
-  subscriptionId?: string
+  config?: Partial<AzureResourceGraphAdapterConfig>
 ): AzureResourceGraphMCPAdapter {
-  return new AzureResourceGraphMCPAdapter(clientManager, workspaceFolder, subscriptionId);
+  return new AzureResourceGraphMCPAdapter(clientManager, config);
 }

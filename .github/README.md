@@ -106,17 +106,14 @@ npm test
                           │
           ┌───────────────▼───────────────┐
           │   TYPESCRIPT MCP LAYER        │
-          │   MCPGateway │ MCPBridge      │
-          │   19+ Adapters │ Health Mon.  │
-          └───────────────┬───────────────┘
-                          │
-          ┌───────────────▼───────────────┐
-          │     PYTHON MCP SERVERS        │
-          │   Pricing │ Docs │ Resources  │
+          │   MCPBridge │ Native Adapters │
+          │   Azure APIs │ Health Mon.    │
           └───────────────┬───────────────┘
                           │
           ┌───────────────▼───────────────┐
           │      AZURE SERVICES           │
+          │  Pricing │ Resource Graph     │
+          │  Microsoft Learn Search       │
           └───────────────────────────────┘
 ```
 
@@ -151,16 +148,13 @@ AgenticCoder/
 ├── src/mcp/                   # TypeScript MCP integration layer
 │   ├── core/                  # Client manager, connection pool
 │   ├── transport/             # Stdio, SSE, HTTP transports
-│   ├── servers/               # 19+ server adapters
+│   ├── servers/azure/         # Native Azure adapters
 │   ├── health/                # Circuit breaker, retry policies
 │   └── bridge.ts              # JS agent integration bridge
 ├── .github/                   # GitHub Copilot agents & skills
 │   ├── agents/                # 17 agent definitions
 │   ├── skills/                # 15 skill definitions
-│   ├── mcp/                   # Python MCP servers
-│   │   ├── azure-pricing-mcp/     # Azure pricing queries
-│   │   ├── azure-resource-graph-mcp/ # Resource graph queries
-│   │   └── microsoft-docs-mcp/    # Documentation search
+│   ├── mcp/                   # MCP configuration
 │   └── scenarios/             # 10 test scenarios
 └── Files/                     # Project plans & documentation
     └── AgenticCoderPlan/      # Detailed implementation plans
@@ -170,22 +164,21 @@ AgenticCoder/
 
 ## 🔌 MCP Integration
 
-### Python MCP Servers
+### Native TypeScript Adapters (`src/mcp/servers/azure/`)
 
-| Server | Transport | Description |
-|--------|-----------|-------------|
-| **azure-pricing-mcp** | Stdio | Real-time Azure pricing via Retail Prices API |
-| **azure-resource-graph-mcp** | Stdio | KQL queries for resource discovery |
-| **microsoft-docs-mcp** | Stdio | Microsoft Learn documentation search |
+| Adapter | API | Description |
+|---------|-----|-------------|
+| **AzurePricingMCPAdapter** | Azure Retail Prices API | Real-time Azure pricing queries |
+| **AzureResourceGraphMCPAdapter** | Azure REST API | KQL queries for resource discovery |
+| **MicrosoftDocsMCPAdapter** | Microsoft Learn API | Documentation search |
 
 ### TypeScript MCP Layer (`src/mcp/`)
 
 | Component | Description |
 |-----------|-------------|
-| **MCPGateway** | Unified entry point for all MCP operations |
+| **MCPBridge** | Unified entry point for all MCP operations |
 | **MCPClientManager** | Connection pool and lifecycle management |
-| **MCPBridge** | JavaScript agent integration bridge |
-| **19+ Server Adapters** | GitHub, Docker, Kubernetes, Azure, etc. |
+| **Native Adapters** | Direct HTTP calls to Azure/Microsoft APIs |
 | **Health Monitoring** | Circuit breaker, retry policies, metrics |
 
 ### Usage Example
@@ -216,7 +209,7 @@ cd agents && npm test
 ```
 
 **Test Coverage:**
-- ✅ 38+ MCP integration tests (CircuitBreaker, RetryPolicy)
+- ✅ 92+ MCP integration tests (Adapters, CircuitBreaker, RetryPolicy)
 - ✅ TypeScript compilation passing
 - ✅ Health monitoring tests
 

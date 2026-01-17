@@ -1,1 +1,0 @@
-"""microsoft-docs-mcp package."""

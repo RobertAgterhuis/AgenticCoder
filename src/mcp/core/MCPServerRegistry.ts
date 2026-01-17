@@ -313,6 +313,7 @@ export class MCPServerRegistry extends EventEmitter {
         sse: 0,
         http: 0,
         websocket: 0,
+        native: 0,
       },
     };
 

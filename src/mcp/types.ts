@@ -12,7 +12,7 @@
 /**
  * MCP Server transport types
  */
-export type TransportType = 'stdio' | 'sse' | 'http' | 'websocket';
+export type TransportType = 'stdio' | 'sse' | 'http' | 'websocket' | 'native';
 
 /**
  * MCP Server status

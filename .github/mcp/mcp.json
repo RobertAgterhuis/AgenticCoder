@@ -1,19 +1,14 @@
 {
   "$schema": "https://json.schemastore.org/mcp-server-config.json",
-  "version": "2.0.0",
-  "description": "AgenticCoder MCP Server Configuration - Aligned with TypeScript MCP Infrastructure",
+  "version": "3.0.0",
+  "description": "AgenticCoder MCP Server Configuration - Native TypeScript Implementation",
   
   "mcpServers": {
     "azure-pricing-mcp": {
-      "type": "stdio",
-      "command": "python",
-      "args": ["-m", "azure_pricing_mcp"],
-      "cwd": "${workspaceFolder}/.github/mcp/azure-pricing-mcp",
-      "env": {
-        "PYTHONPATH": "${workspaceFolder}/.github/mcp/azure-pricing-mcp"
-      },
+      "type": "native",
+      "implementation": "src/mcp/servers/azure/AzurePricingMCPAdapter.ts",
       "timeout": 30000,
-      "description": "Real-time Azure pricing data for cost estimation",
+      "description": "Real-time Azure pricing data for cost estimation (native TypeScript)",
       "category": "data",
       "tags": ["azure", "pricing", "cost"],
       "healthCheck": {
@@ -23,16 +18,13 @@
       }
     },
     "azure-resource-graph-mcp": {
-      "type": "stdio",
-      "command": "python",
-      "args": ["-m", "azure_resource_graph_mcp"],
-      "cwd": "${workspaceFolder}/.github/mcp/azure-resource-graph-mcp",
+      "type": "native",
+      "implementation": "src/mcp/servers/azure/AzureResourceGraphMCPAdapter.ts",
       "env": {
-        "PYTHONPATH": "${workspaceFolder}/.github/mcp/azure-resource-graph-mcp",
         "AZURE_SUBSCRIPTION_ID": "${env:AZURE_SUBSCRIPTION_ID}"
       },
       "timeout": 30000,
-      "description": "Azure Resource Graph queries for governance and compliance",
+      "description": "Azure Resource Graph queries for governance and compliance (native TypeScript)",
       "category": "data",
       "tags": ["azure", "resource-graph", "governance"],
       "healthCheck": {
@@ -42,15 +34,10 @@
       }
     },
     "microsoft-docs-mcp": {
-      "type": "stdio",
-      "command": "python",
-      "args": ["-m", "microsoft_docs_mcp"],
-      "cwd": "${workspaceFolder}/.github/mcp/microsoft-docs-mcp",
-      "env": {
-        "PYTHONPATH": "${workspaceFolder}/.github/mcp/microsoft-docs-mcp"
-      },
+      "type": "native",
+      "implementation": "src/mcp/servers/azure/MicrosoftDocsMCPAdapter.ts",
       "timeout": 30000,
-      "description": "Microsoft documentation search for best practices",
+      "description": "Microsoft documentation search for best practices (native TypeScript)",
       "category": "documentation",
       "tags": ["microsoft", "documentation", "best-practices"],
       "healthCheck": {
@@ -77,13 +64,8 @@
   },
 
   "notes": {
-    "migration": "This config is now aligned with src/mcp TypeScript infrastructure",
+    "architecture": "All servers are native TypeScript - no Python subprocess dependency",
     "usage": "Use MCPBridge from src/mcp/bridge.ts for JavaScript agent integration",
-    "deprecated": [
-      "servers/mcp-azure-* (Express HTTP - removed)",
-      "agents/core/McpClient.js",
-      "agents/core/tooling/McpStdioToolClient.js",
-      "agents/core/tooling/ToolClientFactory.js"
-    ]
+    "migration": "Python servers removed in v3.0.0, replaced by native TypeScript adapters"
   }
 }

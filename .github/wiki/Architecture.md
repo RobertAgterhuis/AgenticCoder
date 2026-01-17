@@ -347,31 +347,31 @@ AgenticCoder uses a **TypeScript MCP integration layer** (`src/mcp/`) that provi
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                Transport Layer (transport/)                      │
-│   - StdioTransport (Python servers)                              │
+│   - NativeTransport (direct HTTP)                                │
+│   - StdioTransport (subprocess)                                  │
 │   - SSETransport (streaming)                                     │
 │   - HTTPTransport (REST APIs)                                    │
-│   - WebSocketTransport (bidirectional)                           │
 └───────────────────────────┬─────────────────────────────────────┘
                             │
     ┌───────────────────────┼───────────────────────┐
     ▼                       ▼                       ▼
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Python MCP │     │Official MCP │     │External MCP │
-│  (.github/  │     │ (GitHub,    │     │ (Custom)    │
-│   mcp/)     │     │  Docker...) │     │             │
+│  Native TS  │     │Official MCP │     │External MCP │
+│  Adapters   │     │ (GitHub,    │     │ (Custom)    │
+│  (Azure)    │     │  Docker...) │     │             │
 └─────────────┘     └─────────────┘     └─────────────┘
 ```
 
-### Server Adapters (19+)
+### Server Adapters
 
-| Category | Adapters |
-|----------|----------|
-| **Azure** | AzurePricingMCP, AzureResourceGraphMCP, MicrosoftDocsMCP |
-| **Official** | GitHub, Filesystem, Git, Fetch, Puppeteer, Memory, SQLite, Sequential |
-| **Deployment** | Docker, Kubernetes, AzureDevOps, GitHub Actions |
-| **Security** | Semgrep, Trivy, OWASP Dependency Check |
-| **Data** | PostgreSQL, MongoDB, Redis |
-| **Testing** | Playwright |
+| Category | Adapters | Transport |
+|----------|----------|-----------|
+| **Azure** | AzurePricingMCPAdapter, AzureResourceGraphMCPAdapter, MicrosoftDocsMCPAdapter | Native (direct HTTP) |
+| **Official** | GitHub, Filesystem, Git, Fetch, Puppeteer, Memory, SQLite, Sequential | Stdio |
+| **Deployment** | Docker, Kubernetes, AzureDevOps, GitHub Actions | HTTP/Stdio |
+| **Security** | Semgrep, Trivy, OWASP Dependency Check | Stdio |
+| **Data** | PostgreSQL, MongoDB, Redis | HTTP |
+| **Testing** | Playwright | Stdio |
 
 ### Key Features
 

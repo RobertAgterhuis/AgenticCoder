@@ -508,12 +508,12 @@ AgenticCoder uses a **TypeScript MCP integration layer** that provides unified a
                           │
 ┌─────────────────────────▼───────────────────────────────────┐
 │                  Transport Layer                             │
-│  Stdio │ SSE │ HTTP │ WebSocket                             │
+│  Stdio │ SSE │ HTTP │ WebSocket │ Native                    │
 └─────────────────────────┬───────────────────────────────────┘
                           │
 ┌─────────────────────────▼───────────────────────────────────┐
-│              MCP Servers (Python / External)                 │
-│  azure-pricing-mcp │ azure-resource-graph-mcp │ docs-mcp    │
+│                    Azure Services                            │
+│  Retail Prices API │ Resource Graph API │ Learn Search API  │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -528,17 +528,15 @@ src/mcp/
 │   └── MCPServiceRegistry.ts # Service discovery
 ├── transport/               # Transport implementations
 │   ├── BaseTransport.ts     # Abstract base
-│   ├── StdioTransport.ts    # Stdio (Python servers)
+│   ├── StdioTransport.ts    # Stdio transport
 │   ├── SSETransport.ts      # Server-sent events
 │   └── HTTPTransport.ts     # HTTP REST
 ├── servers/                 # Server adapters
-│   ├── azure/               # Local Python MCP servers
-│   │   ├── AzurePricingMCPAdapter.ts
-│   │   ├── AzureResourceGraphMCPAdapter.ts
-│   │   └── MicrosoftDocsMCPAdapter.ts
-│   ├── official/            # Official MCP servers
-│   ├── deployment/          # CI/CD servers
-│   └── ...
+│   └── azure/               # Native Azure adapters
+│       ├── AzurePricingMCPAdapter.ts       # Azure Retail Prices API
+│       ├── AzureResourceGraphMCPAdapter.ts # Azure REST API
+│       ├── MicrosoftDocsMCPAdapter.ts      # Microsoft Learn API
+│       └── __tests__/       # Unit tests
 ├── health/                  # Reliability
 │   ├── CircuitBreaker.ts    # Circuit breaker pattern
 │   ├── RetryPolicy.ts       # Retry strategies
@@ -552,18 +550,21 @@ src/mcp/
 
 ```typescript
 // src/mcp/servers/custom/MyServiceAdapter.ts
-import { BaseServerAdapter } from '../BaseServerAdapter';
-import { MCPClientManager } from '../../core/MCPClientManager';
+import { BaseMCPServerAdapter } from '../BaseMCPServerAdapter';
 import { MCPServerDefinition, ToolCallResponse } from '../../types';
+import { Logger } from '../../utils/Logger';
 
 export interface MyResult {
   status: string;
   data: unknown;
 }
 
-export class MyServiceAdapter extends BaseServerAdapter {
-  constructor(clientManager: MCPClientManager) {
-    super(clientManager);
+export class MyServiceAdapter extends BaseMCPServerAdapter {
+  private logger: Logger;
+
+  constructor(config?: { timeout?: number }) {
+    super();
+    this.logger = new Logger('MyServiceAdapter');
   }
 
   getServerId(): string {
@@ -576,15 +577,18 @@ export class MyServiceAdapter extends BaseServerAdapter {
       name: 'My Service MCP',
       description: 'Custom MCP server',
       category: 'custom',
-      transport: 'stdio',
-      command: 'python',
-      args: ['-m', 'my_service_mcp'],
+      transport: 'native',  // Use 'native' for direct HTTP
       enabled: true,
     };
   }
 
   async myTool(query: string): Promise<ToolCallResponse<MyResult>> {
-    return this.callTool<MyResult>('my_tool', { query });
+    // Implement direct HTTP call to your API
+    const response = await fetch('https://api.example.com/query', {
+      method: 'POST',
+      body: JSON.stringify({ query })
+    });
+    return await response.json();
   }
 }
 ```
@@ -596,7 +600,8 @@ export class MyServiceAdapter extends BaseServerAdapter {
 const { MCPBridge } = require('./src/mcp/bridge');
 
 const bridge = new MCPBridge({ 
-  workspaceFolder: process.cwd() 
+  workspaceFolder: process.cwd(),
+  defaultSubscriptionId: process.env.AZURE_SUBSCRIPTION_ID
 });
 await bridge.initialize();
 
@@ -614,23 +619,6 @@ const docs = await bridge.getAzureBestPractices('security');
 
 // Cleanup
 await bridge.disconnect();
-```
-
-### Python MCP Server Location
-
-Local Python MCP servers are in `.github/mcp/`:
-
-```
-.github/mcp/
-├── azure-pricing-mcp/           # Azure Retail Prices API
-│   ├── azure_pricing_mcp/
-│   │   └── __main__.py
-│   ├── pyproject.toml
-│   └── README.md
-├── azure-resource-graph-mcp/    # Azure Resource Graph
-│   └── ...
-└── microsoft-docs-mcp/          # Microsoft Learn search
-    └── ...
 ```
 
 ---

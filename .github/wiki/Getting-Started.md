@@ -173,16 +173,13 @@ AgenticCoder/
 ├── src/mcp/               # 🔌 TypeScript MCP layer
 │   ├── core/              # Client manager, registry
 │   ├── transport/         # Stdio, SSE, HTTP
-│   ├── servers/           # 19+ server adapters
+│   ├── servers/azure/     # Native Azure adapters
 │   ├── health/            # Circuit breaker, retry
 │   └── bridge.ts          # JS integration bridge
 ├── .github/               # 📋 Agent definitions
 │   ├── agents/           # 17 agent specs
 │   ├── skills/           # 15 skill specs
-│   ├── mcp/              # Python MCP servers
-│   │   ├── azure-pricing-mcp/
-│   │   ├── azure-resource-graph-mcp/
-│   │   └── microsoft-docs-mcp/
+│   ├── mcp/              # MCP configuration
 │   └── scenarios/        # Test scenarios
 └── Files/                # 📚 Documentation
     └── AgenticCoderPlan/ # Implementation plans

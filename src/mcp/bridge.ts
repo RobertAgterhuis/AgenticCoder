@@ -22,6 +22,7 @@ import { ToolCallResponse, MCPServerDefinition } from './types';
 export interface MCPBridgeConfig {
   workspaceFolder?: string;
   subscriptionId?: string;
+  defaultRegion?: string;
   logLevel?: 'debug' | 'info' | 'warn' | 'error';
 }
 
@@ -68,21 +69,21 @@ export class MCPBridge {
     this.clientManager = createClientManager();
     await this.clientManager.initialize();
 
-    // Register local Python MCP servers
+    // Register native TypeScript MCP adapters
     const workspaceFolder = this.config.workspaceFolder!;
     
-    const pricingAdapter = new AzurePricingMCPAdapter(this.clientManager, workspaceFolder);
-    const resourceGraphAdapter = new AzureResourceGraphMCPAdapter(
-      this.clientManager, 
-      workspaceFolder, 
-      this.config.subscriptionId
-    );
-    const docsAdapter = new MicrosoftDocsMCPAdapter(this.clientManager, workspaceFolder);
+    const pricingAdapter = new AzurePricingMCPAdapter(this.clientManager, {
+      defaultRegion: this.config.defaultRegion,
+    });
+    const resourceGraphAdapter = new AzureResourceGraphMCPAdapter(this.clientManager, {
+      subscriptionId: this.config.subscriptionId,
+    });
+    const docsAdapter = new MicrosoftDocsMCPAdapter(this.clientManager, {});
 
-    // Register server definitions
-    await this.clientManager.registerServer(pricingAdapter.getDefinition());
-    await this.clientManager.registerServer(resourceGraphAdapter.getDefinition());
-    await this.clientManager.registerServer(docsAdapter.getDefinition());
+    // Initialize adapters (no external process registration needed)
+    await pricingAdapter.initialize();
+    await resourceGraphAdapter.initialize();
+    await docsAdapter.initialize();
 
     // Create gateway with config
     this.gateway = createMCPGateway({

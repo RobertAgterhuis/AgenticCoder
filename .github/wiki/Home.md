@@ -74,8 +74,9 @@ Your Requirements → AgenticCoder → Production-Ready Application
 AgenticCoder/
 ├── agents/          # Agent framework and implementations
 ├── src/mcp/         # TypeScript MCP integration layer
-├── .github/         # GitHub Copilot agents, skills & Python MCP servers
-│   └── mcp/         # Python MCP servers (pricing, docs, resources)
+│   └── servers/     # Native Azure adapters (pricing, docs, resources)
+├── .github/         # GitHub Copilot agents, skills & MCP config
+│   └── mcp/         # MCP configuration
 ├── Files/           # Project plans & documentation
 └── docs/wiki/       # This wiki
 ```
