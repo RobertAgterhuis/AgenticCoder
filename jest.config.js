@@ -4,6 +4,10 @@ module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testMatch: ['**/*.test.ts', '**/*.spec.ts'],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '<rootDir>/src/state/test/', // Use vitest for state tests
+  ],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',

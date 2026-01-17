@@ -66,3 +66,6 @@ Desktop.ini
 # Temporary and planning folders (not for GitHub)
 TEMP/
 Files/
+
+# AgenticCoder state data (local execution data)
+.agenticcoder/
