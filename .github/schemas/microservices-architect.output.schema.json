@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "microservices-architect.output.schema.json",
+  "title": "Microservices Architect Output",
+  "description": "Output schema for @microservices-architect agent",
+  "type": "object",
+  "required": ["architecture_design", "status"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "needs_input", "failed"]
+    },
+    "architecture_design": {
+      "type": "object",
+      "properties": {
+        "overview": {
+          "type": "string",
+          "description": "High-level architecture description"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "bounded_context": { "type": "string" },
+              "responsibilities": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "technology_stack": {
+                "type": "object",
+                "properties": {
+                  "language": { "type": "string" },
+                  "framework": { "type": "string" },
+                  "database": { "type": "string" }
+                }
+              },
+              "api_type": {
+                "type": "string",
+                "enum": ["REST", "gRPC", "GraphQL"]
+              },
+              "data_ownership": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "events_published": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "events_subscribed": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "communication_patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from_service": { "type": "string" },
+              "to_service": { "type": "string" },
+              "pattern": {
+                "type": "string",
+                "enum": ["sync-rest", "sync-grpc", "async-queue", "async-pubsub", "event-driven"]
+              },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "data_management": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["database-per-service", "shared-database", "hybrid"]
+            },
+            "consistency_pattern": {
+              "type": "string",
+              "enum": ["saga-choreography", "saga-orchestration", "2pc", "eventual"]
+            },
+            "event_sourcing": { "type": "boolean" },
+            "cqrs": { "type": "boolean" }
+          }
+        },
+        "infrastructure": {
+          "type": "object",
+          "properties": {
+            "container_orchestration": { "type": "string" },
+            "service_mesh": { "type": "string" },
+            "api_gateway": { "type": "string" },
+            "message_broker": { "type": "string" },
+            "observability": {
+              "type": "object",
+              "properties": {
+                "logging": { "type": "string" },
+                "metrics": { "type": "string" },
+                "tracing": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "diagrams": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "content": { "type": "string" },
+          "format": {
+            "type": "string",
+            "enum": ["mermaid", "plantuml", "ascii"]
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "recommendation": { "type": "string" },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "next_agents": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

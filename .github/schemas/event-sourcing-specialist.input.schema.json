@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "event-sourcing-specialist.input.schema.json",
+  "title": "Event Sourcing Specialist Agent Input Schema",
+  "description": "Input schema for the Event Sourcing specialist agent",
+  "type": "object",
+  "required": ["project_context", "language", "event_store_type"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "description": "Project context information",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "phase": {
+          "type": "integer",
+          "description": "Current execution phase"
+        }
+      }
+    },
+    "language": {
+      "type": "string",
+      "description": "Target programming language",
+      "enum": ["typescript", "csharp"]
+    },
+    "event_store_type": {
+      "type": "string",
+      "description": "Event store implementation to use",
+      "enum": ["eventstore-db", "marten", "cosmos-db", "dynamodb", "postgres", "custom"]
+    },
+    "aggregates": {
+      "type": "array",
+      "description": "Aggregates with their events",
+      "items": {
+        "type": "object",
+        "required": ["name", "events"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Aggregate name"
+          },
+          "stream_category": {
+            "type": "string",
+            "description": "Stream category for this aggregate"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Event name"
+                },
+                "version": {
+                  "type": "integer",
+                  "description": "Event schema version",
+                  "default": 1
+                },
+                "payload": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "type": { "type": "string" },
+                      "required": { "type": "boolean" }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "snapshot_threshold": {
+            "type": "integer",
+            "description": "Number of events before creating snapshot",
+            "default": 50
+          }
+        }
+      }
+    },
+    "projections": {
+      "type": "array",
+      "description": "Projections to build read models",
+      "items": {
+        "type": "object",
+        "required": ["name", "events"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "target": {
+            "type": "string",
+            "enum": ["read-model", "external-system", "saga"],
+            "default": "read-model"
+          },
+          "projection_type": {
+            "type": "string",
+            "enum": ["async", "inline", "live"],
+            "default": "async"
+          }
+        }
+      }
+    },
+    "event_versioning": {
+      "type": "object",
+      "description": "Event versioning configuration",
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["upcasting", "weak-schema", "multiple-versions"],
+          "default": "upcasting"
+        },
+        "upcasters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "event_type": { "type": "string" },
+              "from_version": { "type": "integer" },
+              "to_version": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "enable_snapshots": {
+          "type": "boolean",
+          "default": true
+        },
+        "snapshot_store": {
+          "type": "string",
+          "enum": ["same-as-events", "postgres", "redis", "cosmos"],
+          "default": "same-as-events"
+        },
+        "enable_idempotency": {
+          "type": "boolean",
+          "default": true
+        },
+        "generate_tests": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "azure-sql-specialist.input.schema.json",
+  "title": "Azure SQL Specialist Input Schema",
+  "description": "Input schema for @azure-sql-specialist agent",
+  "type": "object",
+  "required": ["project_context", "database_tier", "compute_model"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "phase": {
+          "type": "integer",
+          "const": 15,
+          "description": "Must be Phase 15 (Technology-Specific Database)"
+        },
+        "environment": {
+          "type": "string",
+          "enum": ["development", "test", "staging", "production"],
+          "default": "development"
+        }
+      }
+    },
+    "database_tier": {
+      "type": "string",
+      "enum": ["Basic", "Standard", "Premium", "GeneralPurpose", "BusinessCritical", "Hyperscale"],
+      "description": "Azure SQL Database service tier"
+    },
+    "compute_model": {
+      "type": "string",
+      "enum": ["DTU", "vCore", "Serverless"],
+      "description": "Compute model for the database"
+    },
+    "dtu_config": {
+      "type": "object",
+      "description": "Configuration for DTU-based databases",
+      "properties": {
+        "dtu_level": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 4000
+        },
+        "storage_gb": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        }
+      }
+    },
+    "vcore_config": {
+      "type": "object",
+      "description": "Configuration for vCore-based databases",
+      "properties": {
+        "vcores": {
+          "type": "integer",
+          "enum": [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 32, 40, 64, 80, 128]
+        },
+        "storage_gb": {
+          "type": "integer",
+          "minimum": 32,
+          "maximum": 4096
+        },
+        "zone_redundant": {
+          "type": "boolean",
+          "default": false
+        },
+        "read_replicas": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        }
+      }
+    },
+    "serverless_config": {
+      "type": "object",
+      "description": "Configuration for Serverless compute",
+      "properties": {
+        "min_vcores": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 40
+        },
+        "max_vcores": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 40
+        },
+        "auto_pause_delay_minutes": {
+          "type": "integer",
+          "minimum": -1,
+          "description": "-1 to disable auto-pause"
+        },
+        "storage_gb": {
+          "type": "integer",
+          "minimum": 32,
+          "maximum": 4096
+        }
+      }
+    },
+    "entities_to_model": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "properties"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Entity name"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "int", "bigint", "smallint", "tinyint",
+                    "decimal", "numeric", "money", "smallmoney",
+                    "float", "real",
+                    "bit",
+                    "char", "varchar", "nchar", "nvarchar", "text", "ntext",
+                    "date", "time", "datetime", "datetime2", "datetimeoffset", "smalldatetime",
+                    "uniqueidentifier",
+                    "binary", "varbinary", "image",
+                    "xml", "json",
+                    "geography", "geometry",
+                    "hierarchyid"
+                  ]
+                },
+                "max_length": {
+                  "type": ["integer", "string"],
+                  "description": "Max length or 'max'"
+                },
+                "precision": {
+                  "type": "integer"
+                },
+                "scale": {
+                  "type": "integer"
+                },
+                "nullable": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "key": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "unique": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "default": {
+                  "type": "string"
+                },
+                "encrypted": {
+                  "type": "string",
+                  "enum": ["deterministic", "randomized"],
+                  "description": "Always Encrypted type"
+                },
+                "masked": {
+                  "type": "string",
+                  "enum": ["default", "email", "random", "partial"],
+                  "description": "Dynamic Data Masking function"
+                },
+                "masked_params": {
+                  "type": "string",
+                  "description": "Parameters for partial masking"
+                }
+              }
+            }
+          },
+          "relationships": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "Relationship definition (e.g., 'HasMany(Orders)', 'BelongsTo(Customer)')"
+            }
+          },
+          "indexes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "columns": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["clustered", "nonclustered", "columnstore", "filtered", "unique"]
+                },
+                "include": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "filter": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "row_level_security": {
+            "type": "object",
+            "properties": {
+              "policy_name": {
+                "type": "string"
+              },
+              "predicate": {
+                "type": "string"
+              },
+              "predicate_type": {
+                "type": "string",
+                "enum": ["filter", "block", "both"],
+                "default": "both"
+              }
+            }
+          },
+          "temporal": {
+            "type": "object",
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "history_table": {
+                "type": "string"
+              },
+              "retention_period": {
+                "type": "string"
+              }
+            }
+          },
+          "partitioning": {
+            "type": "object",
+            "properties": {
+              "column": {
+                "type": "string"
+              },
+              "function_type": {
+                "type": "string",
+                "enum": ["range_left", "range_right"]
+              },
+              "boundaries": {
+                "type": "array",
+                "items": {
+                  "type": ["string", "number"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "performance_requirements": {
+      "type": "object",
+      "properties": {
+        "expected_database_size_gb": {
+          "type": "integer"
+        },
+        "expected_row_count": {
+          "type": "integer"
+        },
+        "max_concurrent_queries": {
+          "type": "integer"
+        },
+        "target_response_time_ms": {
+          "type": "integer"
+        },
+        "read_write_ratio": {
+          "type": "string",
+          "pattern": "^\\d+:\\d+$",
+          "description": "Read:Write ratio (e.g., '80:20')"
+        },
+        "enable_query_store": {
+          "type": "boolean",
+          "default": true
+        },
+        "enable_automatic_tuning": {
+          "type": "boolean",
+          "default": true
+        },
+        "in_memory_oltp": {
+          "type": "boolean",
+          "default": false
+        },
+        "columnstore_indexes": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "security_requirements": {
+      "type": "object",
+      "properties": {
+        "azure_ad_authentication": {
+          "type": "boolean",
+          "default": true
+        },
+        "azure_ad_only": {
+          "type": "boolean",
+          "default": false
+        },
+        "transparent_data_encryption": {
+          "type": "boolean",
+          "default": true
+        },
+        "customer_managed_key": {
+          "type": "boolean",
+          "default": false
+        },
+        "always_encrypted_columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dynamic_data_masking": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "row_level_security": {
+          "type": "boolean",
+          "default": false
+        },
+        "auditing_enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "threat_detection": {
+          "type": "boolean",
+          "default": true
+        },
+        "vulnerability_assessment": {
+          "type": "boolean",
+          "default": true
+        },
+        "private_endpoint": {
+          "type": "boolean",
+          "default": false
+        },
+        "minimum_tls_version": {
+          "type": "string",
+          "enum": ["1.0", "1.1", "1.2"],
+          "default": "1.2"
+        }
+      }
+    },
+    "availability_requirements": {
+      "type": "object",
+      "properties": {
+        "geo_replication": {
+          "type": "boolean",
+          "default": false
+        },
+        "secondary_regions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "auto_failover_group": {
+          "type": "boolean",
+          "default": false
+        },
+        "failover_policy": {
+          "type": "string",
+          "enum": ["Automatic", "Manual"],
+          "default": "Automatic"
+        },
+        "grace_period_minutes": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 60
+        },
+        "zone_redundant": {
+          "type": "boolean",
+          "default": false
+        },
+        "backup_retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 35,
+          "default": 7
+        },
+        "long_term_retention": {
+          "type": "object",
+          "properties": {
+            "weekly_retention": {
+              "type": "string",
+              "pattern": "^P\\d+W$"
+            },
+            "monthly_retention": {
+              "type": "string",
+              "pattern": "^P\\d+M$"
+            },
+            "yearly_retention": {
+              "type": "string",
+              "pattern": "^P\\d+Y$"
+            },
+            "week_of_year": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 52
+            }
+          }
+        }
+      }
+    },
+    "elastic_pool": {
+      "type": "object",
+      "description": "Elastic pool configuration for multi-tenant scenarios",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "pool_name": {
+          "type": "string"
+        },
+        "max_size_gb": {
+          "type": "integer"
+        },
+        "per_database_settings": {
+          "type": "object",
+          "properties": {
+            "min_capacity": {
+              "type": "number"
+            },
+            "max_capacity": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  }
+}

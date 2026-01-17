@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "event-sourcing-specialist.output.schema.json",
+  "title": "Event Sourcing Specialist Agent Output Schema",
+  "description": "Output schema for the Event Sourcing specialist agent",
+  "type": "object",
+  "required": ["status", "event_store_type", "artifacts"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"]
+    },
+    "event_store_type": {
+      "type": "string",
+      "description": "Event store implementation used"
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "event_store": {
+          "type": "object",
+          "properties": {
+            "interface_path": { "type": "string" },
+            "implementation_path": { "type": "string" },
+            "configuration_path": { "type": "string" }
+          }
+        },
+        "aggregates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "events_handled": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "snapshot_enabled": { "type": "boolean" }
+            }
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "version": { "type": "integer" }
+            }
+          }
+        },
+        "repositories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "aggregate": { "type": "string" }
+            }
+          }
+        },
+        "projections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "events_projected": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "target_model": { "type": "string" }
+            }
+          }
+        },
+        "snapshot_store": {
+          "type": "object",
+          "properties": {
+            "interface_path": { "type": "string" },
+            "implementation_path": { "type": "string" }
+          }
+        },
+        "upcasters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "event_type": { "type": "string" },
+              "from_version": { "type": "integer" },
+              "to_version": { "type": "integer" }
+            }
+          }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "test_count": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "infrastructure": {
+      "type": "object",
+      "description": "Infrastructure requirements",
+      "properties": {
+        "event_store_connection": { "type": "string" },
+        "docker_compose_path": { "type": "string" },
+        "migrations": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "target_agent": { "type": "string" },
+        "reason": { "type": "string" },
+        "context": { "type": "object" }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

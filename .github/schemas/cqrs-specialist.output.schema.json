@@ -1,0 +1,121 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cqrs-specialist.output.schema.json",
+  "title": "CQRS Specialist Agent Output Schema",
+  "description": "Output schema for the CQRS specialist agent",
+  "type": "object",
+  "required": ["status", "artifacts"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"]
+    },
+    "mediator_library": {
+      "type": "string"
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "commands": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "handler_path": { "type": "string" },
+              "validator_path": { "type": "string" }
+            }
+          }
+        },
+        "queries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "handler_path": { "type": "string" }
+            }
+          }
+        },
+        "read_models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "synchronizer_path": { "type": "string" }
+            }
+          }
+        },
+        "pipeline_behaviors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "type": { "type": "string" }
+            }
+          }
+        },
+        "mediator": {
+          "type": "object",
+          "properties": {
+            "interface_path": { "type": "string" },
+            "implementation_path": { "type": "string" },
+            "registration_path": { "type": "string" }
+          }
+        },
+        "database_migrations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tests": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "file_path": { "type": "string" },
+              "test_count": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "file_structure": {
+      "type": "object",
+      "properties": {
+        "commands_path": { "type": "string" },
+        "queries_path": { "type": "string" },
+        "read_models_path": { "type": "string" },
+        "behaviors_path": { "type": "string" }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "target_agent": { "type": "string" },
+        "reason": { "type": "string" },
+        "context": { "type": "object" }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

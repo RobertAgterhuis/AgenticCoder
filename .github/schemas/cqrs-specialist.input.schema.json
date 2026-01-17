@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "cqrs-specialist.input.schema.json",
+  "title": "CQRS Specialist Agent Input Schema",
+  "description": "Input schema for the CQRS specialist agent",
+  "type": "object",
+  "required": ["project_context", "language", "domain_name"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": { "type": "string" },
+        "phase": { "type": "integer" }
+      }
+    },
+    "language": {
+      "type": "string",
+      "enum": ["typescript", "csharp"]
+    },
+    "domain_name": {
+      "type": "string",
+      "description": "Name of the domain"
+    },
+    "mediator_library": {
+      "type": "string",
+      "description": "Mediator library to use",
+      "enum": ["custom", "mediatr", "nestjs-cqrs"],
+      "default": "custom"
+    },
+    "commands": {
+      "type": "array",
+      "description": "Commands to implement",
+      "items": {
+        "type": "object",
+        "required": ["name", "aggregate"],
+        "properties": {
+          "name": { "type": "string" },
+          "aggregate": { "type": "string" },
+          "payload": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "required": { "type": "boolean", "default": true }
+              }
+            }
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "fields": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": { "type": "string" },
+                    "type": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "validation_rules": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "queries": {
+      "type": "array",
+      "description": "Queries to implement",
+      "items": {
+        "type": "object",
+        "required": ["name", "read_model"],
+        "properties": {
+          "name": { "type": "string" },
+          "read_model": { "type": "string" },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "required": { "type": "boolean", "default": true }
+              }
+            }
+          },
+          "result_type": {
+            "type": "string",
+            "enum": ["single", "list", "paginated"],
+            "default": "single"
+          },
+          "includes": {
+            "type": "array",
+            "description": "Related data to include",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "read_models": {
+      "type": "array",
+      "description": "Read model definitions",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "source_aggregate": { "type": "string" },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "source": { "type": "string" }
+              }
+            }
+          },
+          "indexes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "fields": { "type": "array", "items": { "type": "string" } },
+                "unique": { "type": "boolean", "default": false }
+              }
+            }
+          }
+        }
+      }
+    },
+    "pipeline_behaviors": {
+      "type": "array",
+      "description": "Cross-cutting concerns",
+      "items": {
+        "type": "string",
+        "enum": ["validation", "logging", "transaction", "caching", "retry"]
+      },
+      "default": ["validation", "logging"]
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "separate_read_database": {
+          "type": "boolean",
+          "default": false
+        },
+        "generate_api_controllers": {
+          "type": "boolean",
+          "default": true
+        },
+        "generate_validators": {
+          "type": "boolean",
+          "default": true
+        },
+        "generate_tests": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    }
+  }
+}

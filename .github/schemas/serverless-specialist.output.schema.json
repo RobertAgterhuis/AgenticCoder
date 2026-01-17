@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "serverless-specialist.output.schema.json",
+  "title": "Serverless Specialist Output",
+  "description": "Output schema for @serverless-specialist agent",
+  "type": "object",
+  "required": ["serverless_architecture", "status"],
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "needs_input", "failed"]
+    },
+    "serverless_architecture": {
+      "type": "object",
+      "properties": {
+        "overview": {
+          "type": "string",
+          "description": "High-level serverless architecture description"
+        },
+        "functions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "trigger_type": { "type": "string" },
+              "trigger_config": { "type": "object" },
+              "bindings": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "direction": { "type": "string" },
+                    "type": { "type": "string" },
+                    "name": { "type": "string" }
+                  }
+                }
+              },
+              "runtime": { "type": "string" },
+              "timeout_seconds": { "type": "integer" },
+              "memory_mb": { "type": "integer" }
+            }
+          }
+        },
+        "durable_orchestrations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "pattern": { "type": "string" },
+              "activities": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "timeout": { "type": "string" }
+            }
+          }
+        },
+        "workflows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["logic-app", "durable-function"]
+              },
+              "trigger": { "type": "string" },
+              "steps": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "hosting": {
+          "type": "object",
+          "properties": {
+            "plan_type": { "type": "string" },
+            "scale_settings": {
+              "type": "object",
+              "properties": {
+                "min_instances": { "type": "integer" },
+                "max_instances": { "type": "integer" },
+                "scale_rules": { "type": "array" }
+              }
+            },
+            "networking": {
+              "type": "object",
+              "properties": {
+                "vnet_integration": { "type": "boolean" },
+                "private_endpoints": { "type": "boolean" }
+              }
+            }
+          }
+        },
+        "deployment_config": {
+          "type": "object",
+          "properties": {
+            "deployment_method": {
+              "type": "string",
+              "enum": ["zip-deploy", "container", "bicep"]
+            },
+            "slots": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "ci_cd": { "type": "string" }
+          }
+        }
+      }
+    },
+    "code_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "file_path": { "type": "string" },
+          "content_type": {
+            "type": "string",
+            "enum": ["function", "orchestrator", "activity", "config", "infrastructure"]
+          },
+          "language": { "type": "string" }
+        }
+      }
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "host_json": { "type": "object" },
+        "local_settings": { "type": "object" },
+        "app_settings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "string" },
+              "is_secret": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "performance_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "area": { "type": "string" },
+          "recommendation": { "type": "string" },
+          "impact": {
+            "type": "string",
+            "enum": ["high", "medium", "low"]
+          }
+        }
+      }
+    },
+    "handoff": {
+      "type": "object",
+      "properties": {
+        "next_agents": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

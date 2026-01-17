@@ -1,0 +1,233 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sql-server-specialist.input.schema.json",
+  "title": "SQL Server Specialist Input Schema",
+  "description": "Input schema for @sql-server-specialist agent",
+  "type": "object",
+  "required": ["project_context", "sql_server_version", "database_name"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": { "type": "string" },
+        "phase": { "type": "integer", "const": 15 }
+      }
+    },
+    "sql_server_version": {
+      "type": "string",
+      "enum": ["2016", "2017", "2019", "2022"],
+      "description": "SQL Server version"
+    },
+    "edition": {
+      "type": "string",
+      "enum": ["Express", "Standard", "Enterprise", "Developer"],
+      "default": "Standard"
+    },
+    "database_name": { "type": "string" },
+    "compatibility_level": {
+      "type": "integer",
+      "enum": [130, 140, 150, 160],
+      "description": "130=2016, 140=2017, 150=2019, 160=2022"
+    },
+    "collation": {
+      "type": "string",
+      "default": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "filegroups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string", "enum": ["ROWS", "FILESTREAM", "MEMORY_OPTIMIZED"] },
+          "files": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "path": { "type": "string" },
+                "size_mb": { "type": "integer" },
+                "growth_mb": { "type": "integer" },
+                "max_size_mb": { "type": ["integer", "string"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "entities_to_model": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "properties"],
+        "properties": {
+          "name": { "type": "string" },
+          "schema": { "type": "string", "default": "dbo" },
+          "filegroup": { "type": "string", "default": "PRIMARY" },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": {
+                  "type": "string",
+                  "enum": ["int", "bigint", "smallint", "tinyint", "bit", "decimal", "numeric", "money", "smallmoney", "float", "real", "date", "time", "datetime", "datetime2", "datetimeoffset", "smalldatetime", "char", "varchar", "nchar", "nvarchar", "text", "ntext", "binary", "varbinary", "image", "uniqueidentifier", "xml", "geography", "geometry", "hierarchyid", "sql_variant"]
+                },
+                "max_length": { "type": ["integer", "string"] },
+                "precision": { "type": "integer" },
+                "scale": { "type": "integer" },
+                "nullable": { "type": "boolean", "default": true },
+                "key": { "type": "boolean", "default": false },
+                "identity": { "type": "boolean", "default": false },
+                "identity_seed": { "type": "integer", "default": 1 },
+                "identity_increment": { "type": "integer", "default": 1 },
+                "default": { "type": "string" },
+                "computed": { "type": "string" },
+                "persisted": { "type": "boolean" },
+                "foreign_key": { "type": "string" },
+                "unique": { "type": "boolean" },
+                "check_constraint": { "type": "string" }
+              }
+            }
+          },
+          "indexes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "columns": { "type": "array", "items": { "type": "string" } },
+                "include": { "type": "array", "items": { "type": "string" } },
+                "type": { "type": "string", "enum": ["clustered", "nonclustered", "columnstore", "unique"] },
+                "filter": { "type": "string" },
+                "filegroup": { "type": "string" }
+              }
+            }
+          },
+          "temporal": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean" },
+              "history_table": { "type": "string" },
+              "retention_period": { "type": "string" }
+            }
+          },
+          "partitioning": {
+            "type": "object",
+            "properties": {
+              "column": { "type": "string" },
+              "function_name": { "type": "string" },
+              "scheme_name": { "type": "string" },
+              "boundaries": { "type": "array", "items": { "type": ["string", "number"] } }
+            }
+          }
+        }
+      }
+    },
+    "stored_procedures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "schema": { "type": "string", "default": "dbo" },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "direction": { "type": "string", "enum": ["IN", "OUT", "INOUT"], "default": "IN" },
+                "default": { "type": ["string", "null"] }
+              }
+            }
+          },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "functions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string", "enum": ["scalar", "table", "inline_table"] },
+          "parameters": { "type": "array" },
+          "returns": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "table": { "type": "string" },
+          "events": { "type": "array", "items": { "type": "string", "enum": ["INSERT", "UPDATE", "DELETE"] } },
+          "timing": { "type": "string", "enum": ["AFTER", "INSTEAD OF"] },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "indexed": { "type": "boolean" },
+          "with_schemabinding": { "type": "boolean" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+    "performance_requirements": {
+      "type": "object",
+      "properties": {
+        "expected_row_count": { "type": "integer" },
+        "concurrent_users": { "type": "integer" },
+        "target_response_time_ms": { "type": "integer" },
+        "enable_query_store": { "type": "boolean", "default": true },
+        "enable_in_memory_oltp": { "type": "boolean", "default": false },
+        "enable_columnstore": { "type": "boolean", "default": false }
+      }
+    },
+    "high_availability": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["None", "Mirroring", "LogShipping", "AlwaysOn", "FailoverCluster"] },
+        "replica_count": { "type": "integer" },
+        "synchronous_commit": { "type": "boolean" },
+        "automatic_failover": { "type": "boolean" },
+        "readable_secondary": { "type": "boolean" }
+      }
+    },
+    "backup_configuration": {
+      "type": "object",
+      "properties": {
+        "recovery_model": { "type": "string", "enum": ["SIMPLE", "BULK_LOGGED", "FULL"] },
+        "full_backup_schedule": { "type": "string" },
+        "differential_schedule": { "type": "string" },
+        "log_backup_frequency_minutes": { "type": "integer" },
+        "retention_days": { "type": "integer" }
+      }
+    },
+    "security_requirements": {
+      "type": "object",
+      "properties": {
+        "schemas": { "type": "array", "items": { "type": "string" } },
+        "roles": { "type": "array", "items": { "type": "string" } },
+        "transparent_data_encryption": { "type": "boolean" },
+        "row_level_security": { "type": "boolean" }
+      }
+    }
+  }
+}

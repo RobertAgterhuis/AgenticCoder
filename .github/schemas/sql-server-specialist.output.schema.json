@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sql-server-specialist.output.schema.json",
+  "title": "SQL Server Specialist Output Schema",
+  "description": "Output schema for @sql-server-specialist agent",
+  "type": "object",
+  "required": ["artifact_type", "phase", "sql_server_version", "files"],
+  "properties": {
+    "artifact_type": { "type": "string", "const": "sql-server-database" },
+    "phase": { "type": "integer", "const": 15 },
+    "sql_server_version": { "type": "string" },
+    "edition": { "type": "string" },
+    "database_configuration": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "collation": { "type": "string" },
+        "compatibility_level": { "type": "integer" },
+        "recovery_model": { "type": "string" },
+        "filegroups": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "path": { "type": "string" },
+          "type": { "type": "string", "enum": ["sql", "json", "ps1"] },
+          "description": { "type": "string" },
+          "execution_order": { "type": "integer" }
+        }
+      }
+    },
+    "tables_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "schema": { "type": "string" },
+          "columns": { "type": "integer" },
+          "is_temporal": { "type": "boolean" },
+          "is_partitioned": { "type": "boolean" },
+          "filegroup": { "type": "string" }
+        }
+      }
+    },
+    "indexes_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "table": { "type": "string" },
+          "type": { "type": "string" },
+          "columns": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "stored_procedures_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "schema": { "type": "string" },
+          "parameters": { "type": "integer" },
+          "has_error_handling": { "type": "boolean" }
+        }
+      }
+    },
+    "functions_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "schema": { "type": "string" }
+        }
+      }
+    },
+    "triggers_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "table": { "type": "string" },
+          "events": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "views_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "is_indexed": { "type": "boolean" },
+          "schema": { "type": "string" }
+        }
+      }
+    },
+    "high_availability": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string" },
+        "configured": { "type": "boolean" },
+        "replicas": { "type": "array" },
+        "listener": { "type": "string" }
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "version": { "type": "string" },
+          "name": { "type": "string" },
+          "up_script": { "type": "string" },
+          "down_script": { "type": "string" }
+        }
+      }
+    },
+    "maintenance_scripts": {
+      "type": "object",
+      "properties": {
+        "backup": { "type": "string" },
+        "index_maintenance": { "type": "string" },
+        "statistics_update": { "type": "string" },
+        "integrity_check": { "type": "string" }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string" },
+          "recommendation": { "type": "string" },
+          "priority": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generated_at": { "type": "string", "format": "date-time" },
+        "agent_version": { "type": "string" },
+        "project_id": { "type": "string" }
+      }
+    }
+  }
+}

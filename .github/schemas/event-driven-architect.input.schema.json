@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "event-driven-architect.input.schema.json",
+  "title": "Event-Driven Architect Input",
+  "description": "Input schema for @event-driven-architect agent",
+  "type": "object",
+  "required": ["request_type", "domain"],
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": ["design", "implement", "migrate", "review", "troubleshoot"],
+      "description": "Type of event architecture request"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Business domain context"
+    },
+    "event_volume": {
+      "type": "string",
+      "description": "Expected event volume (e.g., 10000/hour)"
+    },
+    "ordering_requirements": {
+      "type": "string",
+      "enum": ["none", "per-aggregate", "global", "partial"],
+      "default": "per-aggregate",
+      "description": "Event ordering guarantees needed"
+    },
+    "retention_days": {
+      "type": "integer",
+      "default": 7,
+      "description": "Event retention period in days"
+    },
+    "replay_needed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether event replay capability is required"
+    },
+    "existing_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "schema": { "type": "object" },
+          "producers": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "consumers": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      },
+      "description": "Existing events to integrate"
+    },
+    "infrastructure_preference": {
+      "type": "object",
+      "properties": {
+        "messaging_platform": {
+          "type": "string",
+          "enum": ["service-bus", "event-hubs", "event-grid", "kafka"],
+          "default": "service-bus"
+        },
+        "event_store": {
+          "type": "string",
+          "enum": ["cosmos-db", "sql-server", "event-store-db", "none"]
+        }
+      }
+    },
+    "consumers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "event_types": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "processing_mode": {
+            "type": "string",
+            "enum": ["real-time", "batch", "scheduled"]
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "project_path": { "type": "string" },
+        "architecture_doc": { "type": "string" }
+      }
+    }
+  }
+}

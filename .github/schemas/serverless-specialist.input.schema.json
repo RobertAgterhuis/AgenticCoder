@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "serverless-specialist.input.schema.json",
+  "title": "Serverless Specialist Input",
+  "description": "Input schema for @serverless-specialist agent",
+  "type": "object",
+  "required": ["request_type", "workload_type"],
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": ["design", "implement", "optimize", "migrate", "troubleshoot"],
+      "description": "Type of serverless request"
+    },
+    "workload_type": {
+      "type": "string",
+      "enum": ["http-api", "event-processing", "scheduled-tasks", "workflow", "file-processing"],
+      "description": "Type of serverless workload"
+    },
+    "triggers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["http", "timer", "queue", "blob", "event-grid", "service-bus", "cosmos-db", "event-hub"]
+      },
+      "description": "Required trigger types"
+    },
+    "scale_requirements": {
+      "type": "string",
+      "enum": ["burst", "steady", "scheduled"],
+      "default": "burst",
+      "description": "Expected scaling pattern"
+    },
+    "cold_start_tolerance": {
+      "type": "string",
+      "enum": ["none", "low", "medium", "high"],
+      "default": "medium",
+      "description": "Tolerance for cold start latency"
+    },
+    "execution_duration": {
+      "type": "object",
+      "properties": {
+        "typical_ms": { "type": "integer" },
+        "max_ms": { "type": "integer" }
+      },
+      "description": "Expected function execution duration"
+    },
+    "durable_functions": {
+      "type": "object",
+      "properties": {
+        "needed": { "type": "boolean" },
+        "patterns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["orchestration", "fan-out-fan-in", "human-interaction", "monitoring", "eternal"]
+          }
+        }
+      }
+    },
+    "logic_apps": {
+      "type": "object",
+      "properties": {
+        "needed": { "type": "boolean" },
+        "connectors": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": ["input", "output"]
+          },
+          "type": { "type": "string" },
+          "connection": { "type": "string" }
+        }
+      }
+    },
+    "hosting_plan": {
+      "type": "string",
+      "enum": ["consumption", "premium", "dedicated", "container-apps"],
+      "description": "Preferred hosting plan"
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "project_path": { "type": "string" },
+        "existing_functions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

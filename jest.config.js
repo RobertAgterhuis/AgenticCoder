@@ -7,6 +7,7 @@ module.exports = {
   testPathIgnorePatterns: [
     '/node_modules/',
     '<rootDir>/src/state/test/', // Use vitest for state tests
+    '<rootDir>/src/errors/test/', // Use vitest for error tests
   ],
   collectCoverageFrom: [
     'src/**/*.ts',

@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "ddd-specialist.input.schema.json",
+  "title": "DDD Specialist Agent Input Schema",
+  "description": "Input schema for the Domain-Driven Design specialist agent",
+  "type": "object",
+  "required": ["project_context", "domain_name", "language"],
+  "properties": {
+    "project_context": {
+      "type": "object",
+      "description": "Project context information",
+      "required": ["project_id", "phase"],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "description": "Unique project identifier"
+        },
+        "phase": {
+          "type": "integer",
+          "description": "Current execution phase",
+          "minimum": 1,
+          "maximum": 20
+        },
+        "iteration": {
+          "type": "integer",
+          "description": "Current iteration number",
+          "minimum": 1
+        }
+      }
+    },
+    "domain_name": {
+      "type": "string",
+      "description": "Name of the domain being modeled",
+      "minLength": 1
+    },
+    "language": {
+      "type": "string",
+      "description": "Target programming language",
+      "enum": ["typescript", "csharp"]
+    },
+    "framework": {
+      "type": "string",
+      "description": "Optional framework specification",
+      "enum": ["nestjs", "express", "aspnet", "minimal-api"]
+    },
+    "bounded_contexts": {
+      "type": "array",
+      "description": "Bounded contexts in the domain",
+      "items": {
+        "type": "object",
+        "required": ["name", "responsibility"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Context name"
+          },
+          "responsibility": {
+            "type": "string",
+            "description": "Context responsibility description"
+          },
+          "entities": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "value_objects": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "aggregates": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "domain_events": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "domain_services": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "entities": {
+      "type": "array",
+      "description": "Entities to model",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Entity name"
+          },
+          "is_aggregate_root": {
+            "type": "boolean",
+            "description": "Whether this entity is an aggregate root",
+            "default": false
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "value_object": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "entity": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "collection": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "nullable": {
+                  "type": "boolean",
+                  "default": false
+                }
+              }
+            }
+          },
+          "invariants": {
+            "type": "array",
+            "description": "Business rules that must always be true",
+            "items": { "type": "string" }
+          },
+          "domain_operations": {
+            "type": "array",
+            "description": "Operations this entity can perform",
+            "items": {
+              "type": "object",
+              "required": ["name"],
+              "properties": {
+                "name": { "type": "string" },
+                "parameters": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "type": { "type": "string" }
+                    }
+                  }
+                },
+                "raises_event": { "type": "string" },
+                "preconditions": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "value_objects": {
+      "type": "array",
+      "description": "Value objects to create",
+      "items": {
+        "type": "object",
+        "required": ["name", "properties"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "type"],
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
+          },
+          "validation_rules": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "operations": {
+            "type": "array",
+            "description": "Operations this value object supports",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "domain_events": {
+      "type": "array",
+      "description": "Domain events to define",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "aggregate": {
+            "type": "string",
+            "description": "Source aggregate"
+          },
+          "payload": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" }
+              }
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "description": "What this event triggers in other contexts",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "context_map": {
+      "type": "object",
+      "description": "Context mapping relationships",
+      "properties": {
+        "upstream_contexts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "relationship": {
+                "type": "string",
+                "enum": ["conformist", "anti-corruption-layer", "open-host-service"]
+              }
+            }
+          }
+        },
+        "downstream_contexts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "relationship": {
+                "type": "string",
+                "enum": ["customer-supplier", "published-language"]
+              }
+            }
+          }
+        },
+        "shared_kernel": {
+          "type": "array",
+          "description": "Types shared with other contexts",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "persistence_strategy": {
+      "type": "string",
+      "description": "How aggregates should be persisted",
+      "enum": ["state-based", "event-sourced"],
+      "default": "state-based"
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "generate_tests": {
+          "type": "boolean",
+          "default": true
+        },
+        "generate_repositories": {
+          "type": "boolean",
+          "default": true
+        },
+        "generate_application_services": {
+          "type": "boolean",
+          "default": true
+        },
+        "use_result_type": {
+          "type": "boolean",
+          "description": "Use Result<T> instead of exceptions",
+          "default": false
+        }
+      }
+    }
+  }
+}

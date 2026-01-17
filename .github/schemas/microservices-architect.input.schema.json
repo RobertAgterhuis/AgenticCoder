@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "microservices-architect.input.schema.json",
+  "title": "Microservices Architect Input",
+  "description": "Input schema for @microservices-architect agent",
+  "type": "object",
+  "required": ["request_type", "domain"],
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": ["design", "decompose", "migrate", "review", "implement"],
+      "description": "Type of architecture request"
+    },
+    "domain": {
+      "type": "string",
+      "description": "Business domain (e.g., e-commerce, healthcare, finance)"
+    },
+    "scale_requirements": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "enterprise"],
+      "default": "medium",
+      "description": "Expected scale and load requirements"
+    },
+    "communication_preference": {
+      "type": "string",
+      "enum": ["sync-first", "async-first", "hybrid"],
+      "default": "hybrid",
+      "description": "Preferred communication pattern between services"
+    },
+    "existing_services": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "technology": { "type": "string" },
+          "database": { "type": "string" }
+        }
+      },
+      "description": "List of existing services to integrate or migrate"
+    },
+    "bounded_contexts": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Identified DDD bounded contexts"
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "cloud_provider": {
+          "type": "string",
+          "enum": ["azure", "aws", "gcp", "multi-cloud"],
+          "default": "azure"
+        },
+        "budget": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "team_size": { "type": "integer" },
+        "timeline_weeks": { "type": "integer" },
+        "compliance": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "technology_preferences": {
+      "type": "object",
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frameworks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "databases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "messaging": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "project_path": { "type": "string" },
+        "documentation": { "type": "string" },
+        "requirements": { "type": "string" }
+      }
+    }
+  }
+}

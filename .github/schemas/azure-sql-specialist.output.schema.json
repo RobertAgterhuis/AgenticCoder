@@ -1,0 +1,464 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "azure-sql-specialist.output.schema.json",
+  "title": "Azure SQL Specialist Output Schema",
+  "description": "Output schema for @azure-sql-specialist agent",
+  "type": "object",
+  "required": ["artifact_type", "phase", "database_tier", "files"],
+  "properties": {
+    "artifact_type": {
+      "type": "string",
+      "const": "azure-sql-database"
+    },
+    "phase": {
+      "type": "integer",
+      "const": 15
+    },
+    "database_tier": {
+      "type": "string",
+      "enum": ["Basic", "Standard", "Premium", "GeneralPurpose", "BusinessCritical", "Hyperscale"]
+    },
+    "compute_model": {
+      "type": "string",
+      "enum": ["DTU", "vCore", "Serverless"]
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "server_name": {
+          "type": "string"
+        },
+        "database_name": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "collation": {
+          "type": "string",
+          "default": "SQL_Latin1_General_CP1_CI_AS"
+        },
+        "max_size_gb": {
+          "type": "integer"
+        },
+        "vcores": {
+          "type": "integer"
+        },
+        "dtu": {
+          "type": "integer"
+        },
+        "zone_redundant": {
+          "type": "boolean"
+        },
+        "read_replicas": {
+          "type": "integer"
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "path", "type"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["bicep", "sql", "json", "yaml", "ps1", "sh"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "tables_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "string",
+            "default": "dbo"
+          },
+          "columns": {
+            "type": "integer"
+          },
+          "has_temporal": {
+            "type": "boolean"
+          },
+          "has_rls": {
+            "type": "boolean"
+          },
+          "encrypted_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "masked_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "indexes_created": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "table": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["clustered", "nonclustered", "columnstore", "filtered", "unique"]
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "include_columns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "security_features": {
+      "type": "object",
+      "properties": {
+        "transparent_data_encryption": {
+          "type": "boolean"
+        },
+        "always_encrypted": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "column_master_key": {
+              "type": "string"
+            },
+            "column_encryption_keys": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "encrypted_columns": {
+              "type": "integer"
+            }
+          }
+        },
+        "dynamic_data_masking": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "masked_columns": {
+              "type": "integer"
+            }
+          }
+        },
+        "row_level_security": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "policies": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "tables": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "azure_ad_authentication": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "admin_login": {
+              "type": "string"
+            },
+            "admin_object_id": {
+              "type": "string"
+            }
+          }
+        },
+        "auditing": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "storage_account": {
+              "type": "string"
+            },
+            "retention_days": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "high_availability": {
+      "type": "object",
+      "properties": {
+        "geo_replication": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "secondaries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "server_name": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "readable": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "failover_group": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "name": {
+              "type": "string"
+            },
+            "failover_policy": {
+              "type": "string"
+            },
+            "grace_period_minutes": {
+              "type": "integer"
+            },
+            "read_write_endpoint": {
+              "type": "string"
+            },
+            "read_only_endpoint": {
+              "type": "string"
+            }
+          }
+        },
+        "backup": {
+          "type": "object",
+          "properties": {
+            "retention_days": {
+              "type": "integer"
+            },
+            "long_term_retention": {
+              "type": "object",
+              "properties": {
+                "weekly": {
+                  "type": "string"
+                },
+                "monthly": {
+                  "type": "string"
+                },
+                "yearly": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "performance_configuration": {
+      "type": "object",
+      "properties": {
+        "query_store": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "operation_mode": {
+              "type": "string"
+            },
+            "max_storage_mb": {
+              "type": "integer"
+            }
+          }
+        },
+        "automatic_tuning": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "create_index": {
+              "type": "boolean"
+            },
+            "drop_index": {
+              "type": "boolean"
+            },
+            "force_last_good_plan": {
+              "type": "boolean"
+            }
+          }
+        },
+        "in_memory_oltp": {
+          "type": "boolean"
+        },
+        "columnstore": {
+          "type": "boolean"
+        }
+      }
+    },
+    "migrations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "up_script": {
+            "type": "string"
+          },
+          "down_script": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cost_estimate": {
+      "type": "object",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "default": "EUR"
+        },
+        "monthly_compute": {
+          "type": "number"
+        },
+        "monthly_storage": {
+          "type": "number"
+        },
+        "monthly_backup": {
+          "type": "number"
+        },
+        "monthly_geo_replication": {
+          "type": "number"
+        },
+        "monthly_total": {
+          "type": "number"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["performance", "security", "cost", "availability", "scalability"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "impact": {
+            "type": "string"
+          },
+          "implementation_effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          }
+        }
+      }
+    },
+    "connection_strings": {
+      "type": "object",
+      "properties": {
+        "ado_net": {
+          "type": "string"
+        },
+        "jdbc": {
+          "type": "string"
+        },
+        "odbc": {
+          "type": "string"
+        },
+        "entity_framework": {
+          "type": "string"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "agent_version": {
+          "type": "string"
+        },
+        "project_id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
