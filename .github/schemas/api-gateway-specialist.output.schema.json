@@ -1,0 +1,347 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "api-gateway-specialist.output.schema.json",
+  "title": "API Gateway Specialist Output",
+  "description": "Output schema for the @api-gateway-specialist agent",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"],
+      "description": "Overall status of the API gateway design"
+    },
+    "apimConfiguration": {
+      "type": "object",
+      "description": "Azure API Management configuration",
+      "properties": {
+        "serviceName": { "type": "string" },
+        "sku": { 
+          "type": "string",
+          "enum": ["Consumption", "Developer", "Basic", "Standard", "Premium"]
+        },
+        "skuJustification": { "type": "string" },
+        "publisherEmail": { "type": "string" },
+        "publisherName": { "type": "string" },
+        "customDomains": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "apiDefinition": {
+      "type": "object",
+      "description": "API definition details",
+      "properties": {
+        "name": { "type": "string" },
+        "displayName": { "type": "string" },
+        "path": { "type": "string" },
+        "protocols": {
+          "type": "array",
+          "items": { 
+            "type": "string",
+            "enum": ["http", "https", "ws", "wss"]
+          }
+        },
+        "subscriptionRequired": { "type": "boolean" },
+        "versioningScheme": {
+          "type": "string",
+          "enum": ["path", "header", "query"]
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": { "type": "string" },
+              "apiVersionSetId": { "type": "string" },
+              "status": {
+                "type": "string",
+                "enum": ["current", "deprecated", "retired"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "policies": {
+      "type": "object",
+      "description": "APIM policies configuration",
+      "properties": {
+        "inbound": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "configuration": { "type": "object" },
+              "xmlPolicy": { "type": "string" }
+            }
+          }
+        },
+        "backend": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "configuration": { "type": "object" },
+              "xmlPolicy": { "type": "string" }
+            }
+          }
+        },
+        "outbound": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "configuration": { "type": "object" },
+              "xmlPolicy": { "type": "string" }
+            }
+          }
+        },
+        "onError": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": { "type": "string" },
+              "configuration": { "type": "object" },
+              "xmlPolicy": { "type": "string" }
+            }
+          }
+        },
+        "fullPolicyXml": {
+          "type": "string",
+          "description": "Complete policy XML document"
+        }
+      }
+    },
+    "backendConfiguration": {
+      "type": "array",
+      "description": "Backend service configurations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "protocol": { "type": "string" },
+          "routingPath": { "type": "string" },
+          "credentials": {
+            "type": "object",
+            "properties": {
+              "type": { 
+                "type": "string",
+                "enum": ["header", "query", "certificate", "managed-identity"]
+              },
+              "configuration": { "type": "object" }
+            }
+          },
+          "circuitBreaker": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean" },
+              "retryCount": { "type": "integer" },
+              "retryInterval": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "products": {
+      "type": "array",
+      "description": "API products configuration",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "displayName": { "type": "string" },
+          "description": { "type": "string" },
+          "subscriptionRequired": { "type": "boolean" },
+          "approvalRequired": { "type": "boolean" },
+          "subscriptionsLimit": { "type": "integer" },
+          "state": {
+            "type": "string",
+            "enum": ["published", "notPublished"]
+          },
+          "rateLimits": {
+            "type": "object",
+            "properties": {
+              "calls": { "type": "integer" },
+              "renewalPeriod": { "type": "integer" },
+              "quota": { "type": "integer" },
+              "quotaPeriod": { "type": "integer" }
+            }
+          }
+        }
+      }
+    },
+    "securityConfiguration": {
+      "type": "object",
+      "description": "Security configuration details",
+      "properties": {
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "openIdConnectUrl": { "type": "string" },
+            "audience": { "type": "string" },
+            "issuer": { "type": "string" },
+            "requiredClaims": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "values": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ipFiltering": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": ["allow", "deny"]
+            },
+            "ranges": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "cors": {
+          "type": "object",
+          "properties": {
+            "allowedOrigins": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "allowedMethods": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "allowedHeaders": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "exposeHeaders": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "allowCredentials": { "type": "boolean" },
+            "maxAge": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "monitoringConfiguration": {
+      "type": "object",
+      "description": "Monitoring and logging configuration",
+      "properties": {
+        "applicationInsights": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "instrumentationKey": { "type": "string" },
+            "sampling": { "type": "number" }
+          }
+        },
+        "diagnosticSettings": {
+          "type": "object",
+          "properties": {
+            "logsEnabled": { "type": "boolean" },
+            "metricsEnabled": { "type": "boolean" },
+            "logAnalyticsWorkspaceId": { "type": "string" }
+          }
+        },
+        "customMetrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "namespace": { "type": "string" },
+              "dimensions": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bicepTemplates": {
+      "type": "array",
+      "description": "Generated Bicep templates",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "content": { "type": "string" },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "description": { "type": "string" },
+                "defaultValue": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "openApiSpecification": {
+      "type": "object",
+      "description": "Generated or updated OpenAPI specification",
+      "properties": {
+        "version": { "type": "string" },
+        "content": { "type": "string" }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Recommendations for API gateway implementation",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["security", "performance", "cost", "reliability", "operations"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "implementation": { "type": "string" }
+        }
+      }
+    },
+    "handoffTo": {
+      "type": "array",
+      "description": "Suggested next agents to involve",
+      "items": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string" },
+          "reason": { "type": "string" },
+          "context": { "type": "object" }
+        }
+      }
+    }
+  },
+  "required": ["status"],
+  "additionalProperties": false
+}

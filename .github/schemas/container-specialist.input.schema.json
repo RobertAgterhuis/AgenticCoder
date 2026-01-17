@@ -1,0 +1,273 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "container-specialist.input.schema.json",
+  "title": "Container Specialist Input",
+  "description": "Input schema for the @container-specialist agent",
+  "type": "object",
+  "properties": {
+    "taskType": {
+      "type": "string",
+      "enum": [
+        "container-app-design",
+        "dockerfile-creation",
+        "scaling-configuration",
+        "dapr-integration",
+        "deployment-strategy",
+        "health-probes",
+        "acr-setup",
+        "networking",
+        "secrets-management"
+      ],
+      "description": "The type of container task to perform"
+    },
+    "context": {
+      "type": "object",
+      "description": "Context information about the containerization requirements",
+      "properties": {
+        "applicationName": {
+          "type": "string",
+          "description": "Name of the application to containerize"
+        },
+        "applicationType": {
+          "type": "string",
+          "enum": ["api", "web", "worker", "function", "batch"],
+          "description": "Type of application"
+        },
+        "runtime": {
+          "type": "string",
+          "enum": ["node", "dotnet", "python", "java", "go", "rust"],
+          "description": "Application runtime"
+        },
+        "runtimeVersion": {
+          "type": "string",
+          "description": "Runtime version (e.g., 20, 8.0, 3.12)"
+        },
+        "targetPlatform": {
+          "type": "string",
+          "enum": ["container-apps", "aks", "app-service"],
+          "description": "Target deployment platform"
+        },
+        "existingInfrastructure": {
+          "type": "object",
+          "properties": {
+            "containerAppEnvironment": { "type": "string" },
+            "containerRegistry": { "type": "string" },
+            "vnet": { "type": "string" },
+            "logAnalyticsWorkspace": { "type": "string" }
+          }
+        }
+      }
+    },
+    "containerConfiguration": {
+      "type": "object",
+      "description": "Container-specific configuration",
+      "properties": {
+        "baseImage": {
+          "type": "string",
+          "description": "Base Docker image to use"
+        },
+        "exposedPorts": {
+          "type": "array",
+          "items": { "type": "integer" },
+          "description": "Ports to expose"
+        },
+        "entrypoint": {
+          "type": "string",
+          "description": "Container entrypoint command"
+        },
+        "cmd": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Container CMD arguments"
+        },
+        "envVariables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "value": { "type": "string" },
+              "isSecret": { "type": "boolean" }
+            }
+          }
+        },
+        "volumes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "mountPath": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["EmptyDir", "AzureFile", "Secret"]
+              }
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "cpu": { "type": "string" },
+            "memory": { "type": "string" }
+          }
+        }
+      }
+    },
+    "scalingRequirements": {
+      "type": "object",
+      "description": "Scaling requirements",
+      "properties": {
+        "minReplicas": { "type": "integer" },
+        "maxReplicas": { "type": "integer" },
+        "scaleToZero": { "type": "boolean" },
+        "scalingRules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["http", "cpu", "memory", "azure-servicebus", "azure-queue", "cron", "custom"]
+              },
+              "metadata": { "type": "object" }
+            }
+          }
+        }
+      }
+    },
+    "daprConfiguration": {
+      "type": "object",
+      "description": "Dapr integration configuration",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "appId": { "type": "string" },
+        "appPort": { "type": "integer" },
+        "appProtocol": {
+          "type": "string",
+          "enum": ["http", "grpc"]
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["state", "pubsub", "bindings", "secrets"]
+              },
+              "name": { "type": "string" },
+              "componentType": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "ingressConfiguration": {
+      "type": "object",
+      "description": "Ingress configuration",
+      "properties": {
+        "external": { "type": "boolean" },
+        "targetPort": { "type": "integer" },
+        "transport": {
+          "type": "string",
+          "enum": ["http", "http2", "auto", "tcp"]
+        },
+        "customDomains": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "corsPolicy": {
+          "type": "object",
+          "properties": {
+            "allowedOrigins": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "allowedMethods": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "allowCredentials": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "deploymentStrategy": {
+      "type": "object",
+      "description": "Deployment strategy configuration",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["rolling", "blue-green", "canary"],
+          "description": "Deployment strategy type"
+        },
+        "canaryPercentage": { "type": "integer" },
+        "revisionMode": {
+          "type": "string",
+          "enum": ["Single", "Multiple"]
+        },
+        "trafficSplit": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "revisionName": { "type": "string" },
+              "weight": { "type": "integer" },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "healthProbes": {
+      "type": "object",
+      "description": "Health probe configuration",
+      "properties": {
+        "startup": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "port": { "type": "integer" },
+            "initialDelaySeconds": { "type": "integer" },
+            "periodSeconds": { "type": "integer" },
+            "failureThreshold": { "type": "integer" }
+          }
+        },
+        "liveness": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "port": { "type": "integer" },
+            "periodSeconds": { "type": "integer" },
+            "failureThreshold": { "type": "integer" }
+          }
+        },
+        "readiness": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "port": { "type": "integer" },
+            "periodSeconds": { "type": "integer" },
+            "failureThreshold": { "type": "integer" }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Constraints and limitations",
+      "properties": {
+        "vnetIntegration": { "type": "boolean" },
+        "privateEndpoint": { "type": "boolean" },
+        "zoneRedundancy": { "type": "boolean" },
+        "workloadProfile": {
+          "type": "string",
+          "enum": ["Consumption", "Dedicated-D4", "Dedicated-D8", "Dedicated-D16", "Dedicated-D32"]
+        }
+      }
+    }
+  },
+  "required": ["taskType"],
+  "additionalProperties": false
+}

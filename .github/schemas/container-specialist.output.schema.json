@@ -1,0 +1,437 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "container-specialist.output.schema.json",
+  "title": "Container Specialist Output",
+  "description": "Output schema for the @container-specialist agent",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": ["success", "partial", "failed"],
+      "description": "Overall status of the container design"
+    },
+    "dockerfile": {
+      "type": "object",
+      "description": "Generated Dockerfile",
+      "properties": {
+        "content": { "type": "string" },
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "baseImage": { "type": "string" },
+              "purpose": { "type": "string" }
+            }
+          }
+        },
+        "buildArgs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "defaultValue": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "securityFeatures": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "dockerignore": {
+      "type": "object",
+      "description": "Generated .dockerignore file",
+      "properties": {
+        "content": { "type": "string" },
+        "patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "containerAppConfiguration": {
+      "type": "object",
+      "description": "Azure Container App configuration",
+      "properties": {
+        "name": { "type": "string" },
+        "environmentId": { "type": "string" },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "activeRevisionsMode": {
+              "type": "string",
+              "enum": ["Single", "Multiple"]
+            },
+            "ingress": {
+              "type": "object",
+              "properties": {
+                "external": { "type": "boolean" },
+                "targetPort": { "type": "integer" },
+                "transport": { "type": "string" },
+                "allowInsecure": { "type": "boolean" },
+                "traffic": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "revisionName": { "type": "string" },
+                      "weight": { "type": "integer" },
+                      "latestRevision": { "type": "boolean" },
+                      "label": { "type": "string" }
+                    }
+                  }
+                },
+                "corsPolicy": { "type": "object" }
+              }
+            },
+            "secrets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "keyVaultUrl": { "type": "string" }
+                }
+              }
+            },
+            "registries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "server": { "type": "string" },
+                  "identity": { "type": "string" }
+                }
+              }
+            },
+            "dapr": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "appId": { "type": "string" },
+                "appPort": { "type": "integer" },
+                "appProtocol": { "type": "string" },
+                "enableApiLogging": { "type": "boolean" }
+              }
+            }
+          }
+        },
+        "template": {
+          "type": "object",
+          "properties": {
+            "containers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "image": { "type": "string" },
+                  "resources": {
+                    "type": "object",
+                    "properties": {
+                      "cpu": { "type": "number" },
+                      "memory": { "type": "string" }
+                    }
+                  },
+                  "env": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "value": { "type": "string" },
+                        "secretRef": { "type": "string" }
+                      }
+                    }
+                  },
+                  "probes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["Startup", "Liveness", "Readiness"]
+                        },
+                        "httpGet": {
+                          "type": "object",
+                          "properties": {
+                            "path": { "type": "string" },
+                            "port": { "type": "integer" }
+                          }
+                        },
+                        "initialDelaySeconds": { "type": "integer" },
+                        "periodSeconds": { "type": "integer" },
+                        "failureThreshold": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "scale": {
+              "type": "object",
+              "properties": {
+                "minReplicas": { "type": "integer" },
+                "maxReplicas": { "type": "integer" },
+                "rules": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": { "type": "string" },
+                      "http": { "type": "object" },
+                      "custom": { "type": "object" }
+                    }
+                  }
+                }
+              }
+            },
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "storageType": { "type": "string" },
+                  "storageName": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "daprComponents": {
+      "type": "array",
+      "description": "Dapr component configurations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "componentType": { "type": "string" },
+          "version": { "type": "string" },
+          "metadata": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" },
+                "secretKeyRef": { "type": "string" }
+              }
+            }
+          },
+          "secrets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "value": { "type": "string" }
+              }
+            }
+          },
+          "scopes": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "containerRegistryConfiguration": {
+      "type": "object",
+      "description": "Azure Container Registry configuration",
+      "properties": {
+        "name": { "type": "string" },
+        "sku": {
+          "type": "string",
+          "enum": ["Basic", "Standard", "Premium"]
+        },
+        "adminUserEnabled": { "type": "boolean" },
+        "policies": {
+          "type": "object",
+          "properties": {
+            "retentionDays": { "type": "integer" },
+            "trustPolicy": { "type": "boolean" }
+          }
+        },
+        "imageTaggingStrategy": {
+          "type": "object",
+          "properties": {
+            "strategy": {
+              "type": "string",
+              "enum": ["semver", "git-sha", "build-number", "date"]
+            },
+            "examples": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "environmentConfiguration": {
+      "type": "object",
+      "description": "Container Apps Environment configuration",
+      "properties": {
+        "name": { "type": "string" },
+        "zoneRedundant": { "type": "boolean" },
+        "workloadProfiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "workloadProfileType": { "type": "string" },
+              "minimumCount": { "type": "integer" },
+              "maximumCount": { "type": "integer" }
+            }
+          }
+        },
+        "vnetConfiguration": {
+          "type": "object",
+          "properties": {
+            "internal": { "type": "boolean" },
+            "infrastructureSubnetId": { "type": "string" }
+          }
+        }
+      }
+    },
+    "deploymentPipeline": {
+      "type": "object",
+      "description": "CI/CD pipeline configuration",
+      "properties": {
+        "buildSteps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "command": { "type": "string" },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "securityScanning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "tools": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "deploymentStrategy": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string" },
+            "stages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "trafficPercentage": { "type": "integer" },
+                  "duration": { "type": "string" },
+                  "healthChecks": {
+                    "type": "array",
+                    "items": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "bicepTemplates": {
+      "type": "array",
+      "description": "Generated Bicep templates",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "content": { "type": "string" },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "type": { "type": "string" },
+                "description": { "type": "string" },
+                "defaultValue": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "healthEndpoints": {
+      "type": "object",
+      "description": "Health endpoint implementation",
+      "properties": {
+        "codeSnippet": { "type": "string" },
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["startup", "liveness", "readiness"]
+              },
+              "checks": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "description": "Recommendations for container implementation",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["security", "performance", "cost", "reliability", "operations"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["critical", "high", "medium", "low"]
+          },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "implementation": { "type": "string" }
+        }
+      }
+    },
+    "handoffTo": {
+      "type": "array",
+      "description": "Suggested next agents to involve",
+      "items": {
+        "type": "object",
+        "properties": {
+          "agent": { "type": "string" },
+          "reason": { "type": "string" },
+          "context": { "type": "object" }
+        }
+      }
+    }
+  },
+  "required": ["status"],
+  "additionalProperties": false
+}

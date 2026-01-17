@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "api-gateway-specialist.input.schema.json",
+  "title": "API Gateway Specialist Input",
+  "description": "Input schema for the @api-gateway-specialist agent",
+  "type": "object",
+  "properties": {
+    "taskType": {
+      "type": "string",
+      "enum": [
+        "apim-design",
+        "api-versioning",
+        "security-policy",
+        "rate-limiting",
+        "traffic-routing",
+        "transformation",
+        "caching",
+        "monitoring",
+        "developer-portal"
+      ],
+      "description": "The type of API gateway task to perform"
+    },
+    "context": {
+      "type": "object",
+      "description": "Context information about the API gateway requirements",
+      "properties": {
+        "apiName": {
+          "type": "string",
+          "description": "Name of the API"
+        },
+        "apiVersion": {
+          "type": "string",
+          "description": "Version of the API"
+        },
+        "apimSku": {
+          "type": "string",
+          "enum": ["Consumption", "Developer", "Basic", "Standard", "Premium"],
+          "description": "Azure API Management SKU tier"
+        },
+        "backendServices": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "type": { 
+                "type": "string",
+                "enum": ["AppService", "FunctionApp", "ContainerApp", "AKS", "External"]
+              },
+              "url": { "type": "string" },
+              "pathPrefix": { "type": "string" }
+            }
+          },
+          "description": "Backend services to route to"
+        },
+        "authenticationRequired": {
+          "type": "boolean",
+          "description": "Whether authentication is required"
+        },
+        "authenticationType": {
+          "type": "string",
+          "enum": ["jwt", "oauth2", "api-key", "certificate", "basic"],
+          "description": "Type of authentication to implement"
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "description": "Specific API gateway requirements",
+      "properties": {
+        "versioning": {
+          "type": "object",
+          "properties": {
+            "scheme": {
+              "type": "string",
+              "enum": ["path", "header", "query"],
+              "description": "API versioning scheme"
+            },
+            "versions": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "List of API versions to support"
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "properties": {
+            "requireHttps": { "type": "boolean" },
+            "validateJwt": { "type": "boolean" },
+            "jwtAudience": { "type": "string" },
+            "jwtIssuer": { "type": "string" },
+            "ipFiltering": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean" },
+                "allowedRanges": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "cors": {
+              "type": "object",
+              "properties": {
+                "allowedOrigins": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "allowedMethods": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "allowCredentials": { "type": "boolean" }
+              }
+            }
+          }
+        },
+        "rateLimiting": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "callsPerPeriod": { "type": "integer" },
+            "renewalPeriodSeconds": { "type": "integer" },
+            "counterKey": {
+              "type": "string",
+              "enum": ["subscription", "ip", "user", "custom"],
+              "description": "Key to use for rate limiting"
+            }
+          }
+        },
+        "caching": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "durationSeconds": { "type": "integer" },
+            "varyByHeaders": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "varyByQueryParams": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "transformation": {
+          "type": "object",
+          "properties": {
+            "requestTransform": { "type": "boolean" },
+            "responseTransform": { "type": "boolean" },
+            "addHeaders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "value": { "type": "string" }
+                }
+              }
+            },
+            "removeHeaders": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "properties": {
+            "applicationInsights": { "type": "boolean" },
+            "eventHub": { "type": "boolean" },
+            "customMetrics": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "openApiSpec": {
+      "type": "object",
+      "description": "OpenAPI specification for the API",
+      "properties": {
+        "url": { "type": "string" },
+        "content": { "type": "string" }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Constraints and limitations",
+      "properties": {
+        "maxRequestSize": { "type": "string" },
+        "maxResponseTime": { "type": "string" },
+        "availabilityZones": { "type": "boolean" },
+        "privateEndpoint": { "type": "boolean" }
+      }
+    }
+  },
+  "required": ["taskType"],
+  "additionalProperties": false
+}
