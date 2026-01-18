@@ -1,0 +1,80 @@
+name: Publish Wiki
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-wiki:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Checkout Wiki
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Sync Documentation to Wiki
+        run: |
+          # Clear existing wiki content (except .git)
+          find wiki -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          
+          # Copy docs to wiki root
+          cp -r docs/* wiki/
+          
+          # Flatten directory structure for wiki compatibility
+          cd wiki
+          
+          # Move nested files to root with path-based names
+          find . -type f -name "*.md" -path "*/*" | while read file; do
+            # Skip _Sidebar and _Footer
+            if [[ "$file" == "./_Sidebar.md" ]] || [[ "$file" == "./_Footer.md" ]]; then
+              continue
+            fi
+            
+            # Get directory and filename
+            dir=$(dirname "$file" | sed 's|^\./||')
+            name=$(basename "$file" .md)
+            
+            # Skip if already at root
+            if [[ "$dir" == "." ]]; then
+              continue
+            fi
+            
+            # Create wiki-compatible filename (dir-name format)
+            newname="${dir}/${name}.md"
+            
+            # Keep in subdirectory (GitHub Wiki supports this)
+            echo "Keeping: $file"
+          done
+          
+          echo "Wiki sync complete"
+      
+      - name: Commit and Push
+        run: |
+          cd wiki
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          git add -A
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "docs: sync documentation from main repository"
+            git push
+            echo "Wiki updated successfully"
+          fi

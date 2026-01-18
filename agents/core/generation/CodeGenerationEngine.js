@@ -5,6 +5,7 @@
  * - FileWriter: File I/O operations
  * - ProjectScaffolder: Directory structure creation
  * - Generators: Framework-specific code generation
+ * - SecurityBridge: Security scanning and validation (optional)
  */
 
 const path = require('path');
@@ -12,17 +13,44 @@ const FileWriter = require('./FileWriter');
 const ProjectScaffolder = require('./ProjectScaffolder');
 const GenerationContext = require('./GenerationContext');
 
+// Security bridge for JS-TS interoperability (lazy-loaded via dynamic import)
+let securityBridgePromise = null;
+let securityBridge = null;
+
+async function loadSecurityBridge() {
+  if (securityBridge) {
+    return securityBridge;
+  }
+  if (!securityBridgePromise) {
+    securityBridgePromise = import('../../bridge/security.js')
+      .then(mod => {
+        securityBridge = mod.default || mod;
+        return securityBridge;
+      })
+      .catch(() => {
+        securityBridge = false; // Mark as unavailable
+        return null;
+      });
+  }
+  return securityBridgePromise;
+}
+
+// Pre-load security bridge
+loadSecurityBridge();
+
 class CodeGenerationEngine {
   /**
    * @param {Object} options - Engine configuration
    * @param {string} options.outputRoot - Root directory for generated output
    * @param {boolean} options.dryRun - If true, don't write files
    * @param {boolean} options.overwrite - Allow overwriting existing files
+   * @param {boolean} options.securityEnabled - Enable security scanning (default: true)
    */
   constructor(options = {}) {
     this.outputRoot = options.outputRoot || './generated';
     this.dryRun = options.dryRun || false;
     this.overwrite = options.overwrite !== false;
+    this.securityEnabled = options.securityEnabled !== false;
     
     // Core components
     this.fileWriter = new FileWriter(this.outputRoot, {
@@ -30,6 +58,12 @@ class CodeGenerationEngine {
       encoding: 'utf8'
     });
     this.scaffolder = new ProjectScaffolder(this.fileWriter);
+    
+    // Security hooks (initialized lazily)
+    this.securityHooks = null;
+    if (this.securityEnabled) {
+      this._initializeSecurity();
+    }
     
     // Plugin registry
     this.generators = new Map();
@@ -41,6 +75,58 @@ class CodeGenerationEngine {
       afterGenerate: [],
       onError: []
     };
+  }
+
+  /**
+   * Initialize security hooks from TypeScript bridge (async)
+   * @private
+   * @returns {Promise<void>}
+   */
+  async _initializeSecurity() {
+    try {
+      const bridge = await loadSecurityBridge();
+      if (bridge && typeof bridge.isAvailable === 'function' && bridge.isAvailable()) {
+        const config = bridge.getDefaultSecurityConfig();
+        const orchestrator = bridge.createSecurityOrchestrator(config);
+        if (orchestrator) {
+          this.securityHooks = bridge.createCodeGenHooks(orchestrator);
+          // console.log('[CodeGenEngine] Security hooks initialized');
+        }
+      }
+    } catch (error) {
+      console.warn('[CodeGenEngine] Security initialization failed:', error.message);
+    }
+  }
+
+  /**
+   * Ensure security is initialized (call before generation)
+   * @returns {Promise<void>}
+   */
+  async ensureSecurityInitialized() {
+    if (this.securityEnabled && !this.securityHooks) {
+      await this._initializeSecurity();
+    }
+  }
+
+  /**
+   * Validate generated content before writing
+   * @param {string} filePath - File path
+   * @param {string} content - File content
+   * @returns {Promise<{valid: boolean, issues: string[]}>}
+   */
+  async validateGeneratedFile(filePath, content) {
+    if (!this.securityHooks) {
+      return { valid: true, issues: [] };
+    }
+    try {
+      const decision = await this.securityHooks.afterGenerate(filePath, content);
+      return {
+        valid: decision.allowed,
+        issues: [...(decision.warnings || []), ...(decision.blockers || [])]
+      };
+    } catch {
+      return { valid: true, issues: [] }; // Fail open on error
+    }
   }
 
   /**
@@ -102,6 +188,9 @@ class CodeGenerationEngine {
    * @returns {Promise<import('./GenerationContext')>}
    */
   async generate(config) {
+    // Ensure security is initialized (async)
+    await this.ensureSecurityInitialized();
+    
     // Create generation context
     const context = new GenerationContext({
       projectName: config.projectName,
@@ -113,6 +202,34 @@ class CodeGenerationEngine {
     });
 
     try {
+      // Security pre-check (if available)
+      if (this.securityHooks) {
+        try {
+          const decision = await this.securityHooks.beforeGenerate(
+            config.scenario || 'default',
+            config.requirements || {}
+          );
+          if (!decision.allowed) {
+            throw new Error(`Security blocked: ${decision.reason || 'Unknown reason'}`);
+          }
+          if (decision.warnings && decision.warnings.length > 0) {
+            decision.warnings.forEach(w => context.addWarning({
+              message: w,
+              component: 'SecurityBridge'
+            }));
+          }
+        } catch (secError) {
+          if (secError.message.startsWith('Security blocked:')) {
+            throw secError;
+          }
+          // Non-blocking: log and continue
+          context.addWarning({
+            message: `Security pre-check failed: ${secError.message}`,
+            component: 'SecurityBridge'
+          });
+        }
+      }
+
       // Execute pre-generation hooks
       await this.executeHooks('beforeGenerate', { context, config });
 
@@ -160,6 +277,16 @@ class CodeGenerationEngine {
             stack: error.stack
           });
           await this.executeHooks('onError', { context, error, generator });
+        }
+      }
+
+      // Security completion callback (if available)
+      if (this.securityHooks && this.securityHooks.onComplete) {
+        try {
+          const generatedPaths = context.generatedFiles.map(f => f.path);
+          await this.securityHooks.onComplete(generatedPaths);
+        } catch {
+          // Non-blocking: security completion is optional
         }
       }
 

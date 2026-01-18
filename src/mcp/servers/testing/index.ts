@@ -15,3 +15,6 @@ export type {
   APIValidationError, 
   APIValidationWarning 
 } from './APIMaticAdapter';
+
+export { TestRunnerAdapter, createTestRunnerAdapter } from './TestRunnerAdapter';
+export type { TestConfig, TestResult } from './TestRunnerAdapter';

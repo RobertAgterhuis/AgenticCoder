@@ -13,6 +13,11 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
+# Config files with sensitive data
+config.json
+*.config.json
+.agentic/config.json
+
 # Build outputs
 dist/
 coverage/
@@ -69,3 +74,6 @@ Files/
 
 # AgenticCoder state data (local execution data)
 .agenticcoder/
+
+# E2E test workspace
+.e2e-workspace/

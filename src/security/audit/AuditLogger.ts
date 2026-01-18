@@ -139,7 +139,8 @@ export class AuditLogger {
       results = results.filter(e => e.actor.id === query.actor);
     }
     if (query.resource) {
-      results = results.filter(e => e.resource.includes(query.resource));
+      const resourceFilter = query.resource;
+      results = results.filter(e => e.resource.includes(resourceFilter));
     }
     if (query.result) {
       results = results.filter(e => e.result === query.result);

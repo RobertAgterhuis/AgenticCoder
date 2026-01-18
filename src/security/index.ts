@@ -7,7 +7,37 @@
  * - Security Scanning (code, dependencies, infrastructure)
  * - Audit Logging (immutable, chain-linked)
  * - Compliance Checking (OWASP, GDPR, PCI-DSS)
+ * - Security Orchestration (central coordination)
+ * - Code Generation Integration (security hooks)
  */
+
+// Security Orchestrator
+export {
+  SecurityOrchestrator,
+  SecurityConfig,
+  SecurityCheckResult,
+  ComplianceCheckFilesResult,
+  createSecurityOrchestrator,
+  createDefaultSecurityConfig,
+} from './SecurityOrchestrator';
+
+// Code Generation Integration
+export {
+  CodeGenHooks,
+  SecurityGateDecision,
+  createCodeGenHooks,
+} from './integration';
+
+// MCP Security Bridge
+export {
+  MCPSecurityBridge,
+  MCPSecurityBridgeConfig,
+  SecretScanResult,
+  NormalizedCodeScanResult,
+  NormalizedDepScanResult,
+  FullScanResult,
+  createMCPSecurityBridge,
+} from './integration';
 
 // Secrets Management
 export {

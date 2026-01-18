@@ -15,6 +15,19 @@ export * from './errors/MCPError';
 // Utils
 export { Logger, createLogger, configureLogger } from './utils/Logger';
 
+// Registry (NEW)
+export { AdapterRegistry, getRegistry } from './registry';
+export type {
+  AdapterCategory,
+  AdapterMetadata,
+  AdapterRegistration,
+  AdapterStatus,
+  AdapterFactory,
+  RegistryEvent,
+  ToolRequest,
+  ToolResult,
+} from './registry';
+
 // Transport
 export { BaseTransport } from './transport/BaseTransport';
 export { StdioTransport } from './transport/StdioTransport';

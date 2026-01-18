@@ -8,3 +8,6 @@ export type { MarkdownifyAdapterConfig, ConversionResult } from './MarkdownifyAd
 
 export { GitMCPAdapter, createGitMCPAdapter } from './GitMCPAdapter';
 export type { RepositoryInfo, DocFileType } from './GitMCPAdapter';
+
+export { DocumentationGeneratorAdapter, createDocumentationGeneratorAdapter } from './DocumentationGeneratorAdapter';
+export type { DocConfig, DocResult } from './DocumentationGeneratorAdapter';

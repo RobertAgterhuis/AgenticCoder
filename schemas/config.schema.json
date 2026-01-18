@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://agentic-coder.dev/schemas/config.schema.json",
+  "title": "AgenticCoder Configuration",
+  "description": "Central configuration for AgenticCoder platform",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Config schema version"
+    },
+    "project": {
+      "$ref": "#/definitions/ProjectConfig"
+    },
+    "azure": {
+      "$ref": "#/definitions/AzureConfig"
+    },
+    "mcp": {
+      "$ref": "#/definitions/MCPConfig"
+    },
+    "security": {
+      "$ref": "#/definitions/SecurityConfig"
+    },
+    "state": {
+      "$ref": "#/definitions/StateConfig"
+    },
+    "logging": {
+      "$ref": "#/definitions/LoggingConfig"
+    }
+  },
+  "required": ["version"],
+  "definitions": {
+    "ProjectConfig": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "AzureConfig": {
+      "type": "object",
+      "properties": {
+        "defaultTenantId": { "type": "string" },
+        "defaultSubscriptionId": { "type": "string" },
+        "keyVault": {
+          "type": "object",
+          "properties": {
+            "vaultUri": { "type": "string", "format": "uri" },
+            "enabled": { "type": "boolean", "default": false }
+          }
+        },
+        "tenants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TenantConfig"
+          }
+        }
+      }
+    },
+    "TenantConfig": {
+      "type": "object",
+      "properties": {
+        "tenantId": { "type": "string" },
+        "name": { "type": "string" },
+        "subscriptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "subscriptionId": { "type": "string" },
+              "name": { "type": "string" },
+              "isDefault": { "type": "boolean" }
+            },
+            "required": ["subscriptionId", "name"]
+          }
+        }
+      },
+      "required": ["tenantId", "name"]
+    },
+    "MCPConfig": {
+      "type": "object",
+      "properties": {
+        "servers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "config": { "type": "object" }
+              }
+            }
+          }
+        },
+        "transport": {
+          "type": "string",
+          "enum": ["stdio", "sse", "websocket"],
+          "default": "stdio"
+        },
+        "timeout": { "type": "number", "default": 30000 }
+      }
+    },
+    "SecurityConfig": {
+      "type": "object",
+      "properties": {
+        "scanning": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "failOnSeverity": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "critical"],
+              "default": "high"
+            }
+          }
+        },
+        "audit": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "logPath": { "type": "string", "default": ".agenticcoder/audit" }
+          }
+        }
+      }
+    },
+    "StateConfig": {
+      "type": "object",
+      "properties": {
+        "persistPath": { "type": "string", "default": ".agenticcoder/state" },
+        "cacheEnabled": { "type": "boolean", "default": true },
+        "cacheTTL": { "type": "number", "default": 3600 }
+      }
+    },
+    "LoggingConfig": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["debug", "info", "warn", "error"],
+          "default": "info"
+        },
+        "format": {
+          "type": "string",
+          "enum": ["json", "text"],
+          "default": "json"
+        },
+        "outputPath": { "type": "string" }
+      }
+    }
+  }
+}
